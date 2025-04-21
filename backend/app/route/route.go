@@ -2,9 +2,9 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/responce"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/zaplog"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/zaplog"
 	swaggerFiles "github.com/swaggo/files"
     ginSwagger "github.com/swaggo/gin-swagger"
 )

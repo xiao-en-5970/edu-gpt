@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 )
 
 func InitRedis() {

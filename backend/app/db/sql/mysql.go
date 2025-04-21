@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

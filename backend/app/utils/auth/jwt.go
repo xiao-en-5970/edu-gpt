@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 )
 
 var JWTSecret = []byte("your-secret-key")

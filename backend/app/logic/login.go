@@ -3,12 +3,12 @@ package logic
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/model"
-	"github.com/xiao-en-5970/Goodminton/backend/app/types"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/auth"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/bcrypts"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/types"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/auth"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/bcrypts"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
 func LogicLogin(c *gin.Context,req *types.LoginReq)(resp *types.LoginResp,code int,err error){

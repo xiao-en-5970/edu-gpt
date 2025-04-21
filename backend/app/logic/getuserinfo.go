@@ -2,9 +2,9 @@ package logic
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/Goodminton/backend/app/model"
-	"github.com/xiao-en-5970/Goodminton/backend/app/types"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/types"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
 func LogicGetUserInfo(c *gin.Context,req *types.GetUserInfoReq)(resp *types.UserInfo,code int,err error){

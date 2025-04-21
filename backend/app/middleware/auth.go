@@ -4,10 +4,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/auth"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/codes"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/responce"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/auth"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
 

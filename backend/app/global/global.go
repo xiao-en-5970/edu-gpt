@@ -2,7 +2,7 @@ package global
 
 import (
 	"github.com/redis/go-redis/v9"
-	"github.com/xiao-en-5970/Goodminton/backend/app/conf"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/conf"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )

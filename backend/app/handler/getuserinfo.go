@@ -2,10 +2,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/Goodminton/backend/app/logic"
-	"github.com/xiao-en-5970/Goodminton/backend/app/types"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/codes"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/responce"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/logic"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/types"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
 func HandlerGetUserInfo(c* gin.Context){

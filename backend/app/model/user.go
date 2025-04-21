@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/types"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/bcrypts"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/types"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/bcrypts"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )

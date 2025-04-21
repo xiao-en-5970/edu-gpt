@@ -1,6 +1,6 @@
-module github.com/xiao-en-5970/Goodminton/backend/app
+module github.com/xiao-en-5970/edu-gpt/backend/app
 
-replace github.com/xiao-en-5970/Goodminton/backend/app => .
+replace github.com/xiao-en-5970/edu-gpt/backend/app => .
 
 go 1.23.5
 

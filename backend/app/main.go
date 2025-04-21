@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/Goodminton/backend/app/conf"
-	"github.com/xiao-en-5970/Goodminton/backend/app/db"
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/route"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/conf"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/db"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/route"
 	"go.uber.org/zap"
 )
 

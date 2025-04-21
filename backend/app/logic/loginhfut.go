@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-	"github.com/xiao-en-5970/Goodminton/backend/app/global"
-	"github.com/xiao-en-5970/Goodminton/backend/app/types"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/types"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
 func LogicLoginHFUT(req *types.LoginHFUTReq)(code int,err error){

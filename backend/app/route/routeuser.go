@@ -2,8 +2,8 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/Goodminton/backend/app/handler"
-	"github.com/xiao-en-5970/Goodminton/backend/app/middleware"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/handler"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 )
 
 func UserRouteInit(apiGroup *gin.RouterGroup) {

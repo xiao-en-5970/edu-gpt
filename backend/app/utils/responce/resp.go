@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/Goodminton/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
 
