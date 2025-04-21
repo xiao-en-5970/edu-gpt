@@ -37,6 +37,7 @@ type RedisConfig struct {
 	Addr string `mapstructure:"addr"`
 	DB   int    `mapstructure:"db"`
 	PoolSize int `mapstructure:"poolsize"`
+	CookieExpire int `mapstructure:"cookie_expire"`//单位小时
 }
 
 type HfutAPI struct {

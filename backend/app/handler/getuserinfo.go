@@ -15,7 +15,7 @@ func HandlerGetUserInfo(c* gin.Context){
 		responce.ErrorInternalServerError(c,err)
 		return
 	}
-	if code == codes.CodeUserLoginSuccess{
+	if code == codes.CodeAllSuccess{
 		responce.SuccessWithCodeData(c,code,*resp)
 	}else{
 		responce.SuccessWithCode(c,code)

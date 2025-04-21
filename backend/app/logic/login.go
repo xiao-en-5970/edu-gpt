@@ -1,43 +1,44 @@
 package logic
 
 import (
-	"github.com/gin-gonic/gin"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/types"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/auth"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/bcrypts"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
 func LogicLogin(c *gin.Context,req *types.LoginReq)(resp *types.LoginResp,code int,err error){
-	user,_:=model.FindUserByName(req.Username)
-	if user!=nil{
-		//用户存在
-		if (bcrypts.CheckPasswordHash(req.Password,user.PasswordHash)){
-			//账密正确
-			// 生成Token
-			token, err := auth.GenerateToken(req.Username)
-			if err != nil {
-				return &types.LoginResp{},codes.CodeAllIntervalError,err
+	hfutresp,code,err:=LogicHFUTLogin(&types.HFUTLoginReq{
+		Username: req.Username,
+		Password: req.Password,
+	})
+	cookie:=hfutresp.Data.Cookie
+	global.RedisClient.SetEx(c,req.Username,cookie,time.Duration(global.Cfg.Redis.CookieExpire)*time.Hour)
+	switch code {
+	case codes.CodeAllSuccess:
+		user,_:=model.FindUserByName(req.Username)
+		if user==nil{
+			// 用户不存在
+			hfutrsp,code,err:=LogicHFUTStudentInfo(c,req.Username)
+			if err!=nil{
+				return &types.LoginResp{},code,err
 			}
-
-			// 设置HTTP-Only Cookie
-			c.SetCookie("auth_token", token, int(global.Cfg.Auth.MaxAge), "/", "", false, true) // 24小时过期
-
-			return &types.LoginResp{Token: token},codes.CodeUserLoginSuccess,nil
-		}else{
-			//账密错误
-			global.Logger.Errorf("%#v %#v",user.PasswordHash,req.Password)
-			return &types.LoginResp{},codes.CodeUserLoginPasswordError,nil
+			model.InsertUser(&model.User{
+				Username: req.Username,
+				Nickname: hfutrsp.Data.UsernameZh,
+			})
 		}
-	}else{
-		// 用户不存在
-		code,err:=LogicLoginHFUT(&types.LoginHFUTReq{
-			Username: req.Username,
-			Password: req.Password,
-		})
+		// 生成Token
+		token, err := auth.GenerateToken(req.Username)
+		if err != nil {
+			return &types.LoginResp{},codes.CodeAllIntervalError,err
+		}
+		return &types.LoginResp{Token: token},codes.CodeAllSuccess,nil
+	default:
 		return &types.LoginResp{},code,err
 	}
 }

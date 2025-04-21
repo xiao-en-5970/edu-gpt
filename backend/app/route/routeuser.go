@@ -9,7 +9,6 @@ import (
 func UserRouteInit(apiGroup *gin.RouterGroup) {
 	r := apiGroup.Group("/user")
 	r.POST("/login", handler.HandlerLogin)
-	r.POST("/register",handler.HandlerRegister)
 	
 	auth:=r.Group("/auth")
 	auth.Use(middleware.AuthMiddleware())
