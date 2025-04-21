@@ -1,0 +1,119 @@
+basePath: /api/v1
+definitions:
+  model.LoginReq:
+    properties:
+      password:
+        description: |-
+          密码，最少6位
+          Required: true
+          Example: password123
+        minLength: 6
+        type: string
+      username:
+        description: |-
+          用户名，4-20位字母数字组合
+          Required: true
+          Example: admin123
+        maxLength: 20
+        minLength: 4
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.LoginResp:
+    properties:
+      avatar_path:
+        description: |-
+          头像路径
+          Example: /avatars/default.png
+        type: string
+      createTime:
+        description: |-
+          创建时间
+          Example: 2023-01-01 12:00:00
+        type: string
+      email:
+        description: |-
+          电子邮箱
+          Example: user@example.com
+        type: string
+      nickname:
+        description: |-
+          用户昵称
+          Example: 游戏达人
+        type: string
+      personality_tags:
+        description: |-
+          个性标签
+          Example: ["竞技","团队合作"]
+        items:
+          type: string
+        type: array
+      phone:
+        description: |-
+          手机号码
+          Example: 13800138000
+        type: string
+      playStyle_tags:
+        description: |-
+          玩法偏好
+          Example: ["PVP","副本"]
+        items:
+          type: string
+        type: array
+      self_evaluatedLevel:
+        description: |-
+          自评等级
+          Example: 高级玩家
+        type: string
+      system_score:
+        description: |-
+          系统评分
+          Example: 85
+        type: integer
+      user_id:
+        description: |-
+          用户ID
+          Example: 123456
+        type: integer
+      username:
+        description: |-
+          用户名
+          Example: admin123
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: 1076763695@qq.com
+    name: API支持
+  description: 用户登录认证接口文档
+  license:
+    name: MIT
+  title: 用户认证服务API文档
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户名密码登录系统
+      parameters:
+      - description: 登录凭证
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            $ref: '#/definitions/model.LoginResp'
+      summary: 用户登录
+      tags:
+      - 认证服务
+swagger: "2.0"

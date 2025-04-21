@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  timeout: 30s
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  db: goodminton_db
+  credentials:
+    username: "root"
+    password: "root123123"
+  connmaxlifetime: 1
+  maxopenconns: 100
+  maxidleconns: 10
+redis:
+  addr: "127.0.0.1:6379"
+  db: 0
+  poolsize: 100
+hfut-api:
+  host: "127.0.0.1"
+  port: 8082
+  retry: 10
+logging:
+  level: "info"
+auth:
+  max_age: 86400
+  

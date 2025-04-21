@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # golang:
+    
+  #   image: golang:1.23.5-alpine  # 使用轻量级Alpine镜像
+  #   container_name: golang
+  #   working_dir: /app            # 容器内工作目录
+  #   volumes:
+  #     - ./app:/app                  # 挂载本地代码到容器
+  #   depends_on:
+  #     - mysql
+  #     - redis
+  #     - hfut-api  # 确保依赖所有需要连接的服务
+  #   environment:
+  #     - GO111MODULE=on
+  #     - GOPROXY=https://goproxy.cn,direct
+  #     # MySQL 连接配置
+  #     - MYSQL_HOST=mysql  # 使用服务名
+  #     - MYSQL_PORT=3306
+  #     - MYSQL_USER=root
+  #     - MYSQL_PASSWORD=root123123
+  #     - MYSQL_DB=goodminton_db
+  #     # Redis 连接配置
+  #     - REDIS_HOST=redis  # 使用服务名
+  #     - REDIS_PORT=6379
+  #     # HFUT-API 连接配置（如果需要）
+  #     - HFUT_API_URL=http://hfut-api:8082
+  #   tty: true                    # 保持容器运行
+  #   ports:
+  #     - "8080:8080"
+  #   command: >
+  #     sh -c "
+  #     go mod tidy &&
+  #     go run .
+  #     "
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123123  # 设置root密码
+      MYSQL_DATABASE: goodminton_db        # 初始创建的数据库名
+    
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql   # 数据持久化
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql  # 挂载初始化脚本
+    networks:
+      - app_net
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data            # 数据持久化
+    networks:
+      - app_net
+    restart: unless-stopped
+  hfut-api:
+    build: ./hfut-api
+    container_name: hfut-api
+    restart: unless-stopped
+    volumes:
+      - ./hfut-api:/app
+      # 防止覆盖容器内的node_modules
+      - /app/node_modules
+    ports:
+      - "8082:8082"  # 如果需要暴露端口
+  
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  app_net:
+    driver: bridge
