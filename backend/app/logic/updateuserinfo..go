@@ -21,7 +21,7 @@ func LogicUpdateUserInfo(c *gin.Context,user *model.User)(resp *types.GetUserInf
 	if us!=nil{
 		//用户存在
 		global.Logger.Debug(user)
-		if err=model.UpdateUser(user);err!=nil{
+		if err=model.UpdateUser(user,us.ID);err!=nil{
 			return &types.GetUserInfoResp{},codes.CodeUserInfoUpdateFail,err
 		}
 		hfutrsp,code,err:=LogicHFUTStudentInfo(c,username)

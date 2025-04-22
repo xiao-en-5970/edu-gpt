@@ -24,6 +24,9 @@ func LogicLogin(c *gin.Context,req *types.LoginReq)(resp *types.LoginResp,code i
 		if user==nil{
 			// 用户不存在
 			hfutrsp,code,err:=LogicHFUTStudentInfo(c,req.Username)
+			if code != codes.CodeAllSuccess{
+				return &types.LoginResp{},code,nil
+			}
 			if err!=nil{
 				return &types.LoginResp{},code,err
 			}

@@ -2,7 +2,7 @@ server:
   port: 8080
   timeout: 30s
 mysql:
-  host: "127.0.0.1"
+  host: "mysql"
   port: 3306
   db: goodminton_db
   credentials:
@@ -12,12 +12,12 @@ mysql:
   maxopenconns: 100
   maxidleconns: 10
 redis:
-  addr: "127.0.0.1:6379"
+  addr: "redis:6379"
   db: 0
   poolsize: 100
   cookie_expire: 72 
 hfut-api:
-  host: "127.0.0.1"
+  host: "hfut-api"
   port: 8082
   retry: 10
 logging:

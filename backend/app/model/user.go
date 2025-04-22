@@ -59,7 +59,7 @@ func InsertUser(user *User)(err error){
 	return nil
 }
 
-func UpdateUser(newuser * User)(error){
+func UpdateUser(newuser * User,id uint)(error){
 	global.Logger.Infof("Nickname:%v",newuser.Nickname)
-    return global.Db.Model(newuser).Where("id=?",newuser.ID).Updates(*newuser).Error
+    return global.Db.Model(newuser).Where("id=?",id).Updates(*newuser).Error
 }
