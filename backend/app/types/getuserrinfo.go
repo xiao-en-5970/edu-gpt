@@ -7,6 +7,5 @@ type GetUserInfoReq struct {
 }
 
 type GetUserInfoResp struct {
-	HFUTStudentInfo
 	model.User
 }

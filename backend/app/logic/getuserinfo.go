@@ -16,20 +16,10 @@ func LogicGetUserInfo(c *gin.Context,req *types.GetUserInfoReq)(resp *types.GetU
 	user,_:=model.FindUserByName(username)
 	if user!=nil{
 		//用户存在
-		hfutrsp,code,err:=LogicHFUTStudentInfo(c,username)
-		if code!=codes.CodeAllSuccess{
-			return &types.GetUserInfoResp{},code,nil
-		}
-		if err!=nil{
-			return &types.GetUserInfoResp{},code,err
-		}
-
 		return &types.GetUserInfoResp{
-			HFUTStudentInfo: hfutrsp.Data,
 			User:*user,
 		},codes.CodeAllSuccess,nil
 	}else{
-		
 		return &types.GetUserInfoResp{},codes.CodeUserNotExist,nil
 	}
 }

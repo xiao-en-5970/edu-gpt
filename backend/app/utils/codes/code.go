@@ -23,7 +23,7 @@ const(
 	CodeAuthNotExistError = 30001 //未授权
 	CodeAuthUnvalidToken = 30002 //无效token
 	//HFUT-api错误
-	CodeHFUTLoginError 			= 40001 //信息门户校登录失败
+	CodeHFUTLoginError 			= 40001 //信息门户校登录失败，重新登录
 	CodeHFUTIntervalError  		= 40002 //信息门户内部问题，请重试
 	CodeHFUTUnkonwnError  		= 40003 //信息门户未知错误
 	CodeHFUTNotLogin 			= 40004 //信息门户未登录
