@@ -29,8 +29,8 @@ type User struct {
     Campus         string    `gorm:"type:varchar(50)" json:"campus"`
     Status         string    `gorm:"type:varchar(50)" json:"status"`
     Length         string   `gorm:"type:decimal(3,1)" json:"length"`
-    EnrollmentDate string `gorm:"type:date" json:"enrollmentDate"`
-    GraduateDate   string `gorm:"type:date" json:"graduateDate"`
+    EnrollmentDate string `gorm:"type:varchar(50)" json:"enrollmentDate"`
+    GraduateDate   string `gorm:"type:varchar(50)" json:"graduateDate"`
 	CreatedAt     time.Time `gorm:"autoCreateTime;not null;comment:创建时间" json:"created_at"`
 	UpdatedAt     time.Time `gorm:"autoUpdateTime;not null;comment:更新时间" json:"updated_at"`
 	Username      string    `gorm:"size:50;not null;uniqueIndex;comment:登录用户名(唯一)" json:"username" validate:"required,min=3,max=50"`
@@ -58,6 +58,17 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 func FindUserByName(username string)(*User,error){
 	user:=&User{}
 	err:=global.Db.Model(user).Where("username=?",username).First(user).Error
+	if err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return nil, nil // 用户不存在
+        }
+        return nil, err // 其他数据库错误
+    }
+    return user, nil // 用户存在
+}
+func FindUserById(id int)(*User,error){
+	user:=&User{}
+	err:=global.Db.Model(user).Where("id=?",id).First(user).Error
 	if err != nil {
         if errors.Is(err, gorm.ErrRecordNotFound) {
             return nil, nil // 用户不存在

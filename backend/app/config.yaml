@@ -1,4 +1,5 @@
 server:
+  address: 127.0.0.1
   port: 8080
   timeout: 30s
 mysql:
@@ -22,6 +23,8 @@ hfut-api:
   retry: 10
 logging:
   level: "info"
+image:
+  root_path: ./static/avatars
 auth:
   max_age: 86400
   

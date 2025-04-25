@@ -9,12 +9,13 @@ import (
 func UserRouteInit(apiGroup *gin.RouterGroup) {
 	r := apiGroup.Group("/user")
 	r.POST("/login", handler.HandlerLogin)
-	
+	r.POST("/imageurl/:id",handler.HandlerImageUrl)
 	auth:=r.Group("/auth")
 	auth.Use(middleware.AuthMiddleware())
 	{
 		auth.POST("/get_userinfo",handler.HandlerGetUserInfo)
 		auth.POST("/update_userinfo",handler.HandlerUpdateUserInfo)
+		auth.POST("/upload_image",handler.HandlerUploadImage)
 	}
 	
 }

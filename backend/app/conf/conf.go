@@ -14,11 +14,13 @@ type Config struct {
 	HfutAPI  HfutAPI      	`mapstructure:"hfut-api"`
 	Logging  LoggingConfig  `mapstructure:"logging"`
 	Auth 	 Auth 			`mapstructure:"auth"`
+	Image 	 Image 			`mapstructure:"image"`
 }
 type Auth struct{ 
 	MaxAge time.Duration `mapstructure:"max_age"`
 }
 type Server struct {
+	Address string 		  `mapstructure:"address"`
 	Port    int           `mapstructure:"port"`
 	Timeout time.Duration `mapstructure:"timeout"`
 }
@@ -45,7 +47,9 @@ type HfutAPI struct {
 	Port int    `mapstructure:"port"`
 	Retry int 	`mapstructure:"retry"`
 }
-
+type Image struct{
+	RootPath string `mapstructure:"root_path"`
+}
 type LoggingConfig struct {
 	Level string `mapstructure:"level"`
 }

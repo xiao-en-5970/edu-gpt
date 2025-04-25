@@ -57,6 +57,7 @@ func LogicLogin(c *gin.Context,req *types.LoginReq)(resp *types.LoginResp,code i
 				GraduateDate:   hfutrsp.Data.GraduateDate,
 				Tags: "[]",
 				Signature: "这人啥也没说",
+				AvatarPath: "./static/avatars/default-avatar.png",
 			}
 			err=model.InsertUser(u)
 			if err!=nil{

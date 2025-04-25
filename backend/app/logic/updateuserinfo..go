@@ -13,9 +13,6 @@ func LogicUpdateUserInfo(c *gin.Context,user *model.User)(resp *types.GetUserInf
 	if !ex{
 		return &types.GetUserInfoResp{},codes.CodeAuthUnvalidToken,nil
 	}
-	if user.ID==0{
-		return &types.GetUserInfoResp{},codes.CodeAllRequestFormatError,err
-	}
 	username := u.(string)
 	us,_:=model.FindUserByName(username)
 	if us!=nil{

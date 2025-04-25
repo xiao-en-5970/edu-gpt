@@ -6,7 +6,7 @@ CREATE TABLE `user` (
   `password` VARCHAR(256) NOT NULL COMMENT '双向加密后的密码',
   `account_status` ENUM('active', 'locked', 'disabled') NOT NULL DEFAULT 'active' COMMENT '账号状态',
   `nickname` VARCHAR(50) NOT NULL COMMENT '仅供查看',
-  `avatar_path` VARCHAR(255) NOT NULL DEFAULT 'default-avatar.png' COMMENT '头像路径(相对路径)',
+  `avatar_path` VARCHAR(255) NOT NULL DEFAULT './static/avatars/default-avatar.png' COMMENT '头像路径(绝对路径)',
   `tags` VARCHAR(255) NOT NULL DEFAULT '[]' COMMENT '用户tag',
   `signature` VARCHAR(255) NOT NULL DEFAULT '这个人啥也没说' COMMENT '个性签名',
   
