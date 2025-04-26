@@ -254,14 +254,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
     "code": 10000,
     "data": {
         "id": 1,
-        "create_at": "2025-04-25T07:07:01.907Z",
-        "department": "计算机学院",
-        "nickname": "李华",
+        "create_at": "2025-04-26T14:45:47.751Z",
+        "department": "数学学院",
+        "nickname": "小奀66666666",
+        "avatar_path": "remote.xiaoen.xyz/api/v1/user/auth/imageurl/1",
         "sex": "男",
-        "grade": "2021",
+        "grade": "2022",
         "campus": "翡翠湖校区",
         "signature": "这人啥也没说",
-        "tags": []
+        "tags": "[]"
     },
     "msg": "成功"
 }
@@ -269,17 +270,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 
 ### 响应字段说明
 
-| 字段       | 类型     | 说明         |
-| ---------- | -------- | ------------ |
-| id         | int      | 用户号       |
-| create_at  | string   | 创建用户时间 |
-| department | string   | 学院         |
-| nickname   | string   | 昵称         |
-| sex        | string   | 性别         |
-| grade      | string   | 年级         |
-| campus     | string   | 校区         |
-| signature  | string   | 签名         |
-| tags       | []string | 标签         |
+| 字段        | 类型     | 说明         |
+| ----------- | -------- | ------------ |
+| id          | int      | 用户号       |
+| create_at   | string   | 创建用户时间 |
+| department  | string   | 学院         |
+| nickname    | string   | 昵称         |
+| avatar_path | string   | 图片url      |
+| sex         | string   | 性别         |
+| grade       | string   | 年级         |
+| campus      | string   | 校区         |
+| signature   | string   | 签名         |
+| tags        | []string | 标签         |
 
 
 
