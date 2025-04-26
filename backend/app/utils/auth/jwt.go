@@ -10,10 +10,10 @@ import (
 
 var JWTSecret = []byte("your-secret-key")
 
-func GenerateToken(username string) (string, error) {
-	global.Logger.Infof(username)
+func GenerateToken(id uint) (string, error) {
+	global.Logger.Info(id)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username": username,
+		"id": id,
 		"exp":      time.Now().Add(24 * time.Hour).Unix(),
 	})
 	return token.SignedString(JWTSecret)

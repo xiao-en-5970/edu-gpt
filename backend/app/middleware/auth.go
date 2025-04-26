@@ -17,7 +17,7 @@ func AuthMiddleware() gin.HandlerFunc {
         // 从 Header 获取 Token
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
-			responce.SuccessWithCode(c,codes.CodeAuthNotExistError)
+			responce.ErrorInternalServerErrorWithCode(c,codes.CodeAuthNotExistError)
 			c.Abort()
 			return
 		}
@@ -30,17 +30,22 @@ func AuthMiddleware() gin.HandlerFunc {
         token, err := auth.ParseToken(tokenString)
         if err != nil {
             global.Logger.Error("Token无效",err)
-                
-            responce.SuccessWithCode(c,codes.CodeAuthUnvalidToken)
+            responce.ErrorInternalServerErrorWithCode(c,codes.CodeAuthUnvalidToken)
 			c.Abort()
             return
         }
 
         // 安全类型断言（此时已通过ParseToken验证）
         claims := token.Claims.(jwt.MapClaims)
-        username := claims["username"].(string)
-        
-        c.Set("username", username)
+        f,ok := claims["id"].(float64)
+		id := uint(f)
+        if !ok{
+			global.Logger.Error("Token无效",err)
+            responce.ErrorInternalServerErrorWithCode(c,codes.CodeAuthUnvalidToken)
+			c.Abort()
+            return
+		}
+        c.Set("id", id)
         c.Next()
     }
 }

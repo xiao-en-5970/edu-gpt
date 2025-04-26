@@ -2,20 +2,21 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/handler"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/handler/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 )
 
-func UserRouteInit(apiGroup *gin.RouterGroup) {
+func RouteUserInit(apiGroup *gin.RouterGroup) {
 	r := apiGroup.Group("/user")
-	r.POST("/login", handler.HandlerLogin)
-	r.POST("/imageurl/:id",handler.HandlerImageUrl)
-	auth:=r.Group("/auth")
+	r.POST("/login", handler.HandlerUserLogin)
+	
+	auth := r.Group("/auth")
 	auth.Use(middleware.AuthMiddleware())
 	{
-		auth.POST("/get_userinfo",handler.HandlerGetUserInfo)
-		auth.POST("/update_userinfo",handler.HandlerUpdateUserInfo)
-		auth.POST("/upload_image",handler.HandlerUploadImage)
+		auth.POST("/:id", handler.HandlerUser)
+		auth.POST("/imageurl/:id", handler.HandlerUserImageUrl)
+		auth.POST("/get_userinfo", handler.HandlerUserGetUserInfo)
+		auth.POST("/update_userinfo", handler.HandlerUserUpdateUserInfo)
+		auth.POST("/upload_image", handler.HandlerUserUploadImage)
 	}
-	
 }

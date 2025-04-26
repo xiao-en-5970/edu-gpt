@@ -48,7 +48,8 @@ type HfutAPI struct {
 	Retry int 	`mapstructure:"retry"`
 }
 type Image struct{
-	RootPath string `mapstructure:"root_path"`
+	AvatarsPath string `mapstructure:"avatars_path"`
+	PostPath string `mapstructure:"post_path"`
 }
 type LoggingConfig struct {
 	Level string `mapstructure:"level"`

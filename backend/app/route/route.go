@@ -18,6 +18,6 @@ func RouteInit(r * gin.Engine){
 		responce.SuccessWithMsg(c,"测试成功!")
 	})
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	UserRouteInit(apiGroup)
-	
+	RouteUserInit(apiGroup)
+	RoutePostInit(apiGroup)
 }

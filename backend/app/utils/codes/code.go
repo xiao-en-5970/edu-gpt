@@ -29,6 +29,8 @@ const(
 	CodeHFUTNotLogin 			= 40004 //信息门户未登录
 	//图片错误
 	CodeImageFormatError  		= 50001 //图片格式错误
+	//帖子错误
+	CodePostNotExist = 60001 //帖子不存在
 )
 var(
 	CodeMsg = map[int]string{
@@ -53,5 +55,7 @@ var(
 		CodeHFUTNotLogin :"信息门户未登录",
 		//图片错误
 		CodeImageFormatError :"图片格式错误",
+		//帖子错误
+		CodePostNotExist :"帖子不存在",
 	}
 )

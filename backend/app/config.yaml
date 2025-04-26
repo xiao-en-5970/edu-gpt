@@ -1,5 +1,5 @@
 server:
-  address: 127.0.0.1
+  address: "127.0.0.1:8080"
   port: 8080
   timeout: 30s
 mysql:
@@ -24,7 +24,8 @@ hfut-api:
 logging:
   level: "info"
 image:
-  root_path: ./static/avatars
+  avatars_path: ./static/avatars
+  post_path: ./static/post
 auth:
   max_age: 86400
   

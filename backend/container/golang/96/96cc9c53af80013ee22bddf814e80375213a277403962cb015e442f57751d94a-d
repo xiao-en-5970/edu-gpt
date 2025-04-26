@@ -1,0 +1,6 @@
+./getuserinfo.go
+./imageurl.go
+./login.go
+./updateuserinfo.go
+./uploadimage.go
+./user.go

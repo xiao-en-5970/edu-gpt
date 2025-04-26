@@ -1,5 +1,5 @@
 -- 用户表（更新版）
-CREATE TABLE `user` (
+CREATE TABLE `user` IF NOT EXISTS `user` (
 
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '用户编号',
   `username` VARCHAR(50) NOT NULL COMMENT '登录用户名（唯一）',
@@ -25,13 +25,25 @@ CREATE TABLE `user` (
   `length` VARCHAR(20) NOT NULL COMMENT '学制',
   `enrollment_date` VARCHAR(50) NOT NULL COMMENT '入学日期',
   `graduate_date` VARCHAR(50) NOT NULL COMMENT '毕业日期',
-
-  
-
   `create_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+
+CREATE TABLE IF NOT EXISTS `post` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '帖子ID',
+    `poster_id` BIGINT COMMENT '发帖人id',
+    `title` VARCHAR(200) NOT NULL COMMENT '标题',
+    `content` TEXT COMMENT '内容（除标题）',
+    `view_count` INT DEFAULT 0 COMMENT '浏览数',
+    `like_count` INT DEFAULT 0 COMMENT '点赞数',
+    `collect_count` INT DEFAULT 0 COMMENT '收藏数',
+    `comment_count` INT DEFAULT 0 COMMENT '(被）评论数',
+    `create_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_title_prefix` (`title`(10))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

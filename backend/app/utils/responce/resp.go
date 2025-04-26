@@ -56,6 +56,7 @@ func ErrorBadRequest(c *gin.Context,err error){
 		"msg":codes.CodeMsg[codes.CodeAllRequestFormatError],
 		"err":err.Error(),
 	})
+	c.Abort()
 }
 
 func ErrorBadRequestWithCode(c *gin.Context,code int){
@@ -64,6 +65,7 @@ func ErrorBadRequestWithCode(c *gin.Context,code int){
 		"msg":codes.CodeMsg[code],
 		"data":"null",
 	})
+	c.Abort()
 }
 
 func ErrorBadGateway(c *gin.Context,err error){
@@ -72,6 +74,7 @@ func ErrorBadGateway(c *gin.Context,err error){
 		"msg":codes.CodeMsg[codes.CodeAllBadGateway],
 		"err":err.Error(),
 	})
+	c.Abort()
 }
 
 func ErrorInternalServerError(c *gin.Context,err error){
@@ -80,4 +83,13 @@ func ErrorInternalServerError(c *gin.Context,err error){
 		"msg":codes.CodeMsg[codes.CodeAllIntervalError],
 		"err":err.Error(),
 	})
+	c.Abort()
+}
+
+func ErrorInternalServerErrorWithCode(c *gin.Context,code int){
+	c.JSON(http.StatusInternalServerError,gin.H{
+		"code":code,
+		"msg":codes.CodeMsg[code],
+	})
+	c.Abort()
 }
