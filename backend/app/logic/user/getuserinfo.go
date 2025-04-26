@@ -11,19 +11,19 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
-func LogicUserGetUserInfo(c *gin.Context,req *types.GetUserInfoReq)(resp *types.GetUserInfoResp,code int,err error){
-	u,ex:=c.Get("id")
-	if !ex{
-		return &types.GetUserInfoResp{},codes.CodeAuthUnvalidToken,nil
+func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *types.GetUserInfoResp, code int, err error) {
+	u, ex := c.Get("id")
+	if !ex {
+		return &types.GetUserInfoResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	id := u.(uint)
-	user,_:=model.FindUserById(id)
-	if user!=nil{
+	user, _ := model.FindUserById(id)
+	if user != nil {
 		//用户存在
-		var tag = make([]string,0)
-		err:=json.Unmarshal([]byte(user.Tags),&tag)
-		if err !=nil{
-			return &types.GetUserInfoResp{},codes.CodeAllIntervalError,err
+		var tag = make([]string, 0)
+		err := json.Unmarshal([]byte(user.Tags), &tag)
+		if err != nil {
+			return &types.GetUserInfoResp{}, codes.CodeAllIntervalError, err
 		}
 		return &types.GetUserInfoResp{
 			ID:             user.ID,
@@ -42,11 +42,11 @@ func LogicUserGetUserInfo(c *gin.Context,req *types.GetUserInfoReq)(resp *types.
 			Username:       user.Username,
 			AccountStatus:  user.AccountStatus,
 			Nickname:       user.Nickname,
-			AvatarUrl:     fmt.Sprintf("%s/api/v1/user/auth/imageurl/%d",global.Cfg.Server.Address,user.ID),
+			AvatarUrl:      fmt.Sprintf("%s/api/v1/user/auth/imageurl/%d", global.Cfg.Server.Address, user.ID),
 			Signature:      user.Signature,
 			Tags:           tag,
-		},codes.CodeAllSuccess,nil
-	}else{
-		return &types.GetUserInfoResp{},codes.CodeUserNotExist,nil
+		}, codes.CodeAllSuccess, nil
+	} else {
+		return &types.GetUserInfoResp{}, codes.CodeUserNotExist, nil
 	}
 }

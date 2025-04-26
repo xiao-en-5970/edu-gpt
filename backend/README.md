@@ -92,30 +92,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 {
     "code": 10000,
     "data": {
-        "studentCode": "166548",
-        "studentId": "2022210867",
-        "usernameEn": "Li Hua",
-        "usernameZh": "李华",
-        "sex": "男",
-        "cultivateType": "主修",
-        "department": "计算机学院",
-        "grade": "2021",
-        "level": "本科",
-        "studentType": "一般本科生",
-        "major": "计算机科学与技术",
-        "class": "计算机22-1班",
-        "campus": "翡翠湖校区",
-        "status": "正常",
-        "length": "4.0",
-        "enrollmentDate": "2021-09-01",
-        "graduateDate": "2025-07-01",
         "id": 1,
-        "created_at": "2025-04-21T23:55:16.676+08:00",
-        "updated_at": "2025-04-21T23:55:16.676+08:00",
-        "username": "2022210867",
+        "username_zh": "李铁",
+        "sex": "男",
+        "cultivate_type": "主修",
+        "department": "管理学院",
+        "grade": "2022",
+        "level": "本科",
+        "major": "大数据管理与应用",
+        "class": "大数据22-1班",
+        "campus": "屯溪路校区",
+        "enrollment_date": "2022-09-01",
+        "graduate_date": "2026-07-01",
+        "created_at": "2025-04-25T07:07:01.907Z",
+        "username": "2022210857",
         "account_status": "active",
-        "nickname": "李华666",
-        "avatar_path": "default-avatar.png"
+        "nickname": "李铁668879",
+        "avatar_path": "127.0.0.1:8080/api/v1/user/auth/imageurl/1",
+        "signature": "这人啥也没说",
+        "tags": []
     },
     "msg": "成功"
 }
@@ -125,31 +120,31 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| student_code | string | 学生编码 |
-| studentId | string | 学号 |
-| username_en | string | 英文姓名 |
-| username_zh | string | 中文姓名 |
-| sex | string | 性别 |
-| cultivate_type | string | 培养类型 |
-| department | string | 学院 |
-| grade | string | 年级 |
-| level | string | 学历层次 |
-| student_type | string | 学生类型 |
-| major | string | 专业 |
-| class | string | 班级 |
-| campus | string | 校区 |
-| status | string | 学籍状态 |
-| length | string | 学制 |
-| enrollment_date | string | 入学日期 |
-| graduate_date | string | 预计毕业日期 |
-|------|------|------|
 | id | int | 用户ID |
-| created_at | string | 创建时间 |
-| updated_at | string | 更新时间 |
-| username | string | 用户名 |
-| account_status | string | 账号状态 (active/locked/disabled) |
-| nickname | string | 昵称 |
-| avatar_path | string | 头像路径 |
+| username_zh | string | 中文姓名 |
+| sex             | string   | 性别                              |
+| cultivate_type  | string   | 培养类型                          |
+| department      | string   | 学院                              |
+| grade           | string   | 年级                              |
+| level           | string   | 学历层次                          |
+| student_type    | string   | 学生类型                          |
+| major           | string   | 专业                              |
+| class           | string   | 班级                              |
+| campus          | string   | 校区                              |
+| status          | string   | 学籍状态                          |
+| length          | string   | 学制                              |
+| enrollment_date | string   | 入学日期                          |
+| graduate_date   | string   | 预计毕业日期                      |
+| ------          | ------   | ------                            |
+| created_at      | string   | 创建时间                          |
+| username        | string   | 用户名                            |
+| account_status  | string   | 账号状态 (active/locked/disabled) |
+| nickname        | string   | 昵称                              |
+| avatar_path     | string   | 头像路径                          |
+| signature       | string   | 个性签名                          |
+| tags            | []string | tag                               |
+|                 |          |                                   |
+|                 |          |                                   |
 
 
 
