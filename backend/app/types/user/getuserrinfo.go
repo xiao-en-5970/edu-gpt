@@ -20,7 +20,7 @@ type GetUserInfoResp struct {
 	Campus         string    `json:"campus"`
 	EnrollmentDate string    `json:"enrollment_date"`
 	GraduateDate   string    `json:"graduate_date"`
-	CreatedAt      time.Time `json:"created_at"`
+	CreateAt       time.Time `json:"create_at"`
 	Username       string    `json:"username" validate:"required,min=3,max=50"`
 	AccountStatus  string    `json:"account_status" validate:"required,oneof=active locked disabled"`
 	Nickname       string    `json:"nickname" validate:"required,min=1,max=50"`

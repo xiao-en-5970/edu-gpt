@@ -10,3 +10,4 @@ type UploadImageReq struct{
 type UploadImageResp struct{
 	Url string `json:"url"`
 }
+

@@ -30,7 +30,7 @@ func HandlerUser(c *gin.Context) {
 	}
 	rsp := &types.BriefUser{
 		ID:         user.ID,
-		CreatedAt:  user.CreatedAt,
+		CreateAt:  user.CreateAt,
 		Department: user.Department,
 		Nickname:   user.Nickname,
 		AvatarUrl: logic.GetUrl("avatar",user.ID),

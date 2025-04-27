@@ -10,16 +10,16 @@ import (
 
 // Post 对应数据库中的 post 表
 type Post struct {
-	ID               uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id" comment:"帖子ID"`
-	PosterID         uint      `gorm:"column:poster_id" json:"poster_id" comment:"发帖人id"`
-	Title            string    `gorm:"column:title;type:varchar(200);index:idx_title_prefix(10)" json:"title" comment:"标题"`
-	Content          string    `gorm:"column:content;type:text" json:"content" comment:"内容（除标题）"`
-	ViewCount        int       `gorm:"column:view_count;default:0" json:"view_count" comment:"浏览数"`
-	LikeCount        int       `gorm:"column:like_count;default:0" json:"like_count" comment:"点赞数"`
-	CollectCount     int       `gorm:"column:collect_count;default:0" json:"collect_count" comment:"收藏数"`
-	CommentCount     int       `gorm:"column:comment_count;default:0" json:"comment_count" comment:"(被）评论数"`
-	CreateAt         time.Time `gorm:"column:create_at;default:CURRENT_TIMESTAMP" json:"create_at" comment:"创建时间"`
-	UpdateAt         time.Time `gorm:"column:update_at;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_at" comment:"更新时间"`
+	ID           uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id" comment:"帖子ID"`
+	PosterID     uint      `gorm:"column:poster_id" json:"poster_id" comment:"发帖人id"`
+	Title        string    `gorm:"column:title;type:varchar(200);index:idx_title_prefix(10)" json:"title" comment:"标题"`
+	Content      string    `gorm:"column:content;type:text" json:"content" comment:"内容（除标题）"`
+	ViewCount    int       `gorm:"column:view_count;default:0" json:"view_count" comment:"浏览数"`
+	LikeCount    int       `gorm:"column:like_count;default:0" json:"like_count" comment:"点赞数"`
+	CollectCount int       `gorm:"column:collect_count;default:0" json:"collect_count" comment:"收藏数"`
+	CommentCount int       `gorm:"column:comment_count;default:0" json:"comment_count" comment:"(被）评论数"`
+	CreateAt     time.Time `gorm:"column:create_at;autoCreateTime;not null" json:"create_at" comment:"创建时间"`
+	UpdateAt     time.Time `gorm:"column:update_at;autoUpdateTime;not null" json:"update_at" comment:"更新时间"`
 }
 
 // TableName 指定表名

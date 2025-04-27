@@ -1,0 +1,4 @@
+./create.go
+./edit.go
+./post.go
+./postimage.go

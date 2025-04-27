@@ -38,7 +38,7 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 			Campus:         user.Campus,
 			EnrollmentDate: user.EnrollmentDate,
 			GraduateDate:   user.GraduateDate,
-			CreatedAt:      user.CreatedAt,
+			CreateAt:      user.CreateAt,
 			Username:       user.Username,
 			AccountStatus:  user.AccountStatus,
 			Nickname:       user.Nickname,

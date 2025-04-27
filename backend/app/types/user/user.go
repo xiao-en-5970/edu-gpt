@@ -4,7 +4,7 @@ import "time"
 
 type BriefUser struct {
 	ID           uint      `json:"id"`
-	CreatedAt    time.Time `json:"create_at"`
+	CreateAt     time.Time `json:"create_at"`
 	Department   string    `json:"department"`
 	Nickname     string    `json:"nickname"`
 	AvatarUrl    string    `json:"avatar_url"`

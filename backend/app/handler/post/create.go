@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	logic "github.com/xiao-en-5970/edu-gpt/backend/app/logic/post"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/post"
@@ -8,20 +10,41 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
-func HandlerPostCreate(c* gin.Context){
+func HandlerPostCreate(c *gin.Context) {
 	req := &types.CreatePostReq{}
-	err := c.ShouldBindJSON(req)
-	if err !=nil{
-		responce.ErrorBadRequest(c,err)
-	}
-	resp,code,err:=logic.LogicPostCreate(c,req)
-	if code != codes.CodeAllSuccess{
-		responce.ErrorInternalServerErrorWithCode(c,code)
+	form, err := c.MultipartForm()
+	if err != nil {
+		responce.ErrorBadRequest(c, err)
 		return
 	}
-	if err!=nil{
-		responce.ErrorInternalServerError(c,err)
+	if form==nil{
+		responce.ErrorBadRequest(c, err)
+		return
 	}
-	responce.SuccessWithData(c,resp)
+	files := form.File["postimage"]   // 获取文件
+	jsonData := form.Value["json"][0] // 获取JSON字符串
+	err = json.Unmarshal([]byte(jsonData), req)
+	if err != nil {
+		responce.ErrorBadRequest(c, err)
+	}
 	
+	resp, code, err := logic.LogicPostCreate(c, req)
+	if code != codes.CodeAllSuccess {
+		responce.ErrorInternalServerErrorWithCode(c, code)
+		return
+	}
+	if err != nil {
+		responce.ErrorInternalServerError(c, err)
+	}
+	fileresp, code, err := logic.LogicPostUploadPostImage(c, &types.UploadManyImagesReq{Files: files,ID: resp.ID})
+	if code != codes.CodeAllSuccess {
+		responce.ErrorInternalServerErrorWithCode(c, code)
+		return
+	}
+	if err != nil {
+		responce.ErrorInternalServerError(c, err)
+	}
+	resp.Urls = fileresp.Urls
+	responce.SuccessWithData(c, resp)
+
 }

@@ -1,6 +1,8 @@
 [TOC]
 
----
+------
+
+
 
 # 公共前缀
 
@@ -76,7 +78,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 
 
 
-## 2. 获取用户信息【auth】
+## 2. 【fix：可正确获取tag】获取用户信息【auth】
 
 ### 请求
 `POST /api/v1/user/auth/get_userinfo`
@@ -148,7 +150,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 
 
 
-## 3. 更改用户信息【auth】
+## 3. 【fix：可修改tag】更改用户信息【auth】
 
 ### 请求
 `POST /api/v1/user/auth/update_userinfo`
@@ -176,30 +178,31 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 {
     "code": 10000,
     "data": {
-        "studentCode": "163348",
-        "studentId": "2022210857",
-        "usernameEn": "Li Tie",
-        "usernameZh": "李铁",
+        "id": 2,
+        "username_zh": "傅益忠",
         "sex": "男",
-        "cultivateType": "主修",
-        "department": "管理学院",
+        "cultivate_type": "主修",
+        "department": "数学学院",
         "grade": "2022",
         "level": "本科",
-        "studentType": "一般本科生",
-        "major": "大数据管理与应用",
-        "class": "大数据22-1班",
-        "campus": "屯溪路校区",
-        "status": "正常",
-        "length": "4.0",
-        "enrollmentDate": "2022-09-01",
-        "graduateDate": "2026-07-01",
-        "id": 1,
-        "created_at": "2025-04-21T23:55:16.676+08:00",
-        "updated_at": "2025-04-21T23:55:16.676+08:00",
-        "username": "2022210857",
+        "major": "信息与计算科学",
+        "class": "信息计22-2班",
+        "campus": "翡翠湖校区",
+        "enrollment_date": "2022-09-01",
+        "graduate_date": "2026-07-01",
+        "created_at": "2025-04-27T13:11:56.738Z",
+        "username": "2022210826",
         "account_status": "active",
-        "nickname": "李铁2333",
-        "avatar_path": "default-avatar.png"
+        "nickname": "李华2333",
+        "avatar_url": "https://127.0.0.1:8080/api/v1/user/auth/avatar/2",
+        "backimage_url": "https://127.0.0.1:8080/api/v1/user/auth/backimage/2",
+        "signature": "这个人说了什么",
+        "tags": [
+            "唱",
+            "跳",
+            "rap",
+            "篮球"
+        ]
     },
     "msg": "成功"
 }
@@ -231,10 +234,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 | username        | string | 用户名                            |
 | account_status  | string | 账号状态 (active/locked/disabled) |
 | nickname        | string | 昵称                              |
+| tags | []string | 用户tags |
 
 
 
-## 4. 用户信息【auth】
+## 4. 【fix：可正确获取tag】用户信息【auth】
 
 ### 请求
 
@@ -263,7 +267,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
         "grade": "2022",
         "campus": "翡翠湖校区",
         "signature": "这人啥也没说",
-        "tags": "[]"
+        "tags": []
     },
     "msg": "成功"
 }
@@ -286,7 +290,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 
 
 
-## 5. 上传用户头像【auth】
+## 5. 【fix：更改接口url】上传用户头像【auth】
 
 ### 请求
 
@@ -324,7 +328,7 @@ value:图片文件
 
 
 
-## 6. 获取用户头像【auth】
+## 6. 【fix：更改接口url】获取用户头像【auth】
 
 ### 请求
 
@@ -333,7 +337,7 @@ value:图片文件
 ### 请求参数
 
 ```
-无
+parma中的:id填入实际用户id
 ```
 
 ### 成功响应
@@ -344,7 +348,7 @@ value:图片文件
 图片内容
 ```
 
-## 7. 上传用户背景【auth】
+## 7. 【fix：更改接口url】上传用户背景【auth】
 
 ### 请求
 
@@ -355,7 +359,7 @@ value:图片文件
 ```
 form-data
 
-key:avatar
+key:backimage
 
 value:图片文件
 ```
@@ -382,7 +386,7 @@ value:图片文件
 
 
 
-## 8. 获取用户背景【auth】
+## 8. 【fix：更改接口url】获取用户背景【auth】
 
 ### 请求
 
@@ -391,7 +395,7 @@ value:图片文件
 ### 请求参数
 
 ```
-无
+parma中的:id填入实际用户id
 ```
 
 ### 成功响应
@@ -412,7 +416,7 @@ value:图片文件
 
 
 
-## 1. 上传帖子【auth】
+## 1. 【fix：更改请求方式，增加图片请求】上传帖子【auth】
 
 ### 请求
 
@@ -420,11 +424,15 @@ value:图片文件
 
 ### 请求参数
 
-```json
-{
+```formdata
+key: json
+value: {
     "title":"震惊！他居然这样做！",
-    "content":"其实啥也没干"
+    "content":"其实啥也没干，对吗"
 }
+
+key: postimage
+value: 图片文件
 ```
 
 ### 成功响应
@@ -435,7 +443,11 @@ value:图片文件
 {
     "code": 10000,
     "data": {
-        "id": 4
+        "id": 1,
+        "url": [
+            "https://127.0.0.1:8080/api/v1/post/auth/postimage/1",
+            "https://127.0.0.1:8080/api/v1/post/auth/postimage/2"
+        ]
     },
     "msg": "成功"
 }
@@ -443,13 +455,14 @@ value:图片文件
 
 ### 响应字段说明
 
-| 字段 | 类型 | 说明   |
-| ---- | ---- | ------ |
-| id   | int  | 帖子id |
+| 字段 | 类型     | 说明            |
+| ---- | -------- | --------------- |
+| id   | int      | 帖子id          |
+| url  | []string | 帖子中图片的url |
 
 
 
-## 2. 编辑帖子【auth】
+## 2. 【todo：还在完善】编辑帖子【auth】
 
 ### 请求
 
@@ -511,7 +524,7 @@ value:图片文件
 | poster_campus     | string | 发帖人校区 |
 | poster_department | string | 发帖人学院 |
 
-## 5. 获取帖子内容【auth】
+## 5. 【fix：增加图片url返回字段】获取帖子内容【auth】
 
 ### 请求
 
@@ -520,7 +533,7 @@ value:图片文件
 ### 请求参数
 
 ```
-无
+parma中的:id填入实际帖子id
 ```
 
 ### 成功响应
@@ -533,18 +546,22 @@ value:图片文件
     "data": {
         "id": 1,
         "poster_id": 1,
-        "title": "震惊",
-        "content": "没什么好震惊的",
+        "title": "震惊！他居然这样做！",
+        "content": "其实啥也没干，对吗",
         "view_count": 0,
         "like_count": 0,
         "collect_count": 0,
         "comment_count": 0,
-        "create_at": "2025-04-25T14:59:36Z",
-        "update_at": "2025-04-26T12:51:16Z",
-        "poster_nickname": "李华668879",
-        "poster_grade": "2021",
+        "create_at": "2025-04-27T17:03:41Z",
+        "update_at": "2025-04-27T17:03:41Z",
+        "poster_nickname": "傅益忠",
+        "poster_grade": "2022",
         "poster_campus": "翡翠湖校区",
-        "poster_department": "计算机学院"
+        "poster_department": "数学学院",
+        "image_urls": [
+            "https://127.0.0.1:8080/api/v1/post/auth/postimage/1",
+            "https://127.0.0.1:8080/api/v1/post/auth/postimage/2"
+        ]
     },
     "msg": "成功"
 }
@@ -552,37 +569,34 @@ value:图片文件
 
 ### 响应字段说明
 
-| 字段              | 类型   | 说明       |
-| ----------------- | ------ | ---------- |
-| id                | int    | 帖子id     |
-| poster_id         | int    | 发帖人id   |
-| title             | string | 帖子标题   |
-| content           | string | 帖子内容   |
-| view_count        | int    | 浏览量     |
-| like_count        | int    | 点赞量     |
-| collect_count     | int    | 收藏量     |
-| comment_count     | int    | 评论量     |
-| create_at         | string | 创建时间   |
-| update_at         | string | 修改时间   |
-| poster_nickname   | string | 发帖人昵称 |
-| poster_grade      | string | 发帖人年级 |
-| poster_campus     | string | 发帖人校区 |
-| poster_department | string | 发帖人学院 |
+| 字段              | 类型     | 说明            |
+| ----------------- | -------- | --------------- |
+| id                | int      | 帖子id          |
+| poster_id         | int      | 发帖人id        |
+| title             | string   | 帖子标题        |
+| content           | string   | 帖子内容        |
+| view_count        | int      | 浏览量          |
+| like_count        | int      | 点赞量          |
+| collect_count     | int      | 收藏量          |
+| comment_count     | int      | 评论量          |
+| create_at         | string   | 创建时间        |
+| update_at         | string   | 修改时间        |
+| poster_nickname   | string   | 发帖人昵称      |
+| poster_grade      | string   | 发帖人年级      |
+| poster_campus     | string   | 发帖人校区      |
+| poster_department | string   | 发帖人学院      |
+| image_urls        | []string | 帖子所有图片url |
 
-## 5. 待定
+## 6. 【new：增加返回帖子图片的url】获取帖子图片【auth】
 
 ### 请求
 
-`POST /api/v1/user/auth/upload_image`
+`POST /api/v1/post/auth/postimage/:id`
 
 ### 请求参数
 
-```
-form-data
-
-key:avatar
-
-value:图片文件
+```json
+parma中的:id填入实际帖子图片id，这个图片id是独立的数据表
 ```
 
 ### 成功响应
@@ -590,20 +604,8 @@ value:图片文件
 `200 OK`
 
 ```json
-{
-    "code": 10000,
-    "data": {
-        "url": "127.0.0.1:8080/api/v1/user/imageurl/1"
-    },
-    "msg": "成功"
-}
+图片文件本身
 ```
-
-### 响应字段说明
-
-| 字段 | 类型   | 说明    |
-| ---- | ------ | ------- |
-| url  | string | 图片url |
 
 ## 5. 待定
 

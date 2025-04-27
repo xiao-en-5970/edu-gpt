@@ -23,7 +23,10 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 		us.AccountStatus = req.AccountStatus
 		us.Nickname = req.Nickname
 		us.Signature = req.Signature
-		tagstr,err:=json.Marshal(req.Tags)
+		tagstr, err := json.Marshal(req.Tags)
+		if err!=nil{
+			return &types.UpdateUserInfoResp{}, codes.CodeAllIntervalError, err
+		}
 		us.Tags = string(tagstr)
 		if err = model.UpdateUser(us, us.ID); err != nil {
 			return &types.UpdateUserInfoResp{}, codes.CodeUserInfoUpdateFail, err
@@ -47,7 +50,7 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 			Campus:         us.Campus,
 			EnrollmentDate: us.EnrollmentDate,
 			GraduateDate:   us.GraduateDate,
-			CreatedAt:      us.CreatedAt,
+			CreateAt:       us.CreateAt,
 			Username:       us.Username,
 			AccountStatus:  us.AccountStatus,
 			Nickname:       us.Nickname,
