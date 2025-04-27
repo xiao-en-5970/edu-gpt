@@ -1,11 +1,10 @@
 package handler
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	logic "github.com/xiao-en-5970/edu-gpt/backend/app/logic/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
@@ -34,7 +33,8 @@ func HandlerUser(c *gin.Context) {
 		CreatedAt:  user.CreatedAt,
 		Department: user.Department,
 		Nickname:   user.Nickname,
-		AvatarPath: fmt.Sprintf("%s/api/v1/user/auth/imageurl/%d", global.Cfg.Server.Address, user.ID),
+		AvatarUrl: logic.GetUrl("avatar",user.ID),
+		BackImageUrl: logic.GetUrl("backimage",user.ID),
 		Sex:        user.Sex,
 		Grade:      user.Grade,
 		Campus:     user.Campus,

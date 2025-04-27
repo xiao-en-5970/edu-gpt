@@ -1,12 +1,13 @@
 -- 用户表（更新版）
-CREATE TABLE `user` IF NOT EXISTS `user` (
+CREATE TABLE `user`(
 
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '用户编号',
   `username` VARCHAR(50) NOT NULL COMMENT '登录用户名（唯一）',
   `password` VARCHAR(256) NOT NULL COMMENT '双向加密后的密码',
   `account_status` ENUM('active', 'locked', 'disabled') NOT NULL DEFAULT 'active' COMMENT '账号状态',
   `nickname` VARCHAR(50) NOT NULL COMMENT '仅供查看',
-  `avatar_path` VARCHAR(255) NOT NULL DEFAULT './static/avatars/default-avatar.png' COMMENT '头像路径(绝对路径)',
+  `avatar_path` VARCHAR(255) NOT NULL DEFAULT './static/avatars/default-avatar.png' COMMENT '头像路径(相对路径)',
+  `backimage_path` VARCHAR(255) NOT NULL DEFAULT './static/backgrounds/default-image.png' COMMENT '背景图路径(相对路径)',
   `tags` VARCHAR(255) NOT NULL DEFAULT '[]' COMMENT '用户tag',
   `signature` VARCHAR(255) NOT NULL DEFAULT '这个人啥也没说' COMMENT '个性签名',
   
@@ -31,7 +32,7 @@ CREATE TABLE `user` IF NOT EXISTS `user` (
   UNIQUE KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
 
-CREATE TABLE IF NOT EXISTS `post` (
+CREATE TABLE `post`(
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '帖子ID',
     `poster_id` BIGINT COMMENT '发帖人id',
     `title` VARCHAR(200) NOT NULL COMMENT '标题',
@@ -44,6 +45,6 @@ CREATE TABLE IF NOT EXISTS `post` (
     `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     INDEX `idx_title_prefix` (`title`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='帖子表';
 
 

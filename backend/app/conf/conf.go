@@ -1,55 +1,55 @@
 package conf
+
 import (
 	"fmt"
 	"github.com/spf13/viper"
 	"time"
 )
 
-
-
 type Config struct {
-	Server   Server   		`mapstructure:"server"`
-	MySQL    MysqlConfig 	`mapstructure:"mysql"`
-	Redis    RedisConfig    `mapstructure:"redis"`
-	HfutAPI  HfutAPI      	`mapstructure:"hfut-api"`
-	Logging  LoggingConfig  `mapstructure:"logging"`
-	Auth 	 Auth 			`mapstructure:"auth"`
-	Image 	 Image 			`mapstructure:"image"`
+	Server  Server        `mapstructure:"server"`
+	MySQL   MysqlConfig   `mapstructure:"mysql"`
+	Redis   RedisConfig   `mapstructure:"redis"`
+	HfutAPI HfutAPI       `mapstructure:"hfut-api"`
+	Logging LoggingConfig `mapstructure:"logging"`
+	Auth    Auth          `mapstructure:"auth"`
+	Image   Image         `mapstructure:"image"`
 }
-type Auth struct{ 
+type Auth struct {
 	MaxAge time.Duration `mapstructure:"max_age"`
 }
 type Server struct {
-	Address string 		  `mapstructure:"address"`
+	Address string        `mapstructure:"address"`
 	Port    int           `mapstructure:"port"`
 	Timeout time.Duration `mapstructure:"timeout"`
 }
 
 type MysqlConfig struct {
-	Host        string     	`mapstructure:"host"`
-	Port        int        	`mapstructure:"port"`
-	Db 			string 		`mapstructure:"db"`
-	Credentials Credentials `mapstructure:"credentials"`
-	MaxIdleConns int 		`mapstructure:"maxidleconns"`
-	SetMaxOpenConns int 	`mapstructure:"maxopenconns"`
+	Host            string        `mapstructure:"host"`
+	Port            int           `mapstructure:"port"`
+	Db              string        `mapstructure:"db"`
+	Credentials     Credentials   `mapstructure:"credentials"`
+	MaxIdleConns    int           `mapstructure:"maxidleconns"`
+	SetMaxOpenConns int           `mapstructure:"maxopenconns"`
 	ConnMaxLifetime time.Duration `mapstructure:"connmaxlifetime"`
 }
 
 type RedisConfig struct {
-	Addr string `mapstructure:"addr"`
-	DB   int    `mapstructure:"db"`
-	PoolSize int `mapstructure:"poolsize"`
-	CookieExpire int `mapstructure:"cookie_expire"`//单位小时
+	Addr         string `mapstructure:"addr"`
+	DB           int    `mapstructure:"db"`
+	PoolSize     int    `mapstructure:"poolsize"`
+	CookieExpire int    `mapstructure:"cookie_expire"` //单位小时
 }
 
 type HfutAPI struct {
-	Host string `mapstructure:"host"`
-	Port int    `mapstructure:"port"`
-	Retry int 	`mapstructure:"retry"`
+	Host  string `mapstructure:"host"`
+	Port  int    `mapstructure:"port"`
+	Retry int    `mapstructure:"retry"`
 }
-type Image struct{
-	AvatarsPath string `mapstructure:"avatars_path"`
-	PostPath string `mapstructure:"post_path"`
+type Image struct {
+	AvatarsPath   string `mapstructure:"avatars_path"`
+	BackImagePath string `mapstructure:"backimage_path"`
+	PostPath      string `mapstructure:"post_path"`
 }
 type LoggingConfig struct {
 	Level string `mapstructure:"level"`
@@ -60,8 +60,8 @@ type Credentials struct {
 	Password string `mapstructure:"password"`
 }
 
-func ConfInit(path string) (cfg *Config,err error){
-	viper.SetConfigFile(path)  // 指定配置文件路径
+func ConfInit(path string) (cfg *Config, err error) {
+	viper.SetConfigFile(path)   // 指定配置文件路径
 	viper.SetConfigType("yaml") // 显式设置配置类型
 	cfg = &Config{}
 	if err := viper.ReadInConfig(); err != nil {

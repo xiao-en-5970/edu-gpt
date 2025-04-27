@@ -25,6 +25,7 @@ type GetUserInfoResp struct {
 	AccountStatus  string    `json:"account_status" validate:"required,oneof=active locked disabled"`
 	Nickname       string    `json:"nickname" validate:"required,min=1,max=50"`
 	AvatarUrl      string    `json:"avatar_url"`
+	BackImageUrl   string    `json:"backimage_url"`
 	Signature      string    `json:"signature"`
 	Tags           []string  `json:"tags"`
 }

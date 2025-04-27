@@ -42,11 +42,16 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 			Username:       user.Username,
 			AccountStatus:  user.AccountStatus,
 			Nickname:       user.Nickname,
-			AvatarUrl:      fmt.Sprintf("%s/api/v1/user/auth/imageurl/%d", global.Cfg.Server.Address, user.ID),
+			AvatarUrl:      GetUrl("avatar", user.ID),
+			BackImageUrl:   GetUrl("backimage", user.ID),
 			Signature:      user.Signature,
 			Tags:           tag,
 		}, codes.CodeAllSuccess, nil
 	} else {
 		return &types.GetUserInfoResp{}, codes.CodeUserNotExist, nil
 	}
+}
+
+func GetUrl(prefix string, id uint) string {
+	return fmt.Sprintf("https://%s/api/v1/user/auth/%s/%d", global.Cfg.Server.Address, prefix, id)
 }

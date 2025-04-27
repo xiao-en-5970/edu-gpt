@@ -12,31 +12,32 @@ import (
 type AccountStatus string
 
 type User struct {
-	ID             uint      `gorm:"primaryKey;autoIncrement;comment:用户ID" json:"id"`
-	Password       string    `gorm:"type:varchar(255)" json:"-"`
-	UsernameEn     string    `gorm:"type:varchar(100)" json:"username_en"`
-	UsernameZh     string    `gorm:"type:varchar(100)" json:"username_zh"`
-	Sex            string    `gorm:"type:enum('男','女','其他')" json:"sex"`
-	CultivateType  string    `gorm:"type:varchar(50)" json:"cultivate_type"`
-	Department     string    `gorm:"type:varchar(100)" json:"department"`
-	Grade          string    `gorm:"type:varchar(20)" json:"grade"`
-	Level          string    `gorm:"type:varchar(50)" json:"level"`
-	StudentType    string    `gorm:"type:varchar(50)" json:"student_type"`
-	Major          string    `gorm:"type:varchar(100)" json:"major"`
-	Class          string    `gorm:"type:varchar(50)" json:"class"`
-	Campus         string    `gorm:"type:varchar(50)" json:"campus"`
-	Status         string    `gorm:"type:varchar(50)" json:"status"`
-	Length         string    `gorm:"type:decimal(3,1)" json:"length"`
-	EnrollmentDate string    `gorm:"type:varchar(50)" json:"enrollment_date"`
-	GraduateDate   string    `gorm:"type:varchar(50)" json:"graduate_date"`
-	CreatedAt      time.Time `gorm:"autoCreateTime;not null;comment:创建时间" json:"created_at"`
-	UpdatedAt      time.Time `gorm:"autoUpdateTime;not null;comment:更新时间" json:"updated_at"`
-	Username       string    `gorm:"size:50;not null;uniqueIndex;comment:登录用户名(唯一)" json:"username" validate:"required,min=3,max=50"`
-	AccountStatus  string    `gorm:"type:ENUM('active', 'locked', 'disabled');not null;default:'active';comment:账号状态" json:"account_status" validate:"required,oneof=active locked disabled"`
-	Nickname       string    `gorm:"size:50;not null;comment:用户昵称" json:"nickname" validate:"required,min=1,max=50"`
-	AvatarPath     string    `gorm:"size:255;not null;default:'default-avatar.png';comment:头像路径" json:"avatar_path"`
-	Signature      string    `gorm:"type:varchar(255);comment:'个性签名'" json:"signature"`
-	Tags           string    `gorm:"type:varchar(255);comment:'标签'" json:"tags"`
+	ID                  uint      `gorm:"primaryKey;autoIncrement;comment:用户ID" json:"id"`
+	Password            string    `gorm:"type:varchar(255)" json:"-"`
+	UsernameEn          string    `gorm:"type:varchar(100)" json:"username_en"`
+	UsernameZh          string    `gorm:"type:varchar(100)" json:"username_zh"`
+	Sex                 string    `gorm:"type:enum('男','女','其他')" json:"sex"`
+	CultivateType       string    `gorm:"type:varchar(50)" json:"cultivate_type"`
+	Department          string    `gorm:"type:varchar(100)" json:"department"`
+	Grade               string    `gorm:"type:varchar(20)" json:"grade"`
+	Level               string    `gorm:"type:varchar(50)" json:"level"`
+	StudentType         string    `gorm:"type:varchar(50)" json:"student_type"`
+	Major               string    `gorm:"type:varchar(100)" json:"major"`
+	Class               string    `gorm:"type:varchar(50)" json:"class"`
+	Campus              string    `gorm:"type:varchar(50)" json:"campus"`
+	Status              string    `gorm:"type:varchar(50)" json:"status"`
+	Length              string    `gorm:"type:decimal(3,1)" json:"length"`
+	EnrollmentDate      string    `gorm:"type:varchar(50)" json:"enrollment_date"`
+	GraduateDate        string    `gorm:"type:varchar(50)" json:"graduate_date"`
+	CreatedAt           time.Time `gorm:"autoCreateTime;not null;comment:创建时间" json:"created_at"`
+	UpdatedAt           time.Time `gorm:"autoUpdateTime;not null;comment:更新时间" json:"updated_at"`
+	Username            string    `gorm:"size:50;not null;uniqueIndex;comment:登录用户名(唯一)" json:"username" validate:"required,min=3,max=50"`
+	AccountStatus       string    `gorm:"type:ENUM('active', 'locked', 'disabled');not null;default:'active';comment:账号状态" json:"account_status" validate:"required,oneof=active locked disabled"`
+	Nickname            string    `gorm:"size:50;not null;comment:用户昵称" json:"nickname" validate:"required,min=1,max=50"`
+	AvatarPath          string    `gorm:"size:255;not null;default:'./static/avatar/default-avatar.png';comment:头像路径" json:"avatar_path"`
+	BackgroundImagePath string    `gorm:"size:255;not null;default:'./static/backgrounds/default-image.png';comment:背景路径" json:"backimage_path"`
+	Signature           string    `gorm:"type:varchar(255);comment:'个性签名'" json:"signature"`
+	Tags                string    `gorm:"type:varchar(255);comment:'标签'" json:"tags"`
 }
 
 // TableName 设置表名
@@ -75,15 +76,15 @@ func FindUserById(id uint) (*User, error) {
 	return user, nil // 用户存在
 }
 
-func InsertUser(user *User) (id uint,err error) {
+func InsertUser(user *User) (id uint, err error) {
 	result := global.Db.Model(user).Create(user) // 通过指针传递数据
 	if result.Error != nil {
 		// 处理错误
 		global.Logger.Warnf("创建记录失败: %v", result.Error)
-		return 0,result.Error
+		return 0, result.Error
 	}
 	global.Logger.Infof("插入成功，ID: %d\n", user.ID)
-	return user.ID ,nil
+	return user.ID, nil
 }
 
 func UpdateUser(newuser *User, id uint) error {

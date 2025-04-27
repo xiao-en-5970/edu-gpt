@@ -3,13 +3,13 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/logic/user"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
 func HandlerUserUpdateUserInfo(c *gin.Context) {
-	req := &model.User{}
+	req := &types.UpdateUserInfoReq{}
 	err := c.ShouldBindJSON(req)
 	if err != nil {
 		responce.ErrorBadRequest(c,err)

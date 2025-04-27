@@ -25,7 +25,8 @@ logging:
   level: "info"
 image:
   avatars_path: ./static/avatars
-  post_path: ./static/post
+  backimage_path: ./static/backimages
+  post_path: ./static/posts
 auth:
   max_age: 86400
   

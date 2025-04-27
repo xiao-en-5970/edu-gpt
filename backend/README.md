@@ -156,18 +156,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 ### 请求参数
 ```json
 {
-  "id": "1",
-  "nickname": "李铁2333"
+  "signature":"这个人说了什么",
+  "nickname": "李华2333",
+  "tags":["唱","跳","rap","篮球"]
 }
 ```
 
 ### 参数说明
 | 字段 | 类型 | 必填 | 说明 |
 |------|------|------|----------|
-| avatar_path    | string | 否   | 头像路径                          |
-| username | string |否 | 用户名 |
-| account_status | string |否 | 账号状态 (active/locked/disabled) |
-| nickname | string |否 | 昵称 |
+| nickname  | string | 否   | 昵称     |
+| signature | string | 否   | 个性签名 |
+|           |        |      |          |
+|           |        |      |          |
 
 ### 成功响应
 `200 OK`
@@ -289,7 +290,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzMzczM
 
 ### 请求
 
-`POST /api/v1/user/auth/upload_image`
+`POST /api/v1/user/auth/upload_avatar`
 
 ### 请求参数
 
@@ -309,7 +310,7 @@ value:图片文件
 {
     "code": 10000,
     "data": {
-        "url": "127.0.0.1:8080/api/v1/user/imageurl/1"
+        "url": "127.0.0.1:8080/api/v1/user/avatar/1"
     },
     "msg": "成功"
 }
@@ -327,7 +328,7 @@ value:图片文件
 
 ### 请求
 
-`POST /api/v1/user/auth/imageurl/:id`
+`POST /api/v1/user/auth/avatar/:id`
 
 ### 请求参数
 
@@ -342,6 +343,66 @@ value:图片文件
 ```
 图片内容
 ```
+
+## 7. 上传用户背景【auth】
+
+### 请求
+
+`POST /api/v1/user/auth/upload_backimage`
+
+### 请求参数
+
+```
+form-data
+
+key:avatar
+
+value:图片文件
+```
+
+### 成功响应
+
+`200 OK`
+
+```json
+{
+    "code": 10000,
+    "data": {
+        "url": "127.0.0.1:8080/api/v1/user/backimage/1"
+    },
+    "msg": "成功"
+}
+```
+
+### 响应字段说明
+
+| 字段 | 类型   | 说明    |
+| ---- | ------ | ------- |
+| url  | string | 图片url |
+
+
+
+## 8. 获取用户背景【auth】
+
+### 请求
+
+`POST /api/v1/user/auth/backimage/:id`
+
+### 请求参数
+
+```
+无
+```
+
+### 成功响应
+
+`200 OK`
+
+```
+图片内容
+```
+
+
 
 # 帖子服务API文档
 
