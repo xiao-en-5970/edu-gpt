@@ -10,7 +10,6 @@ type CreatePostReq struct {
 
 type CreatePostResp struct {
 	ID uint `json:"id"`
-	Urls []string `json:"url"`
 }
 
 type UploadManyImagesReq struct{

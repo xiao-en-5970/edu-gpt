@@ -36,7 +36,7 @@ func HandlerPostCreate(c *gin.Context) {
 	if err != nil {
 		responce.ErrorInternalServerError(c, err)
 	}
-	fileresp, code, err := logic.LogicPostUploadPostImage(c, &types.UploadManyImagesReq{Files: files,ID: resp.ID})
+	_, code, err = logic.LogicPostUploadPostImage(c, &types.UploadManyImagesReq{Files: files,ID: resp.ID})
 	if code != codes.CodeAllSuccess {
 		responce.ErrorInternalServerErrorWithCode(c, code)
 		return
@@ -44,7 +44,6 @@ func HandlerPostCreate(c *gin.Context) {
 	if err != nil {
 		responce.ErrorInternalServerError(c, err)
 	}
-	resp.Urls = fileresp.Urls
 	responce.SuccessWithData(c, resp)
 
 }

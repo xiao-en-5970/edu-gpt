@@ -6,4 +6,4 @@ type EditPostReq struct{
 	Content        string    `json:"content" comment:"内容（除标题）"`
 }
 
-type EditPostResp PostResp
+type EditPostResp CreatePostResp

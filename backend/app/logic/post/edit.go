@@ -40,10 +40,6 @@ func LogicPostEdit(c *gin.Context,req *types.EditPostReq)(resp * types.EditPostR
 		return &types.EditPostResp{},codes.CodeAllIntervalError,err
 	}
 	return &types.EditPostResp{
-		Post:*rsppost,
-		Nickname: user.Nickname,
-		Grade: user.Grade,
-		Campus: user.Campus,
-		Department: user.Department,
-		},codes.CodeAllSuccess,nil
+		ID: req.ID,
+	},codes.CodeAllSuccess,nil
 }

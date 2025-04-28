@@ -53,3 +53,9 @@ func InsertPost(post *Post) (id uint, err error) {
 func UpdatePost(newpost *Post, id uint) error {
 	return global.Db.Model(newpost).Where("id=?", id).Updates(*newpost).Error
 }
+
+func ListPost(offset int,limit int)(posts []Post,err error){
+	posts=make([]Post,0,1)
+	err=global.Db.Model(&Post{}).Offset(offset-1).Limit(limit).Find(&posts).Error
+	return posts,err 
+}

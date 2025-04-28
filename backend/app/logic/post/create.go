@@ -14,21 +14,14 @@ func LogicPostCreate(c *gin.Context,req *types.CreatePostReq)(resp * types.Creat
 		return &types.CreatePostResp{},codes.CodeAuthUnvalidToken,nil
 	}
 	uid := u.(uint)
-	user,err := model.FindUserById(uid)
-	if user == nil{
-		return &types.CreatePostResp{},codes.CodeUserNotExist,nil
-	}
 	post := &model.Post{
-		PosterID: user.ID,
+		PosterID: uid,
 		Title: req.Title,
 		Content: req.Content,
 		ViewCount: 0,
 		LikeCount: 0,
 		CollectCount: 0,
 		CommentCount: 0,
-	}
-	if err!=nil{
-		return &types.CreatePostResp{},codes.CodeAllIntervalError,err
 	}
 	pid,err:=model.InsertPost(post)
 	if err!=nil{
