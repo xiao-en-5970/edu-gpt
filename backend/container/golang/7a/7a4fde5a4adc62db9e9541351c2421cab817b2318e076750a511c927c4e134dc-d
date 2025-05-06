@@ -1,0 +1,5 @@
+./briefpost.go
+./create.go
+./edit.go
+./like.go
+./post.go

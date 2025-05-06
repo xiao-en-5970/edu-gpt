@@ -14,14 +14,14 @@ func LogicPostList(c *gin.Context,req *types.PostListReq)(resp types.PostListRes
 		return types.PostListResp{},codes.CodeAuthUnvalidToken,nil
 	}
 	uid := u.(uint)
-	user,err := model.FindUserById(uid)
+	user,err := model.FindUserById(c,uid)
 	if user == nil{
 		return types.PostListResp{},codes.CodeUserNotExist,nil
 	}
 	if err!=nil{
 		return types.PostListResp{},codes.CodeAllIntervalError,err
 	}
-	posts,err:=model.ListPost(req.Offset,req.Limit)
+	posts,err:=model.ListPost(c,req.Offset,req.Limit)
 	if err!=nil{
 		return types.PostListResp{},codes.CodeAllIntervalError,err
 	}

@@ -17,7 +17,7 @@ func HandlerUserAvatar(c *gin.Context){
 		responce.ErrorBadRequest(c,err)
 		return
 	}
-	user,err:=model.FindUserById(id)
+	user,err:=model.FindUserById(c,id)
 	if user == nil{
 		responce.ErrorInternalServerErrorWithCode(c,codes.CodeUserNotExist)
 		return

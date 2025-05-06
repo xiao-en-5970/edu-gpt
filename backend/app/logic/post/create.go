@@ -23,7 +23,7 @@ func LogicPostCreate(c *gin.Context,req *types.CreatePostReq)(resp * types.Creat
 		CollectCount: 0,
 		CommentCount: 0,
 	}
-	pid,err:=model.InsertPost(post)
+	pid,err:=model.InsertPost(c,post)
 	if err!=nil{
 		return &types.CreatePostResp{},codes.CodeAllIntervalError,err
 	}

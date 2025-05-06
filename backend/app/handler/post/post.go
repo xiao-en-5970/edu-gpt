@@ -22,7 +22,7 @@ func HandlerPost(c *gin.Context){
 		return
 	}
 	pid := uint(pidint)
-	post,err:=model.FindPostById(pid)
+	post,err:=model.FindPostById(c,pid)
 	if post == nil{
 		responce.ErrorInternalServerErrorWithCode(c,codes.CodePostNotExist)
 		return
@@ -37,7 +37,7 @@ func HandlerPost(c *gin.Context){
 		return 
 	}
 	uid := u.(uint)
-	user,err := model.FindUserById(uid)
+	user,err := model.FindUserById(c,uid)
 	if user == nil{
 		responce.ErrorInternalServerErrorWithCode(c,codes.CodeUserNotExist)
 		return
@@ -46,7 +46,7 @@ func HandlerPost(c *gin.Context){
 		responce.ErrorInternalServerError(c,err)
 		return
 	}
-	images,err := model.FindPostImageByPid(pid)
+	images,err := model.FindPostImageByPid(c,pid)
 	if images == nil{
 		responce.ErrorInternalServerErrorWithCode(c,codes.CodeImageNotExist)
 		return

@@ -16,7 +16,7 @@ func LogicPostEdit(c *gin.Context,req *types.EditPostReq)(resp * types.EditPostR
 		return &types.EditPostResp{},codes.CodeAuthUnvalidToken,nil
 	}
 	uid := u.(uint)
-	user,err := model.FindUserById(uid)
+	user,err := model.FindUserById(c,uid)
 	if user == nil{
 		return &types.EditPostResp{},codes.CodeUserNotExist,nil
 	}
@@ -28,11 +28,11 @@ func LogicPostEdit(c *gin.Context,req *types.EditPostReq)(resp * types.EditPostR
 	if err!=nil{
 		return &types.EditPostResp{},codes.CodeAllIntervalError,err
 	}
-	err=model.UpdatePost(post,req.ID)
+	err=model.UpdatePost(c,post,req.ID)
 	if err!=nil{
 		return &types.EditPostResp{},codes.CodeAllIntervalError,err
 	}
-	rsppost,err:=model.FindPostById(req.ID)
+	rsppost,err:=model.FindPostById(c,req.ID)
 	if rsppost==nil{
 		return &types.EditPostResp{},codes.CodePostNotExist,err
 	}

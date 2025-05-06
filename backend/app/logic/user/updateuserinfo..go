@@ -16,7 +16,7 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 		return &types.UpdateUserInfoResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	id := u.(uint)
-	us, _ := model.FindUserById(id)
+	us, _ := model.FindUserById(c,id)
 	if us != nil {
 		//用户存在
 		global.Logger.Debug(req)
@@ -28,10 +28,10 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 			return &types.UpdateUserInfoResp{}, codes.CodeAllIntervalError, err
 		}
 		us.Tags = string(tagstr)
-		if err = model.UpdateUser(us, us.ID); err != nil {
+		if err = model.UpdateUser(c,us, us.ID); err != nil {
 			return &types.UpdateUserInfoResp{}, codes.CodeUserInfoUpdateFail, err
 		}
-		us, _ = model.FindUserById(id)
+		us, _ = model.FindUserById(c,id)
 		var tag = make([]string, 0)
 		err = json.Unmarshal([]byte(us.Tags), &tag)
 		if err != nil {

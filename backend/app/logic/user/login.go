@@ -23,7 +23,7 @@ func LogicUserLogin(c *gin.Context, req *types.LoginReq) (resp *types.LoginResp,
 	var id uint = 0
 	switch code {
 	case codes.CodeAllSuccess:
-		user, _ := model.FindUserByName(req.Username)
+		user, _ := model.FindUserByName(c,req.Username)
 		if user == nil {
 			// 用户不存在
 			hfutrsp, code, err := LogicHFUTStudentInfo(c, req.Username)
@@ -61,7 +61,7 @@ func LogicUserLogin(c *gin.Context, req *types.LoginReq) (resp *types.LoginResp,
 				AvatarPath:          "./static/avatars/default-avatar.png",
 				BackgroundImagePath: "./static/backgrounds/default-iamge.png",
 			}
-			id, err = model.InsertUser(u)
+			id, err = model.InsertUser(c,u)
 			if err != nil {
 				return &types.LoginResp{}, codes.CodeAllIntervalError, err
 			}
@@ -88,7 +88,7 @@ func LogicUserLogin(c *gin.Context, req *types.LoginReq) (resp *types.LoginResp,
 				GraduateDate:   hfutrsp.Data.GraduateDate,
 			}
 			id = user.ID
-			err = model.UpdateUser(u, user.ID)
+			err = model.UpdateUser(c,u, user.ID)
 			if err != nil {
 				return &types.LoginResp{}, codes.CodeAllIntervalError, err
 			}

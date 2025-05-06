@@ -12,7 +12,7 @@ import (
 )
 
 func LogicPostUploadPostImage(c *gin.Context, req *types.UploadManyImagesReq) (resp *types.UploadManyImagesResp, code int, err error) {
-	post, _ := model.FindPostById(req.ID)
+	post, _ := model.FindPostById(c,req.ID)
 	if post == nil {
 		//帖子不存在
 		return &types.UploadManyImagesResp{}, codes.CodePostNotExist, nil
@@ -21,7 +21,7 @@ func LogicPostUploadPostImage(c *gin.Context, req *types.UploadManyImagesReq) (r
 	for index, file := range req.Files {
 		//生成存储路径
 		absPath := fmt.Sprintf("%s/%d_%d%s", global.Cfg.Image.PostPath, post.ID, index+1,path.Ext(file.Filename))
-		imageid,err:=model.InsertPostImage(&model.PostImage{
+		imageid,err:=model.InsertPostImage(c,&model.PostImage{
 			PostID: post.ID,
 			Number: index+1,
 			ImagesPath: absPath,

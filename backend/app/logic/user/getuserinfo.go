@@ -17,7 +17,7 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 		return &types.GetUserInfoResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	id := u.(uint)
-	user, _ := model.FindUserById(id)
+	user, _ := model.FindUserById(c,id)
 	if user != nil {
 		//用户存在
 		var tag = make([]string, 0)

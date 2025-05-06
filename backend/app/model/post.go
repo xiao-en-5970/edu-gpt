@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"gorm.io/gorm"
 )
@@ -27,9 +28,9 @@ func (Post) TableName() string {
 	return "post"
 }
 
-func FindPostById(id uint) (*Post, error) {
+func FindPostById(c *gin.Context,id uint) (*Post, error) {
 	post := &Post{}
-	err := global.Db.Model(post).Where("id=?", id).First(post).Error
+	err := global.Db.WithContext(c).Model(post).Where("id=?", id).First(post).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil // 用户不存在
@@ -39,8 +40,8 @@ func FindPostById(id uint) (*Post, error) {
 	return post, nil // 用户存在
 }
 
-func InsertPost(post *Post) (id uint, err error) {
-	result := global.Db.Model(post).Create(post) // 通过指针传递数据
+func InsertPost(c *gin.Context,post *Post) (id uint, err error) {
+	result := global.Db.WithContext(c).Model(post).Create(post) // 通过指针传递数据
 	if result.Error != nil {
 		// 处理错误
 		global.Logger.Warnf("创建记录失败: %v", result.Error)
@@ -50,12 +51,12 @@ func InsertPost(post *Post) (id uint, err error) {
 	return post.ID, nil
 }
 
-func UpdatePost(newpost *Post, id uint) error {
-	return global.Db.Model(newpost).Where("id=?", id).Updates(*newpost).Error
+func UpdatePost(c *gin.Context,newpost *Post, id uint) error {
+	return global.Db.WithContext(c).Model(newpost).Where("id=?", id).Updates(*newpost).Error
 }
 
-func ListPost(offset int,limit int)(posts []Post,err error){
+func ListPost(c *gin.Context,offset int,limit int)(posts []Post,err error){
 	posts=make([]Post,0,1)
-	err=global.Db.Model(&Post{}).Offset(offset-1).Limit(limit).Find(&posts).Error
+	err=global.Db.WithContext(c).Model(&Post{}).Offset(offset-1).Limit(limit).Find(&posts).Error
 	return posts,err 
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"gorm.io/gorm"
 )
@@ -21,9 +22,9 @@ func (PostImage) TableName() string {
 	return "post_image"
 }
 
-func FindPostImageByPidNum(pid uint, num int) (*PostImage, error) {
+func FindPostImageByPidNum(c *gin.Context,pid uint, num int) (*PostImage, error) {
 	postimage := &PostImage{}
-	err := global.Db.Model(postimage).Where("post_id=? AND number=?", pid, num).First(postimage).Error
+	err := global.Db.WithContext(c).Model(postimage).Where("post_id=? AND number=?", pid, num).First(postimage).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil // 用户不存在
@@ -32,9 +33,9 @@ func FindPostImageByPidNum(pid uint, num int) (*PostImage, error) {
 	}
 	return postimage, nil // 用户存在
 }
-func FindPostImageByPid(pid uint) ([]PostImage, error) {
+func FindPostImageByPid(c *gin.Context,pid uint) ([]PostImage, error) {
 	postimage := make([]PostImage,0,1)
-	err := global.Db.Model(postimage).Where("post_id=?", pid,).Find(&postimage).Error
+	err := global.Db.WithContext(c).Model(postimage).Where("post_id=?", pid,).Find(&postimage).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil // 用户不存在
@@ -44,9 +45,9 @@ func FindPostImageByPid(pid uint) ([]PostImage, error) {
 	return postimage, nil // 用户存在
 }
 
-func FindPostImageById(id uint) (*PostImage, error) {
+func FindPostImageById(c *gin.Context,id uint) (*PostImage, error) {
 	postimage := &PostImage{}
-	err := global.Db.Model(postimage).Where("id=?", id).First(postimage).Error
+	err := global.Db.WithContext(c).Model(postimage).Where("id=?", id).First(postimage).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil // 图片不存在
@@ -56,8 +57,8 @@ func FindPostImageById(id uint) (*PostImage, error) {
 	return postimage, nil // 用户存在
 }
 
-func InsertPostImage(postimage *PostImage) (id uint, err error) {
-	result := global.Db.Model(postimage).Create(postimage) // 通过指针传递数据
+func InsertPostImage(c *gin.Context,postimage *PostImage) (id uint, err error) {
+	result := global.Db.WithContext(c).Model(postimage).Create(postimage) // 通过指针传递数据
 	if result.Error != nil {
 		// 处理错误
 		global.Logger.Warnf("创建记录失败: %v", result.Error)

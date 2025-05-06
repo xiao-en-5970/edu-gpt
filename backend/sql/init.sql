@@ -57,4 +57,14 @@ CREATE TABLE `post_image`(
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='帖子图片表';
 
-
+CREATE TABLE `post_likes` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `post_id` BIGINT NOT NULL COMMENT '帖子ID',
+  `user_id` BIGINT NOT NULL COMMENT '用户ID',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-点赞 0-取消',
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_post_user` (`post_id`,`user_id`),
+  KEY `idx_user` (`user_id`)
+) ENGINE=InnoDB COMMENT='用户点赞记录表';

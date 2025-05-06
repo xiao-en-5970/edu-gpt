@@ -16,7 +16,7 @@ func HandlerPostPostImage(c*gin.Context){
 		responce.ErrorBadRequest(c,err)
 		return
 	}
-	image,err:=model.FindPostImageById(id)
+	image,err:=model.FindPostImageById(c,id)
 	if image == nil{
 		responce.ErrorInternalServerErrorWithCode(c,codes.CodeImageNotExist)
 		return

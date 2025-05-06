@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 
 	"gorm.io/gorm"
@@ -53,9 +54,9 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
-func FindUserByName(username string) (*User, error) {
+func FindUserByName(c *gin.Context,username string) (*User, error) {
 	user := &User{}
-	err := global.Db.Model(user).Where("username=?", username).First(user).Error
+	err := global.Db.WithContext(c).Model(user).Where("username=?", username).First(user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil // 用户不存在
@@ -64,9 +65,9 @@ func FindUserByName(username string) (*User, error) {
 	}
 	return user, nil // 用户存在
 }
-func FindUserById(id uint) (*User, error) {
+func FindUserById(c *gin.Context,id uint) (*User, error) {
 	user := &User{}
-	err := global.Db.Model(user).Where("id=?", id).First(user).Error
+	err := global.Db.WithContext(c).Model(user).Where("id=?", id).First(user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil // 用户不存在
@@ -76,8 +77,8 @@ func FindUserById(id uint) (*User, error) {
 	return user, nil // 用户存在
 }
 
-func InsertUser(user *User) (id uint, err error) {
-	result := global.Db.Model(user).Create(user) // 通过指针传递数据
+func InsertUser(c *gin.Context,user *User) (id uint, err error) {
+	result := global.Db.WithContext(c).Model(user).Create(user) // 通过指针传递数据
 	if result.Error != nil {
 		// 处理错误
 		global.Logger.Warnf("创建记录失败: %v", result.Error)
@@ -87,7 +88,7 @@ func InsertUser(user *User) (id uint, err error) {
 	return user.ID, nil
 }
 
-func UpdateUser(newuser *User, id uint) error {
+func UpdateUser(c *gin.Context,newuser *User, id uint) error {
 	global.Logger.Infof("Nickname:%v", newuser.Nickname)
-	return global.Db.Model(newuser).Where("id=?", id).Updates(*newuser).Error
+	return global.Db.WithContext(c).Model(newuser).Where("id=?", id).Updates(*newuser).Error
 }

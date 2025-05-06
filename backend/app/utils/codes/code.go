@@ -27,7 +27,9 @@ const (
 	CodeImageFormatError = 50001 //图片格式错误
 	CodeImageNotExist    = 50002 //图片不存在
 	//帖子错误
-	CodePostNotExist = 60001 //帖子不存在
+	CodePostNotExist       = 60001 //帖子不存在
+	CodePostLikeFail       = 60002 //帖子点赞失败
+	CodePostLikeStatusSame = 60003 //帖子点赞状态不变
 )
 
 var (
@@ -53,8 +55,10 @@ var (
 		CodeHFUTNotLogin:      "信息门户未登录",
 		//图片错误
 		CodeImageFormatError: "图片格式错误",
-		CodeImageNotExist: "图片不存在",
+		CodeImageNotExist:    "图片不存在",
 		//帖子错误
 		CodePostNotExist: "帖子不存在",
+		CodePostLikeFail: "帖子点赞失败",
+		CodePostLikeStatusSame:"帖子点赞状态不变",
 	}
 )

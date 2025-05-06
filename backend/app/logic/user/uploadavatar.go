@@ -18,7 +18,7 @@ func LogicUserUploadAvatar(c *gin.Context, req *types.UploadImageReq) (resp *typ
 		return &types.UploadImageResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	id := u.(uint)
-	user, _ := model.FindUserById(id)
+	user, _ := model.FindUserById(c,id)
 	if user != nil {
 		//用户存在
 		//生成存储路径
@@ -28,7 +28,7 @@ func LogicUserUploadAvatar(c *gin.Context, req *types.UploadImageReq) (resp *typ
 			os.RemoveAll(absPath)
 		} else {
 			user.AvatarPath = absPath
-			model.UpdateUser(user, user.ID)
+			model.UpdateUser(c,user, user.ID)
 		}
 		// 保存新文件
 		if err := c.SaveUploadedFile(req.File, absPath); err != nil {
