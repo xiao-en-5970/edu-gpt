@@ -2,9 +2,9 @@ package types
 
 import "time"
 
-type PostListReq struct{
+type PostListReq struct {
 	Offset int `json:"last_pid"`
-	Limit int `json:"size"`
+	Limit  int `json:"size"`
 }
 
 type BriefPost struct {
@@ -18,7 +18,7 @@ type BriefPost struct {
 	CollectCount int       `json:"collect_count"`
 	CommentCount int       `json:"comment_count"`
 	CreateAt     time.Time `json:"create_at"`
+	AvatarUrl    string    `json:"avatar_url"`
 }
-
 
 type PostListResp []BriefPost

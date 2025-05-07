@@ -32,12 +32,13 @@ func LogicPostList(c *gin.Context,req *types.PostListReq)(resp types.PostListRes
 			Content: p.Content,
 			Nickname: user.Nickname,
 			ID: p.ID,
-			PosterID: user.ID,
+			PosterID: p.PosterID,
 			ViewCount: p.ViewCount,
 			LikeCount: p.LikeCount,
 			CollectCount: p.CollectCount,
 			CommentCount: p.CommentCount,
 			CreateAt: p.CreateAt,
+			AvatarUrl: GetUrl("avatar",p.PosterID),
 		})
 	}
 	return briefposts,codes.CodeAllSuccess,nil
