@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	logic "github.com/xiao-en-5970/edu-gpt/backend/app/logic/user"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
@@ -33,8 +33,8 @@ func HandlerUser(c *gin.Context) {
 		CreateAt:  user.CreateAt,
 		Department: user.Department,
 		Nickname:   user.Nickname,
-		AvatarUrl: logic.GetUrl("avatar",user.ID),
-		BackImageUrl: logic.GetUrl("backimage",user.ID),
+		AvatarUrl: global.GetUrl("user/auth/avatar",user.ID),
+		BackImageUrl: global.GetUrl("user/auth/backimage",user.ID),
 		Sex:        user.Sex,
 		Grade:      user.Grade,
 		Campus:     user.Campus,

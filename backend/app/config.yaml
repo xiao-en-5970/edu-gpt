@@ -28,5 +28,5 @@ image:
   backimage_path: ./static/backimages
   post_path: ./static/posts
 auth:
-  max_age: 86400
+  max_age: 240 #单位小时
   

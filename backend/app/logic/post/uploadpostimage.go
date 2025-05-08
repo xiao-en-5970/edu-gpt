@@ -33,13 +33,10 @@ func LogicPostUploadPostImage(c *gin.Context, req *types.UploadManyImagesReq) (r
 		if err := c.SaveUploadedFile(file, absPath); err != nil {
 			return &types.UploadManyImagesResp{}, codes.CodeAllIntervalError, err
 		}
-		url := GetUrl("postimage", imageid)
+		url := global.GetUrl("post/auth/postimage", imageid)
 		urls = append(urls, url)
 	}
 	return &types.UploadManyImagesResp{
 		Urls: urls,
 	}, codes.CodeAllSuccess, nil
-}
-func GetUrl(prefix string, id uint) string {
-	return fmt.Sprintf("https://%s/api/v1/post/auth/%s/%d", global.Cfg.Server.Address, prefix, id)
 }

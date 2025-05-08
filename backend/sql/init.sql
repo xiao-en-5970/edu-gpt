@@ -68,3 +68,15 @@ CREATE TABLE `post_likes` (
   UNIQUE KEY `uk_post_user` (`post_id`,`user_id`),
   KEY `idx_user` (`user_id`)
 ) ENGINE=InnoDB COMMENT='用户点赞记录表';
+
+CREATE TABLE `comment` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `post_id` BIGINT NOT NULL COMMENT '评论的帖子ID',
+  `user_id` BIGINT NOT NULL COMMENT '评论的用户ID',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-点赞 0-取消',
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_post_user` (`post_id`,`user_id`),
+  KEY `idx_user` (`user_id`)
+) ENGINE=InnoDB COMMENT='用户点赞记录表';

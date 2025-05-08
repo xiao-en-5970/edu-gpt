@@ -54,8 +54,8 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 			Username:       us.Username,
 			AccountStatus:  us.AccountStatus,
 			Nickname:       us.Nickname,
-			AvatarUrl:      GetUrl("avatar", us.ID),
-			BackImageUrl:   GetUrl("backimage", us.ID),
+			AvatarUrl:      global.GetUrl("user/auth/avatar", us.ID),
+			BackImageUrl:   global.GetUrl("user/auth/backimage", us.ID),
 			Signature:      us.Signature,
 			Tags:           tag,
 		}, codes.CodeAllSuccess, nil

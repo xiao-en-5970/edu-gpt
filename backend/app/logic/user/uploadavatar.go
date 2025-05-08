@@ -34,7 +34,7 @@ func LogicUserUploadAvatar(c *gin.Context, req *types.UploadImageReq) (resp *typ
 		if err := c.SaveUploadedFile(req.File, absPath); err != nil {
 			return &types.UploadImageResp{}, codes.CodeAllIntervalError, err
 		}
-		url := GetUrl("avatar", user.ID)
+		url := global.GetUrl("user/auth/avatar", user.ID)
 		return &types.UploadImageResp{
 			Url: url,
 		}, codes.CodeAllSuccess, nil

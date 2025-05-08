@@ -34,7 +34,7 @@ func LogicUserUploadBackImage(c *gin.Context, req *types.UploadImageReq) (resp *
 		if err := c.SaveUploadedFile(req.File, absPath); err != nil {
 			return &types.UploadImageResp{}, codes.CodeAllIntervalError, err
 		}
-		url := GetUrl("backimage", user.ID)
+		url := global.GetUrl("user/auth/backimage", user.ID)
 		return &types.UploadImageResp{
 			Url: url,
 		}, codes.CodeAllSuccess, nil

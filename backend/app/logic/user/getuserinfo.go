@@ -2,7 +2,6 @@ package logic
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
@@ -17,7 +16,7 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 		return &types.GetUserInfoResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	id := u.(uint)
-	user, _ := model.FindUserById(c,id)
+	user, _ := model.FindUserById(c, id)
 	if user != nil {
 		//用户存在
 		var tag = make([]string, 0)
@@ -38,12 +37,12 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 			Campus:         user.Campus,
 			EnrollmentDate: user.EnrollmentDate,
 			GraduateDate:   user.GraduateDate,
-			CreateAt:      user.CreateAt,
+			CreateAt:       user.CreateAt,
 			Username:       user.Username,
 			AccountStatus:  user.AccountStatus,
 			Nickname:       user.Nickname,
-			AvatarUrl:      GetUrl("avatar", user.ID),
-			BackImageUrl:   GetUrl("backimage", user.ID),
+			AvatarUrl:      global.GetUrl("user/auth/avatar", user.ID),
+			BackImageUrl:   global.GetUrl("user/auth/backimage", user.ID),
 			Signature:      user.Signature,
 			Tags:           tag,
 		}, codes.CodeAllSuccess, nil
@@ -52,6 +51,4 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 	}
 }
 
-func GetUrl(prefix string, id uint) string {
-	return fmt.Sprintf("https://%s/api/v1/user/auth/%s/%d", global.Cfg.Server.Address, prefix, id)
-}
+

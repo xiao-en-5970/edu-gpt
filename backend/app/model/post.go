@@ -28,7 +28,7 @@ func (Post) TableName() string {
 	return "post"
 }
 
-func FindPostById(c *gin.Context,id uint) (*Post, error) {
+func FindPostById(c *gin.Context, id uint) (*Post, error) {
 	post := &Post{}
 	err := global.Db.WithContext(c).Model(post).Where("id=?", id).First(post).Error
 	if err != nil {
@@ -40,7 +40,7 @@ func FindPostById(c *gin.Context,id uint) (*Post, error) {
 	return post, nil // 用户存在
 }
 
-func InsertPost(c *gin.Context,post *Post) (id uint, err error) {
+func InsertPost(c *gin.Context, post *Post) (id uint, err error) {
 	result := global.Db.WithContext(c).Model(post).Create(post) // 通过指针传递数据
 	if result.Error != nil {
 		// 处理错误
@@ -51,12 +51,12 @@ func InsertPost(c *gin.Context,post *Post) (id uint, err error) {
 	return post.ID, nil
 }
 
-func UpdatePost(c *gin.Context,newpost *Post, id uint) error {
+func UpdatePost(c *gin.Context, newpost *Post, id uint) error {
 	return global.Db.WithContext(c).Model(newpost).Where("id=?", id).Updates(*newpost).Error
 }
 
-func ListPost(c *gin.Context,offset int,limit int)(posts []Post,err error){
-	posts=make([]Post,0,1)
-	err=global.Db.WithContext(c).Model(&Post{}).Offset(offset-1).Limit(limit).Find(&posts).Error
-	return posts,err 
+func ListPost(c *gin.Context, offset int, limit int) (posts []Post, err error) {
+	posts = make([]Post, 0, 1)
+	err = global.Db.WithContext(c).Model(&Post{}).Offset(offset - 1).Limit(limit).Find(&posts).Error
+	return posts, err
 }
