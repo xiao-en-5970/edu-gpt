@@ -16,6 +16,7 @@ type Post struct {
 	Title        string    `gorm:"column:title;type:varchar(200);index:idx_title_prefix(10)" json:"title" comment:"标题"`
 	Content      string    `gorm:"column:content;type:text" json:"content" comment:"内容（除标题）"`
 	ViewCount    int       `gorm:"column:view_count;default:0" json:"view_count" comment:"浏览数"`
+	Active       string    `gorm:"column:active;type:ENUM('active', 'locked', 'disabled');not null;default:'active';comment:状态" json:"active" validate:"required,oneof=active locked disabled"`
 	LikeCount    int       `gorm:"column:like_count;default:0" json:"like_count" comment:"点赞数"`
 	CollectCount int       `gorm:"column:collect_count;default:0" json:"collect_count" comment:"收藏数"`
 	CommentCount int       `gorm:"column:comment_count;default:0" json:"comment_count" comment:"(被）评论数"`
@@ -40,7 +41,7 @@ func FindPostById(c *gin.Context, id uint) (*Post, error) {
 	return post, nil // 用户存在
 }
 
-func InsertPost(c *gin.Context, post *Post) (id uint, err error) {
+func CreatePost(c *gin.Context, post *Post) (id uint, err error) {
 	result := global.Db.WithContext(c).Model(post).Create(post) // 通过指针传递数据
 	if result.Error != nil {
 		// 处理错误
@@ -55,8 +56,8 @@ func UpdatePost(c *gin.Context, newpost *Post, id uint) error {
 	return global.Db.WithContext(c).Model(newpost).Where("id=?", id).Updates(*newpost).Error
 }
 
-func ListPost(c *gin.Context, offset int, limit int) (posts []Post, err error) {
+func ListPost(c *gin.Context, last_pid uint, limit int) (posts []Post, err error) {
 	posts = make([]Post, 0, 1)
-	err = global.Db.WithContext(c).Model(&Post{}).Offset(offset - 1).Limit(limit).Find(&posts).Error
+	err = global.Db.WithContext(c).Model(&Post{}).Where("id>?",last_pid).Limit(limit).Find(&posts).Error
 	return posts, err
 }

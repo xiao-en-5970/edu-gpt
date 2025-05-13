@@ -10,6 +10,15 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
+// @Summary      更新背景图
+// @Description  通过form-data上传背景图
+// @Tags         User模块
+// @Security     BearerAuth 
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        backimage formData file true "背景图文件"
+// @Success      200  {object}  types.UploadImageResp  "成功响应"
+// @Router       /user/auth/upload_backimage [post]
 func HandlerUserUploadBackImage(c *gin.Context) {
 	file, err := c.FormFile("backimage")
 	if err != nil {
@@ -18,7 +27,6 @@ func HandlerUserUploadBackImage(c *gin.Context) {
 		return
 	}
 	if !isImageFile(file) {
-
 		responce.ErrorBadRequest(c, errors.New(codes.CodeMsg[codes.CodeImageFormatError]))
 		return
 	}

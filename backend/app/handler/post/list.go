@@ -3,27 +3,29 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	logic "github.com/xiao-en-5970/edu-gpt/backend/app/logic/post"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/services"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/post"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
+// @Summary 帖子列表
+// @Description 输入最后刷新的帖子id和返回数量进行帖子列表的获取
+// @Tags Post模块
+// @Security     BearerAuth 
+// @Accept json
+// @Produce json
+// @Param edit body types.PostListReq true "请求体"
+// @Success 200 {object} types.PostListResp "成功响应"
+// @Router /post/auth/list [post]
+func HandlerPostList(c *gin.Context) {
+	services.ServiceHandlerWithJson(c, PostList{})
+}
 
+type PostList struct {
+}
 
-func HandlerPostList(c * gin.Context){
-	req:=&types.PostListReq{}
-	err:=c.ShouldBindJSON(req)
-	if err!=nil{
-		responce.ErrorBadRequest(c,err)
-		return
-	}
-	resp,code,err:=logic.LogicPostList(c,req)
-	if err!=nil{
-		responce.ErrorInternalServerError(c,err)
-		return
-	}
-	if code!=codes.CodeAllSuccess{
-		responce.ErrorInternalServerErrorWithCode(c,code)
-		return
-	}
-	responce.SuccessWithData(c,resp)
+func (PostList) NewReq() any {
+	return &types.PostListReq{}
+}
+
+func (PostList) Logic(c *gin.Context, req any) (resp any, code int, err error) {
+	return logic.LogicPostList(c, req.(*types.PostListReq))
 }

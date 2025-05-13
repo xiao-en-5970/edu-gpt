@@ -8,8 +8,14 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
-
-
+// @Summary      获取用户背景图
+// @Description  根据用户ID返回背景图数据
+// @Tags         User模块
+// @Security     BearerAuth 
+// @Produce      octet-stream
+// @Param        id  path  string  true  "用户ID"  
+// @Success      200  {file}  binary  "背景图片文件"
+// @Router       /user/auth/backimage/{id} [get,post]
 func HandlerUserBackImage(c *gin.Context){
 	idstr := c.Param("id")
 	uid,err := strconv.Atoi(idstr)

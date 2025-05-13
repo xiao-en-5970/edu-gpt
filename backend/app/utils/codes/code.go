@@ -30,6 +30,9 @@ const (
 	CodePostNotExist       = 60001 //帖子不存在
 	CodePostLikeFail       = 60002 //帖子点赞失败
 	CodePostLikeStatusSame = 60003 //帖子点赞状态不变
+	//评论错误
+	CodeCommentNotExist    = 70001 //评论不存在
+	CodeSubCommentNotExist = 70002 //子评论不存在
 )
 
 var (
@@ -57,8 +60,11 @@ var (
 		CodeImageFormatError: "图片格式错误",
 		CodeImageNotExist:    "图片不存在",
 		//帖子错误
-		CodePostNotExist: "帖子不存在",
-		CodePostLikeFail: "帖子点赞失败",
-		CodePostLikeStatusSame:"帖子点赞状态不变",
+		CodePostNotExist:       "帖子不存在",
+		CodePostLikeFail:       "帖子点赞失败",
+		CodePostLikeStatusSame: "帖子点赞状态不变",
+		//评论错误
+		CodeCommentNotExist:    "评论不存在",
+		CodeSubCommentNotExist: "子评论不存在",
 	}
 )

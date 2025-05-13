@@ -12,6 +12,16 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
+// @Summary 创建帖子
+// @Description 输入标题和正文创建帖子，并返回新帖子id
+// @Tags Post模块
+// @Security     BearerAuth
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        postimage formData file true "背景图文件"
+// @Param        json formData string true "JSON请求数据" example="{\"title\":\"标题\",\"content\":\"正文\"}"
+// @Success      200  {object}  types.CreatePostResp  "成功响应"
+// @Router       /post/auth/create [post]
 func HandlerPostCreate(c *gin.Context) {
 	req := &types.CreatePostReq{}
 	form, err := c.MultipartForm()
@@ -19,19 +29,19 @@ func HandlerPostCreate(c *gin.Context) {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
-	if form==nil{
+	if form == nil {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
 	files := form.File["postimage"]   // 获取文件
 	jsonData := form.Value["json"][0] // 获取JSON字符串
-	fmt.Printf("%#v\n",jsonData)
+	fmt.Printf("%#v\n", jsonData)
 	err = json.Unmarshal([]byte(jsonData), req)
 	if err != nil {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
-	
+
 	resp, code, err := logic.LogicPostCreate(c, req)
 	if code != codes.CodeAllSuccess {
 		responce.ErrorInternalServerErrorWithCode(c, code)
@@ -41,7 +51,7 @@ func HandlerPostCreate(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
-	_, code, err = logic.LogicPostUploadPostImage(c, &types.UploadManyImagesReq{Files: files,ID: resp.ID})
+	_, code, err = logic.LogicPostUploadPostImage(c, &types.UploadManyImagesReq{Files: files, ID: resp.ID})
 	if code != codes.CodeAllSuccess {
 		responce.ErrorInternalServerErrorWithCode(c, code)
 		return
@@ -55,6 +65,6 @@ func HandlerPostCreate(c *gin.Context) {
 }
 
 func FormatData(input string) string {
-    // 将 \\n 替换为 \n
-    return strings.ReplaceAll(input, `\`, "\\")
+	// 将 \\n 替换为 \n
+	return strings.ReplaceAll(input, `\`, "\\")
 }

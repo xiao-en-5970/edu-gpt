@@ -9,21 +9,29 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
-func HandlerUserAvatar(c *gin.Context){
+// @Summary      获取用户头像
+// @Description  根据用户ID返回头像数据
+// @Tags         User模块
+// @Security     BearerAuth 
+// @Produce      octet-stream
+// @Param        id  path  string  true  "用户ID"  
+// @Success      200  {file}  binary  "头像图片文件"
+// @Router       /user/auth/avatar/{id} [get,post]
+func HandlerUserAvatar(c *gin.Context) {
 	idstr := c.Param("id")
-	uid,err := strconv.Atoi(idstr)
+	uid, err := strconv.Atoi(idstr)
 	id := uint(uid)
-	if err != nil{
-		responce.ErrorBadRequest(c,err)
+	if err != nil {
+		responce.ErrorBadRequest(c, err)
 		return
 	}
-	user,err:=model.FindUserById(c,id)
-	if user == nil{
-		responce.ErrorInternalServerErrorWithCode(c,codes.CodeUserNotExist)
+	user, err := model.FindUserById(c, id)
+	if user == nil {
+		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return
 	}
-	if err != nil{
-		responce.ErrorInternalServerError(c,err)
+	if err != nil {
+		responce.ErrorInternalServerError(c, err)
 		return
 	}
 	c.File(user.AvatarPath)

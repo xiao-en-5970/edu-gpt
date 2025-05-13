@@ -1,23 +1,20 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "用户登录认证接口文档",
-        "title": "用户认证服务API文档",
-        "contact": {
-            "name": "API支持",
-            "email": "1076763695@qq.com"
-        },
-        "license": {
-            "name": "MIT"
-        },
+        "title": "接口文档",
+        "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/login": {
+        "/comment/auth/createreply": {
             "post": {
-                "description": "使用用户名密码登录系统",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入正文和父评论id和回复用户id创建一条回复并返回这个回复的id",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,25 +22,755 @@
                     "application/json"
                 ],
                 "tags": [
-                    "认证服务"
+                    "Comment模块"
                 ],
-                "summary": "用户登录",
+                "summary": "创建回复",
                 "parameters": [
                     {
-                        "description": "登录凭证",
-                        "name": "login",
+                        "description": "请求体",
+                        "name": "edit",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.LoginReq"
+                            "$ref": "#/definitions/types.SubCommentCreateReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "登录成功",
+                        "description": "成功响应",
                         "schema": {
-                            "$ref": "#/definitions/model.LoginResp"
+                            "$ref": "#/definitions/types.SubCommentCreateResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/auth/like": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "还没做",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment模块"
+                ],
+                "summary": "评论点赞【TODO】",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.CommentLikeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.CommentLikeResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/auth/likereply": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "还没做",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment模块"
+                ],
+                "summary": "回复点赞【TODO】",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.SubCommentLikeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.SubCommentLikeResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/auth/list": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入帖子id返回评论列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment模块"
+                ],
+                "summary": "评论列表",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.CommentListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "description": "评论列表的响应数据",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.BriefComment"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/auth/listreply": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入父评论id返回回复列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment模块"
+                ],
+                "summary": "回复列表",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.SubCommentListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "description": "子评论列表的响应数据",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.BriefSubComment"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/commmnt/auth/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入正文和帖子id创建评论并返回评论id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment模块"
+                ],
+                "summary": "创建评论",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.CommentCreateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.CommentCreateResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/auth/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入标题和正文创建帖子，并返回新帖子id",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "创建帖子",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "背景图文件",
+                        "name": "postimage",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "JSON请求数据",
+                        "name": "json",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.CreatePostResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/auth/edit": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "更改帖子信息【TODO】",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "更改帖子信息【TODO】",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.EditPostReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.EditPostResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/auth/like": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入帖子id预期点赞状态(1/0)给帖子点赞",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "帖子点赞",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.PostLikeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.PostLikeResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/auth/list": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "输入最后刷新的帖子id和返回数量进行帖子列表的获取",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "帖子列表",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.PostListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "description": "帖子列表的响应数据",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.BriefPost"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/post/auth/postimage/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过帖子id直接查看帖子",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "帖子图片查看",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "帖子图片ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "帖子图片文件",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/auth/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过帖子id直接查看帖子",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "帖子查看",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "帖子ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.PostResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/avatar/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "根据用户ID返回头像数据",
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "获取用户头像",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "头像图片文件",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/backimage/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "根据用户ID返回背景图数据",
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "获取用户背景图",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "背景图片文件",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/get_userinfo": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "获取用户个人信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "用户个人信息",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "get_userinfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.GetUserInfoReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.GetUserInfoResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/update_userinfo": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "更改用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "更改用户信息",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "update_userinfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UpdateUserInfoReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.UpdateUserInfoResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/upload_avatar": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过form-data上传头像",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "更新头像",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "图片文件",
+                        "name": "avatar",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.UploadImageResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/upload_backimage": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过form-data上传背景图",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "更新背景图",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "背景图文件",
+                        "name": "backimage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.UploadImageResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "根据用户ID返回用户",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "获取用户数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.BriefUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "description": "使用信息门户用户名密码登录软件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.LoginResp"
                         }
                     }
                 }
@@ -51,7 +778,465 @@
         }
     },
     "definitions": {
-        "model.LoginReq": {
+        "types.BriefComment": {
+            "description": "简要的评论信息展示",
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://example.com/avatar.jpg"
+                },
+                "comment_count": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "content": {
+                    "type": "string",
+                    "example": "这是一条评论内容"
+                },
+                "create_at": {
+                    "type": "string",
+                    "example": "2025-04-27T16:10:08.5Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "like_count": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                },
+                "poster_id": {
+                    "type": "integer",
+                    "example": 789
+                },
+                "poster_nickname": {
+                    "type": "string",
+                    "example": "张三"
+                }
+            }
+        },
+        "types.BriefPost": {
+            "description": "简要的帖子信息展示",
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://example.com/avatar.jpg"
+                },
+                "collect_count": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "comment_count": {
+                    "type": "integer",
+                    "example": 8
+                },
+                "content": {
+                    "type": "string",
+                    "example": "这是帖子的部分内容..."
+                },
+                "create_at": {
+                    "type": "string",
+                    "example": "2025-04-27T16:10:08.5Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 123
+                },
+                "like_count": {
+                    "type": "integer",
+                    "example": 42
+                },
+                "poster_id": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "poster_nickname": {
+                    "type": "string",
+                    "example": "张三"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "这是一个帖子标题"
+                },
+                "view_count": {
+                    "type": "integer",
+                    "example": 100
+                }
+            }
+        },
+        "types.BriefSubComment": {
+            "description": "简要的子评论信息展示",
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "string",
+                    "example": "30分钟前"
+                },
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://example.com/avatar.jpg"
+                },
+                "content": {
+                    "type": "string",
+                    "example": "这是一条回复评论"
+                },
+                "create_at": {
+                    "type": "string",
+                    "example": "2025-04-27T16:10:08.5Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 789
+                },
+                "like_count": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "parent": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                },
+                "poster_id": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "poster_nickname": {
+                    "type": "string",
+                    "example": "李四"
+                },
+                "reply": {
+                    "type": "integer",
+                    "example": 101
+                }
+            }
+        },
+        "types.BriefUser": {
+            "description": "简要的用户信息展示",
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
+                },
+                "backimage_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/backimage/1"
+                },
+                "campus": {
+                    "type": "string",
+                    "example": "翡翠湖校区"
+                },
+                "create_at": {
+                    "type": "string",
+                    "example": "2025-04-27T16:10:08.5Z"
+                },
+                "department": {
+                    "type": "string",
+                    "example": "数学学院"
+                },
+                "grade": {
+                    "type": "string",
+                    "example": "2022"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "傅益忠"
+                },
+                "sex": {
+                    "type": "string",
+                    "example": "男"
+                },
+                "signature": {
+                    "type": "string",
+                    "example": "这人啥也没说"
+                },
+                "tags": {
+                    "description": "注意：原结构体类型应为[]string",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "学习",
+                        "运动",
+                        "音乐"
+                    ]
+                }
+            }
+        },
+        "types.CommentCreateReq": {
+            "description": "创建评论的请求参数",
+            "type": "object",
+            "required": [
+                "content",
+                "post_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "example": "这是一条评论内容"
+                },
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                }
+            }
+        },
+        "types.CommentCreateResp": {
+            "description": "创建评论成功后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 456
+                }
+            }
+        },
+        "types.CommentLikeReq": {
+            "description": "评论点赞/取消点赞的请求参数",
+            "type": "object",
+            "required": [
+                "comment_id",
+                "like_status"
+            ],
+            "properties": {
+                "comment_id": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "like_status": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "example": 1
+                }
+            }
+        },
+        "types.CommentLikeResp": {
+            "description": "评论点赞操作后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "like_count": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "like_status": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "types.CommentListReq": {
+            "description": "获取评论列表的请求参数",
+            "type": "object",
+            "required": [
+                "post_id",
+                "size"
+            ],
+            "properties": {
+                "last_cid": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                },
+                "size": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "minimum": 1,
+                    "example": 10
+                }
+            }
+        },
+        "types.CreatePostResp": {
+            "description": "创建帖子成功后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 123
+                }
+            }
+        },
+        "types.EditPostReq": {
+            "description": "编辑帖子的请求参数",
+            "type": "object",
+            "required": [
+                "content",
+                "id",
+                "title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 5000,
+                    "minLength": 1,
+                    "example": "修改后的内容..."
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 123
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "example": "修改后的标题"
+                }
+            }
+        },
+        "types.EditPostResp": {
+            "description": "创建帖子成功后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 123
+                }
+            }
+        },
+        "types.GetUserInfoReq": {
+            "description": "获取用户信息的请求参数（当前为空结构体）",
+            "type": "object"
+        },
+        "types.GetUserInfoResp": {
+            "description": "获取用户信息的响应数据",
+            "type": "object",
+            "required": [
+                "account_status",
+                "nickname",
+                "username"
+            ],
+            "properties": {
+                "account_status": {
+                    "type": "string",
+                    "enum": [
+                        "active",
+                        "locked",
+                        "disabled"
+                    ],
+                    "example": "active"
+                },
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
+                },
+                "backimage_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/backimage/1"
+                },
+                "campus": {
+                    "type": "string",
+                    "example": "翡翠湖校区"
+                },
+                "class": {
+                    "type": "string",
+                    "example": "信息计22-2班"
+                },
+                "create_at": {
+                    "type": "string",
+                    "example": "2025-04-27T16:10:08.5Z"
+                },
+                "cultivate_type": {
+                    "type": "string",
+                    "example": "主修"
+                },
+                "department": {
+                    "type": "string",
+                    "example": "数学学院"
+                },
+                "enrollment_date": {
+                    "type": "string",
+                    "example": "2022-09-01"
+                },
+                "grade": {
+                    "type": "string",
+                    "example": "2022"
+                },
+                "graduate_date": {
+                    "type": "string",
+                    "example": "2026-07-01"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "level": {
+                    "type": "string",
+                    "example": "本科"
+                },
+                "major": {
+                    "type": "string",
+                    "example": "信息与计算科学"
+                },
+                "nickname": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 1,
+                    "example": "傅益忠"
+                },
+                "sex": {
+                    "type": "string",
+                    "example": "男"
+                },
+                "signature": {
+                    "type": "string",
+                    "example": "这人啥也没说"
+                },
+                "tags": {
+                    "description": "数组类型用逗号分隔示例",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "学习",
+                        "运动",
+                        "音乐"
+                    ]
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 3,
+                    "example": "2022210826"
+                },
+                "username_zh": {
+                    "type": "string",
+                    "example": "傅益忠"
+                }
+            }
+        },
+        "types.LoginReq": {
+            "description": "用户登录的请求参数",
             "type": "object",
             "required": [
                 "password",
@@ -59,72 +1244,433 @@
             ],
             "properties": {
                 "password": {
-                    "description": "密码，最少6位\nRequired: true\nExample: password123",
                     "type": "string",
-                    "minLength": 6
+                    "minLength": 6,
+                    "example": "QQQQQAQWERqwer2."
                 },
                 "username": {
-                    "description": "用户名，4-20位字母数字组合\nRequired: true\nExample: admin123",
                     "type": "string",
                     "maxLength": 20,
-                    "minLength": 4
+                    "minLength": 4,
+                    "example": "2022210857"
                 }
             }
         },
-        "model.LoginResp": {
+        "types.LoginResp": {
+            "description": "用户登录成功后返回的响应数据",
             "type": "object",
             "properties": {
-                "avatar_path": {
-                    "description": "头像路径\nExample: /avatars/default.png",
-                    "type": "string"
+                "id": {
+                    "type": "integer",
+                    "example": 1
                 },
-                "createTime": {
-                    "description": "创建时间\nExample: 2023-01-01 12:00:00",
-                    "type": "string"
-                },
-                "email": {
-                    "description": "电子邮箱\nExample: user@example.com",
-                    "type": "string"
-                },
-                "nickname": {
-                    "description": "用户昵称\nExample: 游戏达人",
-                    "type": "string"
-                },
-                "personality_tags": {
-                    "description": "个性标签\nExample: [\"竞技\",\"团队合作\"]",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "phone": {
-                    "description": "手机号码\nExample: 13800138000",
-                    "type": "string"
-                },
-                "playStyle_tags": {
-                    "description": "玩法偏好\nExample: [\"PVP\",\"副本\"]",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "self_evaluatedLevel": {
-                    "description": "自评等级\nExample: 高级玩家",
-                    "type": "string"
-                },
-                "system_score": {
-                    "description": "系统评分\nExample: 85",
-                    "type": "integer"
-                },
-                "user_id": {
-                    "description": "用户ID\nExample: 123456",
-                    "type": "integer"
-                },
-                "username": {
-                    "description": "用户名\nExample: admin123",
-                    "type": "string"
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDc5ODgxMjgsImlkIjoxfQ.-h4HvQ9PB15dxE-gDXQnSIY0h9ambb1AbMc0VFjZLTE"
                 }
             }
+        },
+        "types.PostLikeReq": {
+            "description": "帖子点赞/取消点赞的请求参数",
+            "type": "object",
+            "required": [
+                "like_status",
+                "post_id"
+            ],
+            "properties": {
+                "like_status": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "example": 1
+                },
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                }
+            }
+        },
+        "types.PostLikeResp": {
+            "description": "帖子点赞操作后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "like_count": {
+                    "type": "integer",
+                    "example": 42
+                },
+                "like_status": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "types.PostListReq": {
+            "description": "获取帖子列表的请求参数",
+            "type": "object",
+            "required": [
+                "size"
+            ],
+            "properties": {
+                "last_pid": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "size": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "minimum": 1,
+                    "example": 10
+                }
+            }
+        },
+        "types.PostResp": {
+            "description": "帖子详情的响应数据",
+            "type": "object",
+            "required": [
+                "active"
+            ],
+            "properties": {
+                "active": {
+                    "type": "string",
+                    "enum": [
+                        "active",
+                        "locked",
+                        "disabled"
+                    ]
+                },
+                "avatar": {
+                    "type": "string",
+                    "example": "https://example.com/avatar.jpg"
+                },
+                "collect_count": {
+                    "type": "integer"
+                },
+                "comment_count": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "create_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_urls": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "https://example.com/image1.jpg",
+                        "https://example.com/image2.jpg"
+                    ]
+                },
+                "like_count": {
+                    "type": "integer"
+                },
+                "like_status": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "poster_campus": {
+                    "type": "string",
+                    "example": "翡翠湖校区"
+                },
+                "poster_department": {
+                    "type": "string",
+                    "example": "计算机学院"
+                },
+                "poster_grade": {
+                    "type": "string",
+                    "example": "2022"
+                },
+                "poster_id": {
+                    "type": "integer"
+                },
+                "poster_nickname": {
+                    "type": "string",
+                    "example": "张三"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "update_at": {
+                    "type": "string"
+                },
+                "view_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "types.SubCommentCreateReq": {
+            "description": "创建子评论(回复评论)的请求参数",
+            "type": "object",
+            "required": [
+                "content",
+                "parent",
+                "post_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "example": "这是一条回复评论"
+                },
+                "parent": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                },
+                "reply": {
+                    "type": "integer",
+                    "example": 789
+                }
+            }
+        },
+        "types.SubCommentCreateResp": {
+            "description": "创建子评论成功后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 789
+                }
+            }
+        },
+        "types.SubCommentLikeReq": {
+            "description": "子评论点赞/取消点赞的请求参数",
+            "type": "object",
+            "required": [
+                "like_status",
+                "subcomment_id"
+            ],
+            "properties": {
+                "like_status": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "example": 1
+                },
+                "subcomment_id": {
+                    "type": "integer",
+                    "example": 789
+                }
+            }
+        },
+        "types.SubCommentLikeResp": {
+            "description": "子评论点赞操作后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "like_count": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "like_status": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "types.SubCommentListReq": {
+            "description": "获取子评论列表的请求参数",
+            "type": "object",
+            "required": [
+                "parent",
+                "size"
+            ],
+            "properties": {
+                "last_scid": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "parent": {
+                    "type": "integer",
+                    "example": 456
+                },
+                "size": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "minimum": 1,
+                    "example": 10
+                }
+            }
+        },
+        "types.UpdateUserInfoReq": {
+            "description": "更新用户信息的请求参数",
+            "type": "object",
+            "required": [
+                "account_status",
+                "nickname"
+            ],
+            "properties": {
+                "account_status": {
+                    "type": "string",
+                    "enum": [
+                        "active",
+                        "locked",
+                        "disabled"
+                    ],
+                    "example": "active"
+                },
+                "nickname": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 1,
+                    "example": "李华2333"
+                },
+                "signature": {
+                    "type": "string",
+                    "example": "这个人说了什么"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "唱",
+                        "跳",
+                        "rap",
+                        "篮球"
+                    ]
+                }
+            }
+        },
+        "types.UpdateUserInfoResp": {
+            "description": "更新用户信息后返回的响应数据",
+            "type": "object",
+            "required": [
+                "account_status",
+                "nickname",
+                "username"
+            ],
+            "properties": {
+                "account_status": {
+                    "type": "string",
+                    "enum": [
+                        "active",
+                        "locked",
+                        "disabled"
+                    ],
+                    "example": "active"
+                },
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
+                },
+                "backimage_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/backimage/1"
+                },
+                "campus": {
+                    "type": "string",
+                    "example": "翡翠湖校区"
+                },
+                "class": {
+                    "type": "string",
+                    "example": "信息计22-2班"
+                },
+                "create_at": {
+                    "type": "string",
+                    "example": "2025-04-27T16:10:08.5Z"
+                },
+                "cultivate_type": {
+                    "type": "string",
+                    "example": "主修"
+                },
+                "department": {
+                    "type": "string",
+                    "example": "数学学院"
+                },
+                "enrollment_date": {
+                    "type": "string",
+                    "example": "2022-09-01"
+                },
+                "grade": {
+                    "type": "string",
+                    "example": "2022"
+                },
+                "graduate_date": {
+                    "type": "string",
+                    "example": "2026-07-01"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "level": {
+                    "type": "string",
+                    "example": "本科"
+                },
+                "major": {
+                    "type": "string",
+                    "example": "信息与计算科学"
+                },
+                "nickname": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 1,
+                    "example": "傅益忠"
+                },
+                "sex": {
+                    "type": "string",
+                    "example": "男"
+                },
+                "signature": {
+                    "type": "string",
+                    "example": "这人啥也没说"
+                },
+                "tags": {
+                    "description": "数组类型用逗号分隔示例",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "学习",
+                        "运动",
+                        "音乐"
+                    ]
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 3,
+                    "example": "2022210826"
+                },
+                "username_zh": {
+                    "type": "string",
+                    "example": "傅益忠"
+                }
+            }
+        },
+        "types.UploadImageResp": {
+            "description": "上传图片成功后返回的响应数据",
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Bearer Token 格式：`Bearer {token}`（注意空格）",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

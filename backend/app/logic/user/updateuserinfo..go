@@ -20,7 +20,7 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 	if us != nil {
 		//用户存在
 		global.Logger.Debug(req)
-		us.AccountStatus = req.AccountStatus
+		us.Active = req.AccountStatus
 		us.Nickname = req.Nickname
 		us.Signature = req.Signature
 		tagstr, err := json.Marshal(req.Tags)
@@ -52,7 +52,7 @@ func LogicUserUpdateUserInfo(c *gin.Context, req *types.UpdateUserInfoReq) (resp
 			GraduateDate:   us.GraduateDate,
 			CreateAt:       us.CreateAt,
 			Username:       us.Username,
-			AccountStatus:  us.AccountStatus,
+			AccountStatus:  us.Active,
 			Nickname:       us.Nickname,
 			AvatarUrl:      global.GetUrl("user/auth/avatar", us.ID),
 			BackImageUrl:   global.GetUrl("user/auth/backimage", us.ID),

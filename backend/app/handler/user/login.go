@@ -2,35 +2,29 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/logic/user"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
+	logic "github.com/xiao-en-5970/edu-gpt/backend/app/logic/user"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/services"
+	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 )
 
 // @Summary 用户登录
-// @Description 使用用户名密码登录系统
-// @Tags 认证服务
+// @Description 使用信息门户用户名密码登录软件
+// @Tags User模块
 // @Accept json
 // @Produce json
-// @Param login body model.LoginReq true "登录凭证"
-// @Success 200 {object} model.LoginResp "登录成功"
-// @Router /login [post]
-func HandlerUserLogin(c *gin.Context){
-	req := &types.LoginReq{}
-	err := c.ShouldBindJSON(req)
-	if err != nil {
-		responce.ErrorBadRequest(c,err)
-		return
-	}
-	resp,code,err:=logic.LogicUserLogin(c,req)
-	if err!=nil{
-		responce.ErrorInternalServerError(c,err)
-		return
-	}
-	if code == codes.CodeAllSuccess{
-		responce.SuccessWithData(c,*resp)
-	}else{
-		responce.ErrorInternalServerErrorWithCode(c,code)
-	}
+// @Param login body types.LoginReq true "请求体"
+// @Success 200 {object} types.LoginResp "成功响应"
+// @Router /user/login [post]
+func HandlerUserLogin(c *gin.Context) {
+	services.ServiceHandlerWithJson(c, UserLogin{})
+}
+
+type UserLogin struct{}
+
+func (UserLogin) NewReq() any {
+	return &types.LoginReq{}
+}
+
+func (UserLogin) Logic(c *gin.Context, req any) (resp any, code int, err error) {
+	return logic.LogicUserLogin(c, req.(*types.LoginReq))
 }

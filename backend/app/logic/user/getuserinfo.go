@@ -39,7 +39,7 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 			GraduateDate:   user.GraduateDate,
 			CreateAt:       user.CreateAt,
 			Username:       user.Username,
-			AccountStatus:  user.AccountStatus,
+			AccountStatus:  user.Active,
 			Nickname:       user.Nickname,
 			AvatarUrl:      global.GetUrl("user/auth/avatar", user.ID),
 			BackImageUrl:   global.GetUrl("user/auth/backimage", user.ID),

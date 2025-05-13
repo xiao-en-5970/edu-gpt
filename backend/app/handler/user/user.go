@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,14 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
+// @Summary      获取用户数据
+// @Description  根据用户ID返回用户
+// @Tags         User模块
+// @Security     BearerAuth
+// @Produce      json
+// @Param        id  path  string  true  "用户ID"
+// @Success 200 {object} types.BriefUser "成功响应"
+// @Router       /user/auth/{id} [get,post]
 func HandlerUser(c *gin.Context) {
 	idstr := c.Param("id")
 	uid, err := strconv.Atoi(idstr)
@@ -28,6 +37,12 @@ func HandlerUser(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
+	var tag = make([]string, 0)
+	err = json.Unmarshal([]byte(user.Tags), &tag)
+	if err != nil {
+		responce.ErrorInternalServerError(c, err)
+		return
+	}
 	rsp := &types.BriefUser{
 		ID:         user.ID,
 		CreateAt:  user.CreateAt,
@@ -39,7 +54,7 @@ func HandlerUser(c *gin.Context) {
 		Grade:      user.Grade,
 		Campus:     user.Campus,
 		Signature:  user.Signature,
-		Tags:       user.Tags,
+		Tags:       tag,
 	}
 	responce.SuccessWithData(c, rsp)
 }

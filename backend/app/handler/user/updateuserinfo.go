@@ -8,6 +8,15 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
+// @Summary 更改用户信息
+// @Description 更改用户信息
+// @Tags User模块
+// @Security     BearerAuth 
+// @Accept json
+// @Produce json
+// @Param update_userinfo body types.UpdateUserInfoReq true "请求体"
+// @Success 200 {object} types.UpdateUserInfoResp "成功响应"
+// @Router /user/auth/update_userinfo [post]
 func HandlerUserUpdateUserInfo(c *gin.Context) {
 	req := &types.UpdateUserInfoReq{}
 	err := c.ShouldBindJSON(req)
@@ -26,3 +35,5 @@ func HandlerUserUpdateUserInfo(c *gin.Context) {
 		responce.ErrorInternalServerErrorWithCode(c, code)
 	}
 }
+
+

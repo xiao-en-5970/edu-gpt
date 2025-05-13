@@ -23,6 +23,18 @@ func (PostLike) TableName() string {
 	return "post_likes"
 }
 
+func GetLikeStatus(c *gin.Context,postid uint,userid uint)(likeStatus int,err error){
+	like:=&PostLike{}
+	err=global.Db.WithContext(c).Model(like).Where("post_id=? and user_id=?",postid,userid).First(like).Error
+	if err!=nil{
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0,nil
+		}
+		return -1,err
+	}
+	return like.Status,nil
+}
+
 
 func AddLikeCount(c *gin.Context,postid uint,userid uint,expectlikestatus int)(newlikeCount int,newlikeStatus int,err error){
 	err=global.Db.Transaction(func(tx *gorm.DB)(err error){

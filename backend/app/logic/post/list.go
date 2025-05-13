@@ -8,39 +8,39 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
+func LogicPostList(c *gin.Context, req *types.PostListReq) (resp types.PostListResp, code int, err error) {
+	_, ex := c.Get("id")
+	if !ex {
+		return types.PostListResp{}, codes.CodeAuthUnvalidToken, nil
+	}
 
-func LogicPostList(c *gin.Context,req *types.PostListReq)(resp types.PostListResp,code int,err error){
-	_,ex:=c.Get("id")
-	if !ex{
-		return types.PostListResp{},codes.CodeAuthUnvalidToken,nil
+	posts, err := model.ListPost(c, req.LastPid, req.Limit)
+	if err != nil {
+		return types.PostListResp{}, codes.CodeAllIntervalError, err
 	}
-	
-	posts,err:=model.ListPost(c,req.Offset,req.Limit)
-	if err!=nil{
-		return types.PostListResp{},codes.CodeAllIntervalError,err
-	}
-	briefposts:=make([]types.BriefPost,0,1)
-	for _,p:=range(posts){
-		poster,err := model.FindUserById(c,p.PosterID)
-		if poster == nil{
-			return types.PostListResp{},codes.CodeUserNotExist,nil
+	briefposts := make([]types.BriefPost, 0, 1)
+	for _, p := range posts {
+		poster, err := model.FindUserById(c, p.PosterID)
+		if poster == nil {
+			return types.PostListResp{}, codes.CodeUserNotExist, nil
 		}
-		if err!=nil{
-			return types.PostListResp{},codes.CodeAllIntervalError,err
+		if err != nil {
+			return types.PostListResp{}, codes.CodeAllIntervalError, err
 		}
 		briefposts = append(briefposts, types.BriefPost{
-			Title: p.Title,
-			Content: p.Content,
-			Nickname: poster.Nickname,
-			ID: p.ID,
-			PosterID: p.PosterID,
-			ViewCount: p.ViewCount,
-			LikeCount: p.LikeCount,
+			Title:        p.Title,
+			Content:      p.Content,
+			Nickname:     poster.Nickname,
+			ID:           p.ID,
+			PosterID:     p.PosterID,
+			ViewCount:    p.ViewCount,
+			Active:       p.Active,
+			LikeCount:    p.LikeCount,
 			CollectCount: p.CollectCount,
 			CommentCount: p.CommentCount,
-			CreateAt: p.CreateAt,
-			AvatarUrl: global.GetUrl("user/auth/avatar",p.PosterID),
+			CreateAt:     p.CreateAt,
+			AvatarUrl:    global.GetUrl("user/auth/avatar", p.PosterID),
 		})
 	}
-	return briefposts,codes.CodeAllSuccess,nil
+	return briefposts, codes.CodeAllSuccess, nil
 }

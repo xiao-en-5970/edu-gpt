@@ -12,6 +12,15 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
+// @Summary      更新头像
+// @Description  通过form-data上传头像
+// @Tags         User模块
+// @Security     BearerAuth 
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        avatar formData file true "图片文件"
+// @Success      200  {object}  types.UploadImageResp  "成功响应"
+// @Router       /user/auth/upload_avatar [post]
 func HandlerUserUploadAvatar(c *gin.Context) {
 	file, err := c.FormFile("avatar")
 	if err != nil {
