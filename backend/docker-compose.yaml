@@ -10,6 +10,8 @@ services:
       - app_net
     volumes:
       - ./app:/app                  # 挂载本地代码到容器
+      # - ./container/golang:/go/pkg/mod        # 持久化模块缓存
+      # - ./container/golang:/root/.cache/go-build # 持久化构建缓存
     depends_on:
       - mysql
       - redis
