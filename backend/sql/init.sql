@@ -61,8 +61,8 @@ CREATE TABLE `post_image` (
     `images_path` VARCHAR(255) DEFAULT 0 COMMENT '图片路径',
     `create_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-    KEY `idx_user` (`post_id`)
+    PRIMARY KEY (`id`),
+    KEY `idx_post` (`post_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '帖子图片表';
 
 CREATE TABLE `post_likes` (

@@ -119,7 +119,7 @@ func CreateSubComment(c *gin.Context, subcomment *SubComment) (id uint, err erro
 func ListComment(c *gin.Context,pid uint, last_cid uint, limit int) (comments []Comment, err error) {
 	comments = make([]Comment, 0, 1)
 	global.Logger.Infof("id>%v and post_id=%v",last_cid,pid)
-	err = global.Db.WithContext(c).Model(&Comment{}).Where("id>? and post_id=?",last_cid,pid).Limit(limit).Find(&comments).Error
+	err = global.Db.WithContext(c).Model(&Comment{}).Where("id>? and post_id=?",last_cid,pid).Order("id DESC").Limit(limit).Find(&comments).Error
 	return comments, err
 }
 

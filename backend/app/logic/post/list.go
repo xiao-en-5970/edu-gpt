@@ -14,7 +14,7 @@ func LogicPostList(c *gin.Context, req *types.PostListReq) (resp types.PostListR
 		return types.PostListResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 
-	posts, err := model.ListPost(c, req.LastPid, req.Limit)
+	posts, err := model.ListPostDesc(c, req.LastPid, req.Limit)
 	if err != nil {
 		return types.PostListResp{}, codes.CodeAllIntervalError, err
 	}
