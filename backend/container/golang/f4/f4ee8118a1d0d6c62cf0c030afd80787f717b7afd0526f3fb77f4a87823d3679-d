@@ -1,8 +1,0 @@
-./avatar.go
-./backimage.go
-./getuserinfo.go
-./login.go
-./updateuserinfo.go
-./uploadavatar.go
-./uploadbackimage.go
-./user.go
