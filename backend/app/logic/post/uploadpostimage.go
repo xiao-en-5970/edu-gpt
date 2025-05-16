@@ -20,7 +20,7 @@ func LogicPostUploadPostImage(c *gin.Context, req *types.UploadManyImagesReq) (r
 	urls:=make([]string,0)
 	for index, file := range req.Files {
 		//生成存储路径
-		absPath := fmt.Sprintf("%s/%d_%d%s", global.Cfg.Image.PostPath, post.ID, index+1,path.Ext(file.Filename))
+		absPath := fmt.Sprintf("%s/%d_%d%s", global.Cfg.Static.PostPath, post.ID, index+1,path.Ext(file.Filename))
 		imageid,err:=model.InsertPostImage(c,&model.PostImage{
 			PostID: post.ID,
 			Number: index+1,

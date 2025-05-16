@@ -22,7 +22,7 @@ func LogicUserUploadBackImage(c *gin.Context, req *types.UploadImageReq) (resp *
 	if user != nil {
 		//用户存在
 		//生成存储路径
-		absPath := fmt.Sprintf("%s/%d%s", global.Cfg.Image.BackImagePath, user.ID, path.Ext(req.File.Filename))
+		absPath := fmt.Sprintf("%s/%d%s", global.Cfg.Static.BackImagePath, user.ID, path.Ext(req.File.Filename))
 		//删除旧头像（如果存在）
 		if user.BackgroundImagePath == absPath {
 			os.RemoveAll(absPath)

@@ -23,10 +23,11 @@ hfut-api:
   retry: 10
 logging:
   level: "info"
-image:
-  avatars_path: ./static/avatars
-  backimage_path: ./static/backimages
-  post_path: ./static/posts
+static:
+  root_path: /var/lib/static
+  avatars_path: /var/lib/static/avatars
+  backimage_path: /var/lib/static/backimages
+  post_path: /var/lib/static/posts
 auth:
   max_age: 240 #单位小时
   

@@ -2,8 +2,10 @@ package conf
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
+	"os"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -13,7 +15,7 @@ type Config struct {
 	HfutAPI HfutAPI       `mapstructure:"hfut-api"`
 	Logging LoggingConfig `mapstructure:"logging"`
 	Auth    Auth          `mapstructure:"auth"`
-	Image   Image         `mapstructure:"image"`
+	Static  Static        `mapstructure:"static"`
 }
 type Auth struct {
 	MaxAge time.Duration `mapstructure:"max_age"`
@@ -46,7 +48,8 @@ type HfutAPI struct {
 	Port  int    `mapstructure:"port"`
 	Retry int    `mapstructure:"retry"`
 }
-type Image struct {
+type Static struct {
+	RootPath      string `mapstructure:"root_path"`
 	AvatarsPath   string `mapstructure:"avatars_path"`
 	BackImagePath string `mapstructure:"backimage_path"`
 	PostPath      string `mapstructure:"post_path"`
@@ -71,6 +74,9 @@ func ConfInit(path string) (cfg *Config, err error) {
 	if err := viper.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("解析配置失败: %w", err)
 	}
-
+	os.MkdirAll(cfg.Static.RootPath, 0755)
+	os.MkdirAll(cfg.Static.AvatarsPath, 0755)
+	os.MkdirAll(cfg.Static.BackImagePath, 0755)
+	os.MkdirAll(cfg.Static.PostPath, 0755)
 	return cfg, nil
 }
