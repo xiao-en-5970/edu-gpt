@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
@@ -20,7 +21,6 @@ func LogicUserHFUTLogin(req *types.HFUTLoginReq) (resp *types.HFUTLoginResp, cod
 	params.Add("username", req.Username)
 	params.Add("password", req.Password)
 	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s:%d/login?", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port)+params.Encode(), nil)
-
 	rsp, err := c.Do(r)
 	if err != nil {
 		return &types.HFUTLoginResp{}, codes.CodeAllBadGateway, err
@@ -77,7 +77,7 @@ func LogicUserHFUTLogin(req *types.HFUTLoginReq) (resp *types.HFUTLoginResp, cod
 func LogicHFUTStudentInfo(c *gin.Context, username string) (resp *types.HFUTStudentInfoResp, code int, err error) {
 	client := &http.Client{}
 	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s:%d/eam/studentinfo?", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port), nil)
-	result := global.RedisClient.Get(c, username)
+	result := global.RedisClient.Get(c, middleware.GetPrefix("username",username))
 	if result.Err() != nil {
 		return &types.HFUTStudentInfoResp{}, codes.CodeHFUTIntervalError, nil
 	}
@@ -101,7 +101,7 @@ func LogicHFUTStudentInfo(c *gin.Context, username string) (resp *types.HFUTStud
 		return hfutrsp, codes.CodeAllSuccess, nil
 	} else if rsp.StatusCode == 401 || rsp.StatusCode == 400 {
 		// 删除 Redis 中的无效 cookie
-		global.RedisClient.Del(c, username)
+		global.RedisClient.Del(c, middleware.GetPrefix("username",username))
 		//未登录
 		return &types.HFUTStudentInfoResp{}, codes.CodeHFUTNotLogin, nil
 	} else if rsp.StatusCode == 500 {

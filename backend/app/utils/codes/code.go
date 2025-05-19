@@ -11,10 +11,11 @@ const (
 	CodeAllBadGateway         = 10004 //错误网关
 
 	//用户逻辑错误
-	CodeUserLoginPasswordError = 20001 //用户存在，但是密码错误
-	CodeUserNotExist           = 20002 //用户不存在
-	CodeUserAlreadyExist       = 20003 //用户已经存在
-	CodeUserInfoUpdateFail     = 20004 //用户信息更新失败
+	CodeUserLoginPasswordError  = 20001 //用户存在，但是密码错误
+	CodeUserNotExist            = 20002 //用户不存在
+	CodeUserAlreadyExist        = 20003 //用户已经存在
+	CodeUserInfoUpdateFail      = 20004 //用户信息更新失败
+	CodeUserRefreshHFUTInfoFail = 20005 //用户HFUT信息无法刷新
 	//鉴权错误
 	CodeAuthNotExistError = 30001 //未授权
 	CodeAuthUnvalidToken  = 30002 //无效token
@@ -23,6 +24,7 @@ const (
 	CodeHFUTIntervalError = 40002 //信息门户内部问题，请重试
 	CodeHFUTUnkonwnError  = 40003 //信息门户未知错误
 	CodeHFUTNotLogin      = 40004 //信息门户未登录
+
 	//图片错误
 	CodeImageFormatError = 50001 //图片格式错误
 	CodeImageNotExist    = 50002 //图片不存在
@@ -44,10 +46,11 @@ var (
 		CodeAllUnknownError:       "未知错误",
 		CodeAllBadGateway:         "错误网关",
 		//用户逻辑错误
-		CodeUserLoginPasswordError: "用户存在，但是密码错误",
-		CodeUserNotExist:           "用户不存在",
-		CodeUserAlreadyExist:       "用户已经存在",
-		CodeUserInfoUpdateFail:     "用户信息更新失败",
+		CodeUserLoginPasswordError:  "用户存在，但是密码错误",
+		CodeUserNotExist:            "用户不存在",
+		CodeUserAlreadyExist:        "用户已经存在",
+		CodeUserInfoUpdateFail:      "用户信息更新失败",
+		CodeUserRefreshHFUTInfoFail: "用户HFUT信息无法刷新",
 		//鉴权错误
 		CodeAuthNotExistError: "未授权",
 		CodeAuthUnvalidToken:  "无效token",

@@ -53,3 +53,24 @@ func Decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 
     return gcm.Open(nil, nonce, ciphertext, nil)
 }
+
+
+func DecryptPassword(hashedPassword []byte, salt1 string, salt2 string) (string, error) {
+    key := DeriveKey(salt1, []byte(salt2))
+    decrypted, err := Decrypt(hashedPassword, key)
+    if err != nil {
+        return "", err
+    }
+    return string(decrypted), nil
+}
+
+func VerifyPassword(inputPassword string, hashedPassword []byte, salt1 string, salt2 string) (bool, error) {
+    // Decrypt the stored password
+    decryptedPassword, err := DecryptPassword(hashedPassword, salt1, salt2)
+    if err != nil {
+        return false, err
+    }
+    
+    // Compare the decrypted password with the input password
+    return decryptedPassword == inputPassword, nil
+}

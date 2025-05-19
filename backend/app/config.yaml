@@ -16,7 +16,7 @@ redis:
   addr: "redis:6379"
   db: 0
   poolsize: 100
-  cookie_expire: 72 
+  cookie_expire: 240
 hfut-api:
   host: "hfut-api"
   port: 8082
