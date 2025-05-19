@@ -58,6 +58,10 @@ func UpdatePost(c *gin.Context, newpost *Post, id uint) error {
 
 func ListPostDesc(c *gin.Context, last_pid uint, limit int) (posts []Post, err error) {
 	posts = make([]Post, 0, 1)
-	err = global.Db.WithContext(c).Model(&Post{}).Where("id<?", last_pid).Order("id DESC").Limit(limit).Find(&posts).Error
+	if last_pid !=0{
+		err = global.Db.WithContext(c).Model(&Post{}).Where("id<?", last_pid).Order("id DESC").Limit(limit).Find(&posts).Error
+	}else{
+		err = global.Db.WithContext(c).Model(&Post{}).Order("id DESC").Limit(limit).Find(&posts).Error
+	}
 	return posts, err
 }
