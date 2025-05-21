@@ -17,6 +17,7 @@ redis:
   db: 0
   poolsize: 100
   cookie_expire: 240
+  like_expire: 168 #hour
 hfut-api:
   host: "hfut-api"
   port: 8082

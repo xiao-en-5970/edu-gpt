@@ -13,17 +13,7 @@ func LogicPostLike(c *gin.Context, req *types.PostLikeReq) (resp *types.PostLike
 		return &types.PostLikeResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	post, err := model.FindPostById(c, req.PostID)
-	if err != nil {
-		return &types.PostLikeResp{}, codes.CodeAllIntervalError, err
-	}
-	if post == nil {
-		return &types.PostLikeResp{}, codes.CodePostNotExist, nil
-	}
-	count, status, err := model.AddLikeCount(c, req.PostID, uid, req.LikeStatus)
-	if err != nil {
-		return &types.PostLikeResp{}, codes.CodeAllIntervalError, err
-	}
-	return &types.PostLikeResp{LikeCount: count, LikeStatus: status}, codes.CodeAllSuccess, nil
+	go model.AddLikeCount(c, req.PostID, uid, req.LikeStatus)
+	return &types.PostLikeResp{OK: 1}, codes.CodeAllSuccess, nil
 
 }

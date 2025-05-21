@@ -9,6 +9,7 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/redisprefix"
 )
 
 func LogicUserRefreshHFUTInfo(c *gin.Context, username string, password string, uid uint) (code int, err error) {
@@ -20,7 +21,7 @@ func LogicUserRefreshHFUTInfo(c *gin.Context, username string, password string, 
 		return  code, err
 	}
 	cookie := hfutloginresp.Data.Cookie
-	global.RedisClient.SetEx(c, middleware.GetPrefix("username", username), cookie, time.Duration(global.Cfg.Redis.CookieExpire)*time.Hour)
+	global.RedisClient.SetEx(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, username), cookie, time.Duration(global.Cfg.Redis.CookieExpire)*time.Hour)
 	hfutrsp, code, _ := LogicHFUTStudentInfo(c, username)
 	if code == codes.CodeAllSuccess {
 		u := &model.User{

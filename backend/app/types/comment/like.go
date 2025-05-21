@@ -10,8 +10,7 @@ type CommentLikeReq struct {
 // CommentLikeResp 评论点赞响应数据
 // @Description 评论点赞操作后返回的响应数据
 type CommentLikeResp struct {
-	LikeCount  int `json:"like_count" example:"10" comment:"当前点赞总数"`
-	LikeStatus int `json:"like_status" example:"1" comment:"当前点赞状态(0:未点赞,1:已点赞)"`
+	OK  int `json:"ok" example:"1" comment:"是否成功"`
 }
 
 // SubCommentLikeReq 子评论点赞请求参数
@@ -24,6 +23,5 @@ type SubCommentLikeReq struct {
 // SubCommentLikeResp 子评论点赞响应数据
 // @Description 子评论点赞操作后返回的响应数据
 type SubCommentLikeResp struct {
-	LikeCount  int `json:"like_count" example:"5" comment:"当前点赞总数"`
-	LikeStatus int `json:"like_status" example:"1" comment:"当前点赞状态(0:未点赞,1:已点赞)"`
+	OK  int `json:"ok" example:"1" comment:"是否成功"`
 }

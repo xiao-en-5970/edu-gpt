@@ -17,7 +17,10 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 	}
 	uid := u.(uint)
 	//用户存在
-	user, _ := model.FindUserById(c, uid)
+	user, err := model.FindUserById(c, uid)
+	if err != nil {
+		return &types.GetUserInfoResp{}, codes.CodeAllIntervalError, err
+	}
 	var tag = make([]string, 0)
 	err = json.Unmarshal([]byte(user.Tags), &tag)
 	if err != nil {

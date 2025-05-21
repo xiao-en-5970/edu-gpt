@@ -113,3 +113,26 @@ CREATE TABLE `sub_comment` (
     PRIMARY KEY (`id`),
     KEY `idx_parent` (`parent_comment_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论表';
+
+CREATE TABLE `comment_likes` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `comment_id` BIGINT NOT NULL COMMENT '评论ID',
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-点赞 0-取消',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_commment_user` (`comment_id`, `user_id`),
+    KEY `idx_user` (`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论点赞记录表';
+CREATE TABLE `subcomment_likes` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `subcomment_id` BIGINT NOT NULL COMMENT '子评论ID',
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-点赞 0-取消',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_subcomment_user` (`subcomment_id`, `user_id`),
+    KEY `idx_user` (`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论点赞记录表';

@@ -10,7 +10,7 @@ import (
 )
 
 type Comment struct {
-	ID         uint      `gorm:"primaryKey;autoIncrement;column:id" json:"id"`
+	ID         uint      `gorm:"column:id;primaryKey;autoIncrement;column:id" json:"id"`
 	PostID     uint      `gorm:"column:post_id;not null;index:idx_post" json:"post_id"`
 	UserID     uint      `gorm:"column:user_id;not null" json:"user_id"`
 	Content    string    `gorm:"column:content;type:text" json:"content"`
@@ -22,7 +22,7 @@ type Comment struct {
 }
 
 type SubComment struct {
-	ID              uint      `gorm:"primaryKey;autoIncrement;column:id" json:"id"`
+	ID              uint      `gorm:"column:id;primaryKey;autoIncrement;column:id" json:"id"`
 	PostID          uint      `gorm:"column:post_id;not null;index:idx_post" json:"post_id"`
 	UserID          uint      `gorm:"column:user_id;not null" json:"user_id"`
 	ParentCommentID uint      `gorm:"column:parent_comment_id;not null;default:0;index:idx_parent" json:"parent_comment_id"`
@@ -115,21 +115,24 @@ func CreateSubComment(c *gin.Context, subcomment *SubComment) (id uint, err erro
 	return subcomment.ID, nil
 }
 
-
-func ListComment(c *gin.Context,pid uint, last_cid uint, limit int) (comments []Comment, err error) {
+func ListComment(c *gin.Context, pid uint, last_cid uint, limit int) (comments []Comment, err error) {
 	comments = make([]Comment, 0, 1)
-	global.Logger.Infof("id>%v and post_id=%v",last_cid,pid)
-	if last_cid !=0{
-		err = global.Db.WithContext(c).Model(&Comment{}).Where("id<? and post_id=?",last_cid,pid).Order("id DESC").Limit(limit).Find(&comments).Error
-	}else{
-		err = global.Db.WithContext(c).Model(&Comment{}).Where(" post_id=?",pid).Order("id DESC").Limit(limit).Find(&comments).Error
+	global.Logger.Infof("id>%v and post_id=%v", last_cid, pid)
+	if last_cid != 0 {
+		err = global.Db.WithContext(c).Model(&Comment{}).Where("id<? and post_id=?", last_cid, pid).Order("id DESC").Limit(limit).Find(&comments).Error
+	} else {
+		err = global.Db.WithContext(c).Model(&Comment{}).Where("post_id=?", pid).Order("id DESC").Limit(limit).Find(&comments).Error
 	}
-	
+
 	return comments, err
 }
 
-func ListSubComment(c *gin.Context,pcid uint, last_cid uint, limit int) (subcomments []SubComment, err error) {
+func ListSubComment(c *gin.Context, pcid uint, last_cid uint, limit int) (subcomments []SubComment, err error) {
 	subcomments = make([]SubComment, 0, 1)
-	err = global.Db.WithContext(c).Model(&SubComment{}).Where("id>? and parent_comment_id=?",last_cid,pcid).Limit(limit).Find(&subcomments).Error
+	err = global.Db.WithContext(c).Model(&SubComment{}).Where("id>? and parent_comment_id=?", last_cid, pcid).Limit(limit).Find(&subcomments).Error
 	return subcomments, err
+}
+
+func LikeComment(c *gin.Context, cid uint, uid uint, expect_like_status int) (err error) {
+	return nil
 }

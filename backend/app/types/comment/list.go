@@ -20,6 +20,7 @@ type BriefComment struct {
 	Content    string    `json:"content" example:"这是一条评论内容" comment:"评论内容"`
 	LikeCount  int       `json:"like_count" example:"10" comment:"点赞数"`
 	ChildCount int       `json:"comment_count" example:"3" comment:"子评论数量"`
+	LikeStatus int       `json:"like_status" example:"1" comment:"当前用户点赞状态(0:未点赞,1:已点赞)"`
 	CreateAt   time.Time `json:"create_at" example:"2025-04-27T16:10:08.5Z" comment:"创建时间"`
 	Active     string    `json:"active" example:"active" comment:"激活状态"`
 	AvatarUrl  string    `json:"avatar_url" example:"https://example.com/avatar.jpg" comment:"评论者头像URL"`

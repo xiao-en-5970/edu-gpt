@@ -38,7 +38,7 @@ func LogicSubCommentCreate(c *gin.Context, req *types.SubCommentCreateReq) (resp
 		return &types.SubCommentCreateResp{}, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	post, err := model.FindPostById(c, req.PostID)
+	post, err := model.FindCommentById(c, req.PostID)
 	if err != nil {
 		return &types.SubCommentCreateResp{}, codes.CodeAllIntervalError, err
 	}
@@ -58,7 +58,7 @@ func LogicSubCommentCreate(c *gin.Context, req *types.SubCommentCreateReq) (resp
 			return &types.SubCommentCreateResp{}, codes.CodeAllIntervalError, err
 		}
 		if user == nil {
-			return &types.SubCommentCreateResp{}, codes.CodeSubCommentNotExist, nil
+			return &types.SubCommentCreateResp{}, codes.CodeUserNotExist, nil
 		}
 	}
 	subcomment := &model.SubComment{

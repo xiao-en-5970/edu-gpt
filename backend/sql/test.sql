@@ -1,1 +1,1 @@
-TRUNCATE TABLE `post_likes`;
+TRUNCATE TABLE `comment`;
