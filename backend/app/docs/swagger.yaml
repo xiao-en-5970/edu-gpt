@@ -24,6 +24,9 @@ definitions:
       like_count:
         example: 10
         type: integer
+      like_status:
+        example: 1
+        type: integer
       post_id:
         example: 123
         type: integer
@@ -195,10 +198,7 @@ definitions:
   types.CommentLikeResp:
     description: 评论点赞操作后返回的响应数据
     properties:
-      like_count:
-        example: 10
-        type: integer
-      like_status:
+      ok:
         example: 1
         type: integer
     type: object
@@ -385,10 +385,7 @@ definitions:
   types.PostLikeResp:
     description: 帖子点赞操作后返回的响应数据
     properties:
-      like_count:
-        example: 42
-        type: integer
-      like_status:
+      ok:
         example: 1
         type: integer
     type: object
@@ -511,10 +508,7 @@ definitions:
   types.SubCommentLikeResp:
     description: 子评论点赞操作后返回的响应数据
     properties:
-      like_count:
-        example: 5
-        type: integer
-      like_status:
+      ok:
         example: 1
         type: integer
     type: object
@@ -689,7 +683,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 还没做
+      description: 给评论点赞
       parameters:
       - description: 请求体
         in: body
@@ -706,14 +700,14 @@ paths:
             $ref: '#/definitions/types.CommentLikeResp'
       security:
       - BearerAuth: []
-      summary: 评论点赞【TODO】
+      summary: 评论点赞
       tags:
       - Comment模块
   /comment/auth/likereply:
     post:
       consumes:
       - application/json
-      description: 还没做
+      description: 给回复点赞
       parameters:
       - description: 请求体
         in: body
@@ -730,7 +724,7 @@ paths:
             $ref: '#/definitions/types.SubCommentLikeResp'
       security:
       - BearerAuth: []
-      summary: 回复点赞【TODO】
+      summary: 回复点赞
       tags:
       - Comment模块
   /comment/auth/list:
@@ -812,9 +806,7 @@ paths:
       tags:
       - Comment模块
   /post/auth/{id}:
-    get:
-      consumes:
-      - application/json
+    post:
       description: 通过帖子id直接查看帖子
       parameters:
       - description: 帖子ID
@@ -961,7 +953,7 @@ paths:
       tags:
       - Post模块
   /user/auth/{id}:
-    get:
+    post:
       description: 根据用户ID返回用户
       parameters:
       - description: 用户ID

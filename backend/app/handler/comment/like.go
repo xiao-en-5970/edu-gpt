@@ -7,8 +7,8 @@ import (
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/comment"
 )
 
-// @Summary 评论点赞【TODO】
-// @Description 还没做
+// @Summary 评论点赞
+// @Description 给评论点赞
 // @Tags Comment模块
 // @Security     BearerAuth
 // @Accept json
@@ -19,8 +19,9 @@ import (
 func HandlerCommentLike(c * gin.Context){
 	services.ServiceHandlerWithJson(c,CommentLike{})
 }
-// @Summary 回复点赞【TODO】
-// @Description 还没做
+
+// @Summary 回复点赞
+// @Description 给回复点赞
 // @Tags Comment模块
 // @Security     BearerAuth 
 // @Accept json

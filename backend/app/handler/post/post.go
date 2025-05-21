@@ -9,15 +9,15 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 	"strconv"
 )
+
 // @Summary 帖子查看
 // @Description 通过帖子id直接查看帖子
 // @Tags Post模块
-// @Security     BearerAuth 
-// @Accept json
+// @Security     BearerAuth
 // @Produce json
-// @Param        id  path  string  true  "帖子ID"  
+// @Param        id  path  string  true  "帖子ID"
 // @Success 200 {object} types.PostResp "成功响应"
-// @Router /post/auth/{id} [get,post]
+// @Router /post/auth/{id} [post]
 func HandlerPost(c *gin.Context) {
 
 	idstr := c.Param("id")

@@ -61,7 +61,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "还没做",
+                "description": "给评论点赞",
                 "consumes": [
                     "application/json"
                 ],
@@ -71,7 +71,7 @@ const docTemplate = `{
                 "tags": [
                     "Comment模块"
                 ],
-                "summary": "评论点赞【TODO】",
+                "summary": "评论点赞",
                 "parameters": [
                     {
                         "description": "请求体",
@@ -100,7 +100,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "还没做",
+                "description": "给回复点赞",
                 "consumes": [
                     "application/json"
                 ],
@@ -110,7 +110,7 @@ const docTemplate = `{
                 "tags": [
                     "Comment模块"
                 ],
-                "summary": "回复点赞【TODO】",
+                "summary": "回复点赞",
                 "parameters": [
                     {
                         "description": "请求体",
@@ -460,16 +460,13 @@ const docTemplate = `{
             }
         },
         "/post/auth/{id}": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
                 "description": "通过帖子id直接查看帖子",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -717,7 +714,7 @@ const docTemplate = `{
             }
         },
         "/user/auth/{id}": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -817,6 +814,10 @@ const docTemplate = `{
                 "like_count": {
                     "type": "integer",
                     "example": 10
+                },
+                "like_status": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "post_id": {
                     "type": "integer",
@@ -1050,11 +1051,7 @@ const docTemplate = `{
             "description": "评论点赞操作后返回的响应数据",
             "type": "object",
             "properties": {
-                "like_count": {
-                    "type": "integer",
-                    "example": 10
-                },
-                "like_status": {
+                "ok": {
                     "type": "integer",
                     "example": 1
                 }
@@ -1304,11 +1301,7 @@ const docTemplate = `{
             "description": "帖子点赞操作后返回的响应数据",
             "type": "object",
             "properties": {
-                "like_count": {
-                    "type": "integer",
-                    "example": 42
-                },
-                "like_status": {
+                "ok": {
                     "type": "integer",
                     "example": 1
                 }
@@ -1479,11 +1472,7 @@ const docTemplate = `{
             "description": "子评论点赞操作后返回的响应数据",
             "type": "object",
             "properties": {
-                "like_count": {
-                    "type": "integer",
-                    "example": 5
-                },
-                "like_status": {
+                "ok": {
                     "type": "integer",
                     "example": 1
                 }

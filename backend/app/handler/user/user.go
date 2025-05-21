@@ -19,7 +19,7 @@ import (
 // @Produce      json
 // @Param        id  path  string  true  "用户ID"
 // @Success 200 {object} types.BriefUser "成功响应"
-// @Router       /user/auth/{id} [get,post]
+// @Router       /user/auth/{id} [post]
 func HandlerUser(c *gin.Context) {
 	idstr := c.Param("id")
 	uid, err := strconv.Atoi(idstr)

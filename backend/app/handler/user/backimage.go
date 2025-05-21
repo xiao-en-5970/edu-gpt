@@ -16,7 +16,7 @@ import (
 // @Produce      octet-stream
 // @Param        id  path  string  true  "用户ID"
 // @Success      200  {file}  binary  "背景图片文件"
-// @Router       /user/auth/backimage/{id} [get,post]
+// @Router       /user/auth/backimage/{id} [get]
 func HandlerUserBackImage(c *gin.Context) {
 	idstr := c.Param("id")
 	uid, err := strconv.Atoi(idstr)

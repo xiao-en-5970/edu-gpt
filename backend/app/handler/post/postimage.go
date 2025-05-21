@@ -15,7 +15,7 @@ import (
 // @Produce json
 // @Param        id  path  string  true  "帖子图片ID"  
 // @Success      200  {file}  binary  "帖子图片文件"
-// @Router /post/auth/postimage/{id} [get,post]
+// @Router /post/auth/postimage/{id} [get]
 func HandlerPostPostImage(c*gin.Context){
 	idstr := c.Param("id")
 	uid,err := strconv.Atoi(idstr)
