@@ -47,6 +47,9 @@ func LogicUserGetUserInfo(c *gin.Context, req *types.GetUserInfoReq) (resp *type
 		BackImageUrl:   global.GetUrl("user/auth/backimage", user.ID),
 		Signature:      user.Signature,
 		Tags:           tag,
+		Follows:user.Follows,
+		Fans:user.Fans,
+		AllPostLike: user.AllPostLike,
 	}, codes.CodeAllSuccess, nil
 }
 

@@ -15,5 +15,8 @@ type BriefUser struct {
 	Grade        string    `json:"grade" example:"2022"`
 	Campus       string    `json:"campus" example:"翡翠湖校区"`
 	Signature    string    `json:"signature" example:"这人啥也没说"`
-	Tags         []string  `json:"tags" example:"学习,运动,音乐"` // 注意：原结构体类型应为[]string
+	Tags         []string  `json:"tags" example:"学习,运动,音乐"`
+	Follows      int64     `json:"follows" example:"365"`
+	Fans         int64     `json:"fans" example:"365"`
+	AllPostLike  int64     `json:"allpost_like" example:"365"`
 }

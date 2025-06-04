@@ -13,8 +13,10 @@ func LogicPostList(c *gin.Context, req *types.PostListReq) (resp types.PostListR
 	if !ex {
 		return types.PostListResp{}, codes.CodeAuthUnvalidToken, nil
 	}
-
-	posts, err := model.ListPostDesc(c, req.LastPid, req.Limit)
+	if req.Order == "" {
+		return types.PostListResp{}, codes.CodeAllRequestFormatError, nil
+	}
+	posts, err := model.ListPost(c, req.Page, req.Size, req.Desc, req.Order)
 	if err != nil {
 		return types.PostListResp{}, codes.CodeAllIntervalError, err
 	}
@@ -27,20 +29,22 @@ func LogicPostList(c *gin.Context, req *types.PostListReq) (resp types.PostListR
 		if err != nil {
 			return types.PostListResp{}, codes.CodeAllIntervalError, err
 		}
-		briefposts = append(briefposts, types.BriefPost{
-			Title:        p.Title,
-			Content:      p.Content,
-			Nickname:     poster.Nickname,
-			ID:           p.ID,
-			PosterID:     p.PosterID,
-			ViewCount:    p.ViewCount,
-			Active:       p.Active,
-			LikeCount:    p.LikeCount,
-			CollectCount: p.CollectCount,
-			CommentCount: p.CommentCount,
-			CreateAt:     p.CreateAt,
-			AvatarUrl:    global.GetUrl("user/auth/avatar", p.PosterID),
-		})
+		if p.Active == global.Active.String() {
+			briefposts = append(briefposts, types.BriefPost{
+				Title:        p.Title,
+				Content:      p.Content,
+				Nickname:     poster.Nickname,
+				ID:           p.ID,
+				PosterID:     p.PosterID,
+				ViewCount:    p.ViewCount,
+				Active:       p.Active,
+				LikeCount:    p.LikeCount,
+				CollectCount: p.CollectCount,
+				CommentCount: p.CommentCount,
+				CreateAt:     p.CreateAt,
+				AvatarUrl:    global.GetUrl("user/auth/avatar", p.PosterID),
+			})
+		}
 	}
 	return briefposts, codes.CodeAllSuccess, nil
 }

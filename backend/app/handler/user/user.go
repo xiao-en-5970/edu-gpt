@@ -28,7 +28,7 @@ func HandlerUser(c *gin.Context) {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
-	user, err := model.FindUserById(c,id)
+	user, err := model.FindUserById(c, id)
 	if user == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return
@@ -44,17 +44,20 @@ func HandlerUser(c *gin.Context) {
 		return
 	}
 	rsp := &types.BriefUser{
-		ID:         user.ID,
-		CreateAt:  user.CreateAt,
-		Department: user.Department,
-		Nickname:   user.Nickname,
-		AvatarUrl: global.GetUrl("user/auth/avatar",user.ID),
-		BackImageUrl: global.GetUrl("user/auth/backimage",user.ID),
-		Sex:        user.Sex,
-		Grade:      user.Grade,
-		Campus:     user.Campus,
-		Signature:  user.Signature,
-		Tags:       tag,
+		ID:           user.ID,
+		CreateAt:     user.CreateAt,
+		Department:   user.Department,
+		Nickname:     user.Nickname,
+		AvatarUrl:    global.GetUrl("user/auth/avatar", user.ID),
+		BackImageUrl: global.GetUrl("user/auth/backimage", user.ID),
+		Sex:          user.Sex,
+		Grade:        user.Grade,
+		Campus:       user.Campus,
+		Signature:    user.Signature,
+		Tags:         tag,
+		Follows:      user.Follows,
+		Fans:         user.Fans,
+		AllPostLike:  user.AllPostLike,
 	}
 	responce.SuccessWithData(c, rsp)
 }

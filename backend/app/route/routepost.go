@@ -20,5 +20,7 @@ func RoutePostInit(apiGroup *gin.RouterGroup) {
 		auth.POST("/postimage/:id", handler.HandlerPostPostImage)
 		auth.POST("/list", handler.HandlerPostList)
 		auth.POST("/like", handler.HandlerPostLike)
+		auth.POST("/delete", handler.HandlerPostDelete)
+
 	}
 }

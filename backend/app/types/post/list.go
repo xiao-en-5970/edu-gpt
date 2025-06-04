@@ -5,8 +5,11 @@ import "time"
 // PostListReq 帖子列表请求参数
 // @Description 获取帖子列表的请求参数
 type PostListReq struct {
-	LastPid uint `json:"last_pid" example:"100" comment:"上一页最后一条帖子ID，用于分页"`
-	Limit   int  `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
+	Page        int    `json:"page" example:"1" comment:"页数"`
+	Size        int    `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
+	Order       string `json:"order" validate:"required,oneof=time like" example:"10" comment:"排序依据"`
+	CummunityID uint   `json:"community" example:"1" validate:"required" comment:"社区id"`
+	Desc        int    `json:"desc" example:"0" comment:"是否倒序"`
 }
 
 // BriefPost 简要帖子信息

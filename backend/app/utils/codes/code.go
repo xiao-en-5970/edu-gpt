@@ -16,6 +16,8 @@ const (
 	CodeUserAlreadyExist        = 20003 //用户已经存在
 	CodeUserInfoUpdateFail      = 20004 //用户信息更新失败
 	CodeUserRefreshHFUTInfoFail = 20005 //用户HFUT信息无法刷新
+	CodeUserLocked              = 20006 // 用户已锁定
+	CodeUserLDisabled           = 20007 // 用户已注销
 	//鉴权错误
 	CodeAuthNotExistError = 30001 //未授权
 	CodeAuthUnvalidToken  = 30002 //无效token
@@ -32,9 +34,16 @@ const (
 	CodePostNotExist       = 60001 //帖子不存在
 	CodePostLikeFail       = 60002 //帖子点赞失败
 	CodePostLikeStatusSame = 60003 //帖子点赞状态不变
+	CodePostLocked         = 60004 // 帖子已锁定
+	CodePostLDisabled      = 60005 // 帖子已删除
 	//评论错误
-	CodeCommentNotExist    = 70001 //评论不存在
-	CodeSubCommentNotExist = 70002 //子评论不存在
+	CodeCommentNotExist     = 70001 //评论不存在
+	CodeSubCommentNotExist  = 70002 //子评论不存在
+	CodeCommentLocked       = 70003 // 评论已锁定
+	CodeCommentLDisabled    = 70004 // 评论已删除
+	CodeSubCommentLocked    = 70005 // 回复已锁定
+	CodeSubCommentLDisabled = 70006 // 回复已删除
+
 )
 
 var (
@@ -51,6 +60,8 @@ var (
 		CodeUserAlreadyExist:        "用户已经存在",
 		CodeUserInfoUpdateFail:      "用户信息更新失败",
 		CodeUserRefreshHFUTInfoFail: "用户HFUT信息无法刷新",
+		CodeUserLocked:              "用户已锁定",
+		CodeUserLDisabled:           "用户已注销",
 		//鉴权错误
 		CodeAuthNotExistError: "未授权",
 		CodeAuthUnvalidToken:  "无效token",
@@ -66,8 +77,14 @@ var (
 		CodePostNotExist:       "帖子不存在",
 		CodePostLikeFail:       "帖子点赞失败",
 		CodePostLikeStatusSame: "帖子点赞状态不变",
+		CodePostLocked:         "帖子已锁定",
+		CodePostLDisabled:      "帖子已删除",
 		//评论错误
-		CodeCommentNotExist:    "评论不存在",
-		CodeSubCommentNotExist: "子评论不存在",
+		CodeCommentNotExist:     "评论不存在",
+		CodeSubCommentNotExist:  "子评论不存在",
+		CodeCommentLocked:       "评论已锁定",
+		CodeCommentLDisabled:    "评论已删除",
+		CodeSubCommentLocked:    "回复已锁定",
+		CodeSubCommentLDisabled: "回复已删除",
 	}
 )

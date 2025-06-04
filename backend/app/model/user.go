@@ -39,6 +39,23 @@ type User struct {
 	BackgroundImagePath string    `gorm:"column:backimage_path;size:255;not null;default:'./static/backgrounds/default-image.png';comment:背景路径" json:"backimage_path"`
 	Signature           string    `gorm:"column:signature;type:varchar(255);comment:'个性签名'" json:"signature"`
 	Tags                string    `gorm:"column:tags;type:varchar(255);comment:'标签'" json:"tags"`
+	Follows             int64     `gorm:"column:follow;not null;comment:用户关注数量"` // BIGINT 对应 int64
+	Fans                int64     `gorm:"column:fans;not null;comment:用户粉丝数量"`
+	AllPostLike         int64     `gorm:"column:allpost_like;not null;comment:用户点赞数量"`
+}
+
+type UserFollow struct {
+	ID       uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	UserID   uint      `gorm:"column:user_id;not null" json:"user_id"`
+	Follow   uint      `gorm:"column:follow;not null" json:"follow"`
+	Status   int       `gorm:"column:status;not null;default:0" json:"status"`
+	CreateAt time.Time `gorm:"column:create_at;not null;default:CURRENT_TIMESTAMP" json:"create_at"`
+	UpdateAt time.Time `gorm:"column:update_at;not null;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_at"`
+}
+
+// TableName sets the table name for the UserFollow model
+func (UserFollow) TableName() string {
+	return "user_follow"
 }
 
 // TableName 设置表名
@@ -91,4 +108,84 @@ func InsertUser(c *gin.Context, user *User) (id uint, err error) {
 func UpdateUser(c *gin.Context, newuser *User, id uint) error {
 	global.Logger.Infof("Nickname:%v", newuser.Nickname)
 	return global.Db.WithContext(c).Model(newuser).Where("id=?", id).Updates(*newuser).Error
+}
+
+func ChangeUserStatus(c *gin.Context, uid uint, statusCode int) (err error) {
+	var s = global.Status(statusCode)
+	user := &User{Active: s.String()}
+	return global.Db.WithContext(c).Model(user).Where("id=?", uid).Updates(*user).Error
+}
+
+func AddFollows(c *gin.Context, uid uint, followuid uint, expectlikestatus int) (err error) {
+	err = global.Db.Transaction(func(tx *gorm.DB) (err error) {
+		oldflo := &UserFollow{}
+		user := &User{}
+		oldflo.Follow = followuid
+		oldflo.UserID = uid
+		err = tx.WithContext(c).Model(oldflo).Where("follow=? and user_id=?", followuid, uid).First(oldflo).Error
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				if expectlikestatus != 0 {
+					oldflo.Status = 1
+					err = tx.WithContext(c).Model(oldflo).Where("follow=? and user_id=?", followuid, uid).Create(oldflo).Error
+					if err != nil {
+						return err
+					}
+					err = tx.WithContext(c).Model(user).Where("id=?", uid).Update("follow", gorm.Expr("follow + 1")).Error
+					if err != nil {
+						return err
+					}
+					err = tx.WithContext(c).Model(user).Where("id=?", followuid).Update("fans", gorm.Expr("fans + 1")).Error
+					if err != nil {
+						return err
+					}
+				}
+			} else {
+				return err
+			}
+		} else {
+			oldstatus := oldflo.Status
+			if oldstatus != expectlikestatus {
+				err = tx.WithContext(c).Model(oldflo).Where("id=?", oldflo.ID).Update("status", expectlikestatus).Error
+				if err != nil {
+					return err
+				}
+				err = tx.WithContext(c).Model(user).Where("id=?", uid).Update("follow", gorm.Expr("follow + ?", expectlikestatus-oldstatus)).Error
+				if err != nil {
+					return err
+				}
+				err = tx.WithContext(c).Model(user).Where("id=?", followuid).Update("fans", gorm.Expr("fans + ?", expectlikestatus-oldstatus)).Error
+				if err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func FollowFansList(c *gin.Context, uid uint, page int, size int, desc int, order string, isfollow bool) (usersf []UserFollow, err error) {
+	usersf = make([]UserFollow, 0, size)
+	orderdesc := ""
+	if order == "time" {
+		orderdesc += "id "
+	} else if order == "fans" {
+		orderdesc += "fans "
+	}
+	if desc == 0 {
+		orderdesc += "ASC"
+	} else {
+		orderdesc += "DESC"
+	}
+	if isfollow {
+		err = global.Db.WithContext(c).Model(&UserFollow{}).Where("user_id=?", uid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&usersf).Error
+	} else {
+		err = global.Db.WithContext(c).Model(&UserFollow{}).Where("follow=?", uid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&usersf).Error
+	}
+	return usersf, err
 }

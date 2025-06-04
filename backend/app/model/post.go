@@ -56,12 +56,29 @@ func UpdatePost(c *gin.Context, newpost *Post, id uint) error {
 	return global.Db.WithContext(c).Model(newpost).Where("id=?", id).Updates(*newpost).Error
 }
 
-func ListPostDesc(c *gin.Context, last_pid uint, limit int) (posts []Post, err error) {
-	posts = make([]Post, 0, 1)
-	if last_pid !=0{
-		err = global.Db.WithContext(c).Model(&Post{}).Where("id<?", last_pid).Order("id DESC").Limit(limit).Find(&posts).Error
-	}else{
-		err = global.Db.WithContext(c).Model(&Post{}).Order("id DESC").Limit(limit).Find(&posts).Error
+func ListPost(c *gin.Context, page int, size int, desc int, order string) (posts []Post, err error) {
+	posts = make([]Post, 0, size)
+	orderdesc := ""
+	if order == "time" {
+		orderdesc += "id "
+	} else if order == "like" {
+		orderdesc += "like_count "
 	}
+	if desc == 0 {
+		orderdesc += "ASC"
+	} else {
+		orderdesc += "DESC"
+	}
+	err = global.Db.WithContext(c).Model(&Post{}).Where("active=?", "active").Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&posts).Error
 	return posts, err
+}
+
+func ChangePostStatus(c *gin.Context, pid uint, statusCode int) (err error) {
+	var s = global.Status(statusCode)
+	post := &Post{Active: s.String()}
+	if err = global.Db.WithContext(c).Model(post).Where("id=?", pid).Updates(*post).Error; err != nil {
+		global.Logger.Error(err)
+		return err
+	}
+	return nil
 }

@@ -5,9 +5,11 @@ import "time"
 // CommentListReq 评论列表请求参数
 // @Description 获取评论列表的请求参数
 type CommentListReq struct {
-	PostID  uint `json:"post_id" validate:"required" example:"123" comment:"帖子ID"`
-	LastCid uint `json:"last_cid" example:"100" comment:"上一页最后一条评论ID，用于分页"`
-	Limit   int  `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
+	PostID uint   `json:"post_id" validate:"required" example:"123" comment:"帖子ID"`
+	Page   int    `json:"page" example:"1" comment:"页数"`
+	Size   int    `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
+	Order  string `json:"order" validate:"required,oneof=time like" example:"10" comment:"排序依据"`
+	Desc   int    `json:"desc" example:"0" comment:"是否倒序"`
 }
 
 // BriefComment 简要评论信息
@@ -33,9 +35,11 @@ type CommentListResp []BriefComment
 // SubCommentListReq 子评论列表请求参数
 // @Description 获取子评论列表的请求参数
 type SubCommentListReq struct {
-	ParentCommentID uint `json:"parent" validate:"required" example:"456" comment:"父评论ID"`
-	LastSCid        uint `json:"last_scid" example:"100" comment:"上一页最后一条子评论ID，用于分页"`
-	Limit           int  `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
+	ParentCommentID uint   `json:"parent" validate:"required" example:"456" comment:"父评论ID"`
+	Page            int    `json:"page" example:"1" comment:"页数"`
+	Size            int    `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
+	Order           string `json:"order" validate:"required,oneof=time like" example:"10" comment:"排序依据"`
+	Desc            int    `json:"desc" example:"0" comment:"是否倒序"`
 }
 
 // BriefSubComment 简要子评论信息

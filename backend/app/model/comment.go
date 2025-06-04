@@ -115,22 +115,38 @@ func CreateSubComment(c *gin.Context, subcomment *SubComment) (id uint, err erro
 	return subcomment.ID, nil
 }
 
-func ListComment(c *gin.Context, pid uint, last_cid uint, limit int) (comments []Comment, err error) {
-	comments = make([]Comment, 0, 1)
-	global.Logger.Infof("id>%v and post_id=%v", last_cid, pid)
-	if last_cid != 0 {
-		err = global.Db.WithContext(c).Model(&Comment{}).Where("id<? and post_id=?", last_cid, pid).Order("id DESC").Limit(limit).Find(&comments).Error
-	} else {
-		err = global.Db.WithContext(c).Model(&Comment{}).Where("post_id=?", pid).Order("id DESC").Limit(limit).Find(&comments).Error
+func ListComment(c *gin.Context, pcid uint, page int, size int, desc int, order string) (comments []Comment, err error) {
+	comments = make([]Comment, 0, size)
+	orderdesc := ""
+	if order == "time" {
+		orderdesc += "id "
+	} else if order == "like" {
+		orderdesc += "like_count "
 	}
-
+	if desc == 0 {
+		orderdesc += "ASC"
+	} else {
+		orderdesc += "DESC"
+	}
+	err = global.Db.WithContext(c).Model(&Comment{}).Where("active=? and post_id=?", "active",pcid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&comments).Error
 	return comments, err
 }
 
-func ListSubComment(c *gin.Context, pcid uint, last_cid uint, limit int) (subcomments []SubComment, err error) {
-	subcomments = make([]SubComment, 0, 1)
-	err = global.Db.WithContext(c).Model(&SubComment{}).Where("id>? and parent_comment_id=?", last_cid, pcid).Limit(limit).Find(&subcomments).Error
-	return subcomments, err
+func ListSubComment(c *gin.Context, pcid uint, page int, size int, desc int, order string) (comments []SubComment, err error){
+	comments = make([]SubComment, 0, size)
+	orderdesc := ""
+	if order == "time" {
+		orderdesc += "id "
+	} else if order == "like" {
+		orderdesc += "like_count "
+	}
+	if desc == 0 {
+		orderdesc += "ASC"
+	} else {
+		orderdesc += "DESC"
+	}
+	err = global.Db.WithContext(c).Model(&SubComment{}).Where("active=? and parent_comment_id=?", "active",pcid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&comments).Error
+	return comments, err
 }
 
 func LikeComment(c *gin.Context, cid uint, uid uint, expect_like_status int) (err error) {

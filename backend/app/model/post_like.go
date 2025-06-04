@@ -77,11 +77,6 @@ func AddLikeCount(c *gin.Context, postid uint, userid uint, expectlikestatus int
 				}
 			}
 		}
-		err = tx.WithContext(c).Model(post).Where("id=?", postid).First(post).Error
-		if err != nil {
-			return err
-		}
-		global.Logger.Infoln(post.LikeCount)
 		return nil
 	})
 	if err != nil {

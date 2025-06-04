@@ -13,7 +13,7 @@ func LogicCommentList(c *gin.Context, req *types.CommentListReq) (resp types.Com
 	if !ex {
 		return types.CommentListResp{}, codes.CodeAuthUnvalidToken, nil
 	}
-	comments, err := model.ListComment(c, req.PostID, req.LastCid, req.Limit)
+	comments, err := model.ListComment(c, req.PostID, req.Page, req.Size,req.Desc,req.Order)
 	if err != nil {
 		return types.CommentListResp{}, codes.CodeAllIntervalError, err
 	}
@@ -47,7 +47,7 @@ func LogicSubCommentList(c *gin.Context, req *types.SubCommentListReq) (resp typ
 	if !ex {
 		return types.SubCommentListResp{}, codes.CodeAuthUnvalidToken, nil
 	}
-	comments, err := model.ListSubComment(c, req.ParentCommentID, req.LastSCid, req.Limit)
+	comments, err := model.ListSubComment(c, req.ParentCommentID, req.Page, req.Size,req.Desc,req.Order)
 	if err != nil {
 		return types.SubCommentListResp{}, codes.CodeAllIntervalError, err
 	}

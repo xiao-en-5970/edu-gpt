@@ -36,6 +36,15 @@ func HandlerPost(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
+	switch post.Active{
+	case global.Disabled.String():
+		responce.ErrorInternalServerErrorWithCode(c,codes.CodePostLDisabled)
+		return
+	case global.Locked.String():
+		responce.ErrorInternalServerErrorWithCode(c,codes.CodePostLocked)
+		return
+	}
+
 	u, ex := c.Get("id")
 	if !ex {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeAuthNotExistError)

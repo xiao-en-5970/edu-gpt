@@ -12,6 +12,9 @@ CREATE TABLE `user` (
     `avatar_path` VARCHAR(255) NOT NULL DEFAULT './static/avatars/default-avatar.png' COMMENT '头像路径(相对路径)',
     `backimage_path` VARCHAR(255) NOT NULL DEFAULT './static/backgrounds/default-image.png' COMMENT '背景图路径(相对路径)',
     `tags` VARCHAR(255) NOT NULL DEFAULT '[]' COMMENT '用户tag',
+    `follow` BIGINT NOT NULL COMMENT '用户关注数量',
+    `fans` BIGINT NOT NULL COMMENT '用户粉丝数量',
+    `allpost_like` BIGINT NOT NULL COMMENT '用户点赞数量',
     `signature` VARCHAR(255) NOT NULL DEFAULT '这个人啥也没说' COMMENT '个性签名',
     `username_en` VARCHAR(100) NOT NULL COMMENT '英文姓名',
     `username_zh` VARCHAR(100) NOT NULL COMMENT '中文姓名',
@@ -39,6 +42,7 @@ CREATE TABLE `post` (
     `poster_id` BIGINT COMMENT '发帖人id',
     `title` VARCHAR(200) NOT NULL COMMENT '标题',
     `content` TEXT NOT NULL COMMENT '内容',
+    `community_id` BIGINT NOT NULL DEFAULT 1 COMMENT '社区id',
     `view_count` INT NOT NULL DEFAULT 0 COMMENT '浏览数',
     `like_count` INT NOT NULL DEFAULT 0 COMMENT '点赞数',
     `collect_count` INT DEFAULT 0 COMMENT '收藏数',
@@ -129,10 +133,24 @@ CREATE TABLE `subcomment_likes` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `subcomment_id` BIGINT NOT NULL COMMENT '子评论ID',
     `user_id` BIGINT NOT NULL COMMENT '用户ID',
-    `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-点赞 0-取消',
+    `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-点赞 0-取消',
     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_subcomment_user` (`subcomment_id`, `user_id`),
     KEY `idx_user` (`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论点赞记录表';
+
+
+CREATE TABLE `user_follow` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `follow` BIGINT NOT NULL COMMENT '关注的用户ID',
+    `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-关注 0-取消关注',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_follow` (`user_id`, `follow`),
+    KEY `idx_user` (`user_id`),
+    KEY `idx_flo` (`follow`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户关注表';

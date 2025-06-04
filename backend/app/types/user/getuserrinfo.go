@@ -22,6 +22,9 @@ type GetUserInfoResp struct {
 	Major          string    `json:"major" example:"信息与计算科学"`
 	Class          string    `json:"class" example:"信息计22-2班"`
 	Campus         string    `json:"campus" example:"翡翠湖校区"`
+	Follows        int64     `json:"follows" example:"365"`
+	Fans           int64     `json:"fans" example:"365"`
+	AllPostLike    int64     `json:"allpost_like" example:"365"`
 	EnrollmentDate string    `json:"enrollment_date" example:"2022-09-01"`
 	GraduateDate   string    `json:"graduate_date" example:"2026-07-01"`
 	CreateAt       time.Time `json:"create_at" example:"2025-04-27T16:10:08.5Z"`
