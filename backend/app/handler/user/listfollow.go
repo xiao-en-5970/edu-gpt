@@ -7,6 +7,15 @@ import (
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 )
 
+// @Summary 关注列表
+// @Description 粉关注列表
+// @Tags User模块
+// @Security     BearerAuth 
+// @Accept json
+// @Produce json
+// @Param list_fans body types.FollowListReq true "请求体"
+// @Success 200 {object} types.FollowListResp "成功响应"
+// @Router /user/auth/list_follow [post]
 func HandlerListFollow(c *gin.Context){
 	services.ServiceHandlerWithJson(c,UserListFollow{})
 }

@@ -148,7 +148,3 @@ func ListSubComment(c *gin.Context, pcid uint, page int, size int, desc int, ord
 	err = global.Db.WithContext(c).Model(&SubComment{}).Where("active=? and parent_comment_id=?", "active",pcid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&comments).Error
 	return comments, err
 }
-
-func LikeComment(c *gin.Context, cid uint, uid uint, expect_like_status int) (err error) {
-	return nil
-}

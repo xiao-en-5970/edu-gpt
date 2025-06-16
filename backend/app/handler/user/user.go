@@ -28,6 +28,12 @@ func HandlerUser(c *gin.Context) {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
+	myid, ex := c.Get("id")
+	if !ex{
+		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
+		return
+	}
+	myuid := myid.(uint)
 	user, err := model.FindUserById(c, id)
 	if user == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
@@ -40,6 +46,11 @@ func HandlerUser(c *gin.Context) {
 	var tag = make([]string, 0)
 	err = json.Unmarshal([]byte(user.Tags), &tag)
 	if err != nil {
+		responce.ErrorInternalServerError(c, err)
+		return
+	}
+	fs,err:=model.FindFollowStatusById(c,myuid,id)
+	if err !=nil{
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
@@ -58,6 +69,7 @@ func HandlerUser(c *gin.Context) {
 		Follows:      user.Follows,
 		Fans:         user.Fans,
 		AllPostLike:  user.AllPostLike,
+		FollowStatus: fs,
 	}
 	responce.SuccessWithData(c, rsp)
 }

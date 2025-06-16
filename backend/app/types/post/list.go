@@ -7,7 +7,7 @@ import "time"
 type PostListReq struct {
 	Page        int    `json:"page" example:"1" comment:"页数"`
 	Size        int    `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
-	Order       string `json:"order" validate:"required,oneof=time like" example:"10" comment:"排序依据"`
+	Order       string `json:"order" validate:"required,oneof=time like" example:"time" comment:"排序依据"`
 	CummunityID uint   `json:"community" example:"1" validate:"required" comment:"社区id"`
 	Desc        int    `json:"desc" example:"0" comment:"是否倒序"`
 }

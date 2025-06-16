@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/conf"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/db"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/docs"
-	_ "github.com/xiao-en-5970/edu-gpt/backend/app/docs"
+	docs "github.com/xiao-en-5970/edu-gpt/backend/app/docs"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/route"
 	"go.uber.org/zap"

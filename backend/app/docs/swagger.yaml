@@ -37,6 +37,39 @@ definitions:
         example: 张三
         type: string
     type: object
+  types.BriefFans:
+    properties:
+      avatar_url:
+        example: https://127.0.0.1:8080/api/v1/user/auth/avatar/1
+        type: string
+      id:
+        example: 1
+        type: integer
+      nickname:
+        example: 傅益忠
+        type: string
+      signature:
+        example: 这人啥也没说
+        type: string
+    type: object
+  types.BriefFollow:
+    properties:
+      avatar_url:
+        example: https://127.0.0.1:8080/api/v1/user/auth/avatar/1
+        type: string
+      follow_status:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      nickname:
+        example: 傅益忠
+        type: string
+      signature:
+        example: 这人啥也没说
+        type: string
+    type: object
   types.BriefPost:
     description: 简要的帖子信息展示
     properties:
@@ -117,6 +150,9 @@ definitions:
   types.BriefUser:
     description: 简要的用户信息展示
     properties:
+      allpost_like:
+        example: 365
+        type: integer
       avatar_url:
         example: https://127.0.0.1:8080/api/v1/user/auth/avatar/1
         type: string
@@ -132,6 +168,15 @@ definitions:
       department:
         example: 数学学院
         type: string
+      fans:
+        example: 365
+        type: integer
+      follow_status:
+        example: 1
+        type: integer
+      follows:
+        example: 365
+        type: integer
       grade:
         example: "2022"
         type: string
@@ -148,7 +193,6 @@ definitions:
         example: 这人啥也没说
         type: string
       tags:
-        description: 注意：原结构体类型应为[]string
         example:
         - 学习
         - 运动
@@ -205,8 +249,17 @@ definitions:
   types.CommentListReq:
     description: 获取评论列表的请求参数
     properties:
-      last_cid:
-        example: 100
+      desc:
+        example: 0
+        type: integer
+      order:
+        enum:
+        - time
+        - like
+        example: time
+        type: string
+      page:
+        example: 1
         type: integer
       post_id:
         example: 123
@@ -217,6 +270,7 @@ definitions:
         minimum: 1
         type: integer
     required:
+    - order
     - post_id
     - size
     type: object
@@ -255,6 +309,52 @@ definitions:
         example: 123
         type: integer
     type: object
+  types.FansListReq:
+    properties:
+      desc:
+        example: 0
+        type: integer
+      order:
+        enum:
+        - time
+        - fans
+        example: time
+        type: string
+      page:
+        example: 1
+        type: integer
+      size:
+        example: 10
+        maximum: 50
+        minimum: 1
+        type: integer
+    required:
+    - order
+    - size
+    type: object
+  types.FollowListReq:
+    properties:
+      desc:
+        example: 0
+        type: integer
+      order:
+        enum:
+        - time
+        - fans
+        example: time
+        type: string
+      page:
+        example: 1
+        type: integer
+      size:
+        example: 10
+        maximum: 50
+        minimum: 1
+        type: integer
+    required:
+    - order
+    - size
+    type: object
   types.GetUserInfoReq:
     description: 获取用户信息的请求参数（当前为空结构体）
     type: object
@@ -268,6 +368,9 @@ definitions:
         - disabled
         example: active
         type: string
+      allpost_like:
+        example: 365
+        type: integer
       avatar_url:
         example: https://127.0.0.1:8080/api/v1/user/auth/avatar/1
         type: string
@@ -292,6 +395,12 @@ definitions:
       enrollment_date:
         example: "2022-09-01"
         type: string
+      fans:
+        example: 365
+        type: integer
+      follows:
+        example: 365
+        type: integer
       grade:
         example: "2022"
         type: string
@@ -366,6 +475,20 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDc5ODgxMjgsImlkIjoxfQ.-h4HvQ9PB15dxE-gDXQnSIY0h9ambb1AbMc0VFjZLTE
         type: string
     type: object
+  types.PostDeleteReq:
+    properties:
+      post_id:
+        example: 123
+        type: integer
+    required:
+    - post_id
+    type: object
+  types.PostDeleteResp:
+    properties:
+      ok:
+        example: 1
+        type: integer
+    type: object
   types.PostLikeReq:
     description: 帖子点赞/取消点赞的请求参数
     properties:
@@ -392,8 +515,20 @@ definitions:
   types.PostListReq:
     description: 获取帖子列表的请求参数
     properties:
-      last_pid:
-        example: 100
+      community:
+        example: 1
+        type: integer
+      desc:
+        example: 0
+        type: integer
+      order:
+        enum:
+        - time
+        - like
+        example: time
+        type: string
+      page:
+        example: 1
         type: integer
       size:
         example: 10
@@ -401,6 +536,8 @@ definitions:
         minimum: 1
         type: integer
     required:
+    - community
+    - order
     - size
     type: object
   types.PostResp:
@@ -515,8 +652,17 @@ definitions:
   types.SubCommentListReq:
     description: 获取子评论列表的请求参数
     properties:
-      last_scid:
-        example: 100
+      desc:
+        example: 0
+        type: integer
+      order:
+        enum:
+        - time
+        - like
+        example: time
+        type: string
+      page:
+        example: 1
         type: integer
       parent:
         example: 456
@@ -527,6 +673,7 @@ definitions:
         minimum: 1
         type: integer
     required:
+    - order
     - parent
     - size
     type: object
@@ -854,6 +1001,30 @@ paths:
       summary: 创建帖子
       tags:
       - Post模块
+  /post/auth/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除对应id的帖子
+      parameters:
+      - description: 请求体
+        in: body
+        name: edit
+        required: true
+        schema:
+          $ref: '#/definitions/types.PostDeleteReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/types.PostDeleteResp'
+      security:
+      - BearerAuth: []
+      summary: 删除帖子
+      tags:
+      - Post模块
   /post/auth/edit:
     post:
       consumes:
@@ -1037,6 +1208,58 @@ paths:
       security:
       - BearerAuth: []
       summary: 用户个人信息
+      tags:
+      - User模块
+  /user/auth/list_fans:
+    post:
+      consumes:
+      - application/json
+      description: 粉丝列表
+      parameters:
+      - description: 请求体
+        in: body
+        name: list_fans
+        required: true
+        schema:
+          $ref: '#/definitions/types.FansListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            items:
+              $ref: '#/definitions/types.BriefFans'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 粉丝列表
+      tags:
+      - User模块
+  /user/auth/list_follow:
+    post:
+      consumes:
+      - application/json
+      description: 粉关注列表
+      parameters:
+      - description: 请求体
+        in: body
+        name: list_fans
+        required: true
+        schema:
+          $ref: '#/definitions/types.FollowListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            items:
+              $ref: '#/definitions/types.BriefFollow'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 关注列表
       tags:
       - User模块
   /user/auth/update_userinfo:

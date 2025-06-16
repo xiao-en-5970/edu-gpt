@@ -19,4 +19,5 @@ type BriefUser struct {
 	Follows      int64     `json:"follows" example:"365"`
 	Fans         int64     `json:"fans" example:"365"`
 	AllPostLike  int64     `json:"allpost_like" example:"365"`
+	FollowStatus int       `json:"follow_status" example:"1"`
 }

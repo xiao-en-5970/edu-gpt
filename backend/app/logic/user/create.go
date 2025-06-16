@@ -8,12 +8,14 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
+	hfuttypes "github.com/xiao-en-5970/edu-gpt/backend/app/types/HFUT"
+	logichfut "github.com/xiao-en-5970/edu-gpt/backend/app/logic/HFUT"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/bcrypts"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
 func LogicUserCreate(c *gin.Context, req *types.LoginReq)(id uint,code int,err error){
-	hfutloginresp, code, err := LogicUserHFUTLogin(&types.HFUTLoginReq{
+	hfutloginresp, code, err := logichfut.LogicUserHFUTLogin(&hfuttypes.HFUTLoginReq{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -22,7 +24,7 @@ func LogicUserCreate(c *gin.Context, req *types.LoginReq)(id uint,code int,err e
 	}
 	cookie := hfutloginresp.Data.Cookie
 	global.RedisClient.SetEx(c, middleware.GetPrefix("username", req.Username), cookie, time.Duration(global.Cfg.Redis.CookieExpire)*time.Hour)
-	hfutinforesp, code, err := LogicHFUTStudentInfo(c, req.Username)
+	hfutinforesp, code, err := logichfut.LogicHFUTStudentInfo(c, req.Username)
 	if err != nil {
 		return 0, codes.CodeAllIntervalError, err
 	}

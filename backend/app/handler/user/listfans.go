@@ -7,6 +7,15 @@ import (
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 )
 
+// @Summary 粉丝列表
+// @Description 粉丝列表
+// @Tags User模块
+// @Security     BearerAuth 
+// @Accept json
+// @Produce json
+// @Param list_fans body types.FansListReq true "请求体"
+// @Success 200 {object} types.FansListResp "成功响应"
+// @Router /user/auth/list_fans [post]
 func HandlerListFans(c *gin.Context){
 	services.ServiceHandlerWithJson(c,UserListFans{})
 }

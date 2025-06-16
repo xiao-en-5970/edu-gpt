@@ -8,7 +8,7 @@ type CommentListReq struct {
 	PostID uint   `json:"post_id" validate:"required" example:"123" comment:"帖子ID"`
 	Page   int    `json:"page" example:"1" comment:"页数"`
 	Size   int    `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
-	Order  string `json:"order" validate:"required,oneof=time like" example:"10" comment:"排序依据"`
+	Order  string `json:"order" validate:"required,oneof=time like" example:"time" comment:"排序依据"`
 	Desc   int    `json:"desc" example:"0" comment:"是否倒序"`
 }
 
@@ -38,7 +38,7 @@ type SubCommentListReq struct {
 	ParentCommentID uint   `json:"parent" validate:"required" example:"456" comment:"父评论ID"`
 	Page            int    `json:"page" example:"1" comment:"页数"`
 	Size            int    `json:"size" validate:"required,min=1,max=50" example:"10" comment:"每页数量"`
-	Order           string `json:"order" validate:"required,oneof=time like" example:"10" comment:"排序依据"`
+	Order           string `json:"order" validate:"required,oneof=time like" example:"time" comment:"排序依据"`
 	Desc            int    `json:"desc" example:"0" comment:"是否倒序"`
 }
 

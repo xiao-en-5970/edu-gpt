@@ -189,3 +189,15 @@ func FollowFansList(c *gin.Context, uid uint, page int, size int, desc int, orde
 	}
 	return usersf, err
 }
+
+func FindFollowStatusById(c *gin.Context,uid uint,follow uint)(status int,err error){
+	uf:=&UserFollow{}
+	err = global.Db.WithContext(c).Model(uf).Where("user_id=? and follow=?", uid,follow).First(uf).Error
+	if err !=nil{
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, nil // 用户不存在
+		}
+		return -1,err
+	}
+	return uf.Status,nil
+}

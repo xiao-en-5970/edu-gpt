@@ -129,6 +129,7 @@ CREATE TABLE `comment_likes` (
     UNIQUE KEY `uk_commment_user` (`comment_id`, `user_id`),
     KEY `idx_user` (`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论点赞记录表';
+
 CREATE TABLE `subcomment_likes` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `subcomment_id` BIGINT NOT NULL COMMENT '子评论ID',
@@ -140,7 +141,6 @@ CREATE TABLE `subcomment_likes` (
     UNIQUE KEY `uk_subcomment_user` (`subcomment_id`, `user_id`),
     KEY `idx_user` (`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论点赞记录表';
-
 
 CREATE TABLE `user_follow` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
@@ -154,3 +154,20 @@ CREATE TABLE `user_follow` (
     KEY `idx_user` (`user_id`),
     KEY `idx_flo` (`follow`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户关注表';
+
+CREATE TABLE `course` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `course_name` VARCHAR(200) NOT NULL COMMENT '课程名字',
+    `course_code` VARCHAR(32) NOT NULL COMMENT '课程代码',
+    `course_type` VARCHAR(32) NOT NULL COMMENT '课程类型',
+    `credits` INT NOT NULL DEFAULT 0 COMMENT '学分',
+    `open_depart` VARCHAR(32) NOT NULL COMMENT '开课学院' ,
+    `description` VARCHAR(256) NOT NULL DEFAULT "尚无描述" COMMENT '课程描述',
+    `view_count` INT NOT NULL DEFAULT 0 COMMENT '浏览数',
+    `like_count` INT NOT NULL DEFAULT 0 COMMENT '点赞数',
+    `comment_count` INT NOT NULL DEFAULT 0 COMMENT '(被）评论数',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    INDEX `idx_cource` (`course_code` (8))
+)

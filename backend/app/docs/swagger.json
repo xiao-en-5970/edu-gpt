@@ -293,6 +293,45 @@
                 }
             }
         },
+        "/post/auth/delete": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "删除对应id的帖子",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post模块"
+                ],
+                "summary": "删除帖子",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.PostDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "$ref": "#/definitions/types.PostDeleteResp"
+                        }
+                    }
+                }
+            }
+        },
         "/post/auth/edit": {
             "post": {
                 "security": [
@@ -592,6 +631,90 @@
                 }
             }
         },
+        "/user/auth/list_fans": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "粉丝列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "粉丝列表",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "list_fans",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.FansListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.BriefFans"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/list_follow": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "粉关注列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User模块"
+                ],
+                "summary": "关注列表",
+                "parameters": [
+                    {
+                        "description": "请求体",
+                        "name": "list_fans",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.FollowListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.BriefFollow"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/auth/update_userinfo": {
             "post": {
                 "security": [
@@ -825,6 +948,52 @@
                 }
             }
         },
+        "types.BriefFans": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "傅益忠"
+                },
+                "signature": {
+                    "type": "string",
+                    "example": "这人啥也没说"
+                }
+            }
+        },
+        "types.BriefFollow": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
+                },
+                "follow_status": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "傅益忠"
+                },
+                "signature": {
+                    "type": "string",
+                    "example": "这人啥也没说"
+                }
+            }
+        },
         "types.BriefPost": {
             "description": "简要的帖子信息展示",
             "type": "object",
@@ -933,6 +1102,10 @@
             "description": "简要的用户信息展示",
             "type": "object",
             "properties": {
+                "allpost_like": {
+                    "type": "integer",
+                    "example": 365
+                },
                 "avatar_url": {
                     "type": "string",
                     "example": "https://127.0.0.1:8080/api/v1/user/auth/avatar/1"
@@ -952,6 +1125,18 @@
                 "department": {
                     "type": "string",
                     "example": "数学学院"
+                },
+                "fans": {
+                    "type": "integer",
+                    "example": 365
+                },
+                "follow_status": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "follows": {
+                    "type": "integer",
+                    "example": 365
                 },
                 "grade": {
                     "type": "string",
@@ -974,7 +1159,6 @@
                     "example": "这人啥也没说"
                 },
                 "tags": {
-                    "description": "注意：原结构体类型应为[]string",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -1053,13 +1237,26 @@
             "description": "获取评论列表的请求参数",
             "type": "object",
             "required": [
+                "order",
                 "post_id",
                 "size"
             ],
             "properties": {
-                "last_cid": {
+                "desc": {
                     "type": "integer",
-                    "example": 100
+                    "example": 0
+                },
+                "order": {
+                    "type": "string",
+                    "enum": [
+                        "time",
+                        "like"
+                    ],
+                    "example": "time"
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "post_id": {
                     "type": "integer",
@@ -1120,6 +1317,68 @@
                 }
             }
         },
+        "types.FansListReq": {
+            "type": "object",
+            "required": [
+                "order",
+                "size"
+            ],
+            "properties": {
+                "desc": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "order": {
+                    "type": "string",
+                    "enum": [
+                        "time",
+                        "fans"
+                    ],
+                    "example": "time"
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "size": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "minimum": 1,
+                    "example": 10
+                }
+            }
+        },
+        "types.FollowListReq": {
+            "type": "object",
+            "required": [
+                "order",
+                "size"
+            ],
+            "properties": {
+                "desc": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "order": {
+                    "type": "string",
+                    "enum": [
+                        "time",
+                        "fans"
+                    ],
+                    "example": "time"
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "size": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "minimum": 1,
+                    "example": 10
+                }
+            }
+        },
         "types.GetUserInfoReq": {
             "description": "获取用户信息的请求参数（当前为空结构体）",
             "type": "object"
@@ -1141,6 +1400,10 @@
                         "disabled"
                     ],
                     "example": "active"
+                },
+                "allpost_like": {
+                    "type": "integer",
+                    "example": 365
                 },
                 "avatar_url": {
                     "type": "string",
@@ -1173,6 +1436,14 @@
                 "enrollment_date": {
                     "type": "string",
                     "example": "2022-09-01"
+                },
+                "fans": {
+                    "type": "integer",
+                    "example": 365
+                },
+                "follows": {
+                    "type": "integer",
+                    "example": 365
                 },
                 "grade": {
                     "type": "string",
@@ -1267,6 +1538,27 @@
                 }
             }
         },
+        "types.PostDeleteReq": {
+            "type": "object",
+            "required": [
+                "post_id"
+            ],
+            "properties": {
+                "post_id": {
+                    "type": "integer",
+                    "example": 123
+                }
+            }
+        },
+        "types.PostDeleteResp": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
         "types.PostLikeReq": {
             "description": "帖子点赞/取消点赞的请求参数",
             "type": "object",
@@ -1303,12 +1595,30 @@
             "description": "获取帖子列表的请求参数",
             "type": "object",
             "required": [
+                "community",
+                "order",
                 "size"
             ],
             "properties": {
-                "last_pid": {
+                "community": {
                     "type": "integer",
-                    "example": 100
+                    "example": 1
+                },
+                "desc": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "order": {
+                    "type": "string",
+                    "enum": [
+                        "time",
+                        "like"
+                    ],
+                    "example": "time"
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "size": {
                     "type": "integer",
@@ -1474,13 +1784,26 @@
             "description": "获取子评论列表的请求参数",
             "type": "object",
             "required": [
+                "order",
                 "parent",
                 "size"
             ],
             "properties": {
-                "last_scid": {
+                "desc": {
                     "type": "integer",
-                    "example": 100
+                    "example": 0
+                },
+                "order": {
+                    "type": "string",
+                    "enum": [
+                        "time",
+                        "like"
+                    ],
+                    "example": "time"
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "parent": {
                     "type": "integer",
