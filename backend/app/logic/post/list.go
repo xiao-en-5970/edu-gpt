@@ -3,7 +3,7 @@ package logic
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/post"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
@@ -11,23 +11,23 @@ import (
 func LogicPostList(c *gin.Context, req *types.PostListReq) (resp types.PostListResp, code int, err error) {
 	_, ex := c.Get("id")
 	if !ex {
-		return types.PostListResp{}, codes.CodeAuthUnvalidToken, nil
+		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	if req.Order == "" {
-		return types.PostListResp{}, codes.CodeAllRequestFormatError, nil
+		return resp, codes.CodeAllRequestFormatError, nil
 	}
-	posts, err := model.ListPost(c, req.Page, req.Size, req.Desc, req.Order)
+	posts, err := models.ListPost(c, req.Page, req.Size, req.Desc, req.Order)
 	if err != nil {
-		return types.PostListResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
 	briefposts := make([]types.BriefPost, 0, 1)
 	for _, p := range posts {
-		poster, err := model.FindUserById(c, p.PosterID)
+		poster, err := models.FindUserById(c, p.PosterID)
 		if poster == nil {
-			return types.PostListResp{}, codes.CodeUserNotExist, nil
+			return resp, codes.CodeUserNotExist, nil
 		}
 		if err != nil {
-			return types.PostListResp{}, codes.CodeAllIntervalError, err
+			return resp, codes.CodeAllIntervalError, err
 		}
 		if p.Active == global.Active.String() {
 			briefposts = append(briefposts, types.BriefPost{

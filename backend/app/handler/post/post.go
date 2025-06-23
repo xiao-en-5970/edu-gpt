@@ -1,13 +1,14 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/post"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
-	"strconv"
 )
 
 // @Summary 帖子查看
@@ -27,7 +28,7 @@ func HandlerPost(c *gin.Context) {
 		return
 	}
 	pid := uint(pidint)
-	post, err := model.FindPostById(c, pid)
+	post, err := models.FindPostById(c, pid)
 	if post == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodePostNotExist)
 		return
@@ -36,12 +37,12 @@ func HandlerPost(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
-	switch post.Active{
+	switch post.Active {
 	case global.Disabled.String():
-		responce.ErrorInternalServerErrorWithCode(c,codes.CodePostLDisabled)
+		responce.ErrorInternalServerErrorWithCode(c, codes.CodePostLDisabled)
 		return
 	case global.Locked.String():
-		responce.ErrorInternalServerErrorWithCode(c,codes.CodePostLocked)
+		responce.ErrorInternalServerErrorWithCode(c, codes.CodePostLocked)
 		return
 	}
 
@@ -51,7 +52,7 @@ func HandlerPost(c *gin.Context) {
 		return
 	}
 	uid := u.(uint)
-	user, err := model.FindUserById(c, uid)
+	user, err := models.FindUserById(c, uid)
 	if user == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return
@@ -60,7 +61,7 @@ func HandlerPost(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
-	images, err := model.FindPostImageByPid(c, pid)
+	images, err := models.FindPostImageByPid(c, pid)
 	if images == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeImageNotExist)
 		return
@@ -73,11 +74,11 @@ func HandlerPost(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
-	likestatus, err := model.GetLikeStatus(c, pid, uid)
+	likestatus, err := models.GetLikeStatus(c, pid, uid)
 	if err != nil {
 		responce.ErrorInternalServerError(c, err)
 	}
-	poster, err := model.FindUserById(c, post.PosterID)
+	poster, err := models.FindUserById(c, post.PosterID)
 	if poster == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return

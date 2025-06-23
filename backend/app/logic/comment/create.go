@@ -2,75 +2,77 @@ package logic
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/comment"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
-func LogicCommentCreate(c *gin.Context, req *types.CommentCreateReq) (resp *types.CommentCreateResp, code int, err error) {
+func LogicCommentCreate(c *gin.Context, req *types.CommentCreateReq) (resp types.CommentCreateResp, code int, err error) {
 	u, ex := c.Get("id")
 	if !ex {
-		return &types.CommentCreateResp{}, codes.CodeAuthUnvalidToken, nil
+		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	post, err := model.FindPostById(c, req.PostID)
+	post, err := models.FindPostById(c, req.PostID)
 	if err != nil {
-		return &types.CommentCreateResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
 	if post == nil {
-		return &types.CommentCreateResp{}, codes.CodePostNotExist, err
+		return resp, codes.CodePostNotExist, err
 	}
-	comment := &model.Comment{
+	comment := &models.Comment{
 		PostID:  req.PostID,
 		UserID:  uid,
 		Content: req.Content,
 	}
-	cid, err := model.CreateComment(c, comment)
+	cid, err := models.CreateComment(c, comment)
 	if err != nil {
-		return &types.CommentCreateResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
-	return &types.CommentCreateResp{ID: cid}, codes.CodeAllSuccess, nil
+	resp.ID = cid
+	return resp, codes.CodeAllSuccess, nil
 }
 
-func LogicSubCommentCreate(c *gin.Context, req *types.SubCommentCreateReq) (resp *types.SubCommentCreateResp, code int, err error) {
+func LogicSubCommentCreate(c *gin.Context, req *types.SubCommentCreateReq) (resp types.SubCommentCreateResp, code int, err error) {
 	u, ex := c.Get("id")
 	if !ex {
-		return &types.SubCommentCreateResp{}, codes.CodeAuthUnvalidToken, nil
+		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	post, err := model.FindCommentById(c, req.PostID)
+	post, err := models.FindCommentById(c, req.PostID)
 	if err != nil {
-		return &types.SubCommentCreateResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
 	if post == nil {
-		return &types.SubCommentCreateResp{}, codes.CodePostNotExist, nil
+		return resp, codes.CodePostNotExist, nil
 	}
-	comment, err := model.FindCommentById(c, req.ParentCommentID)
+	comment, err := models.FindCommentById(c, req.ParentCommentID)
 	if err != nil {
-		return &types.SubCommentCreateResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
 	if comment == nil {
-		return &types.SubCommentCreateResp{}, codes.CodeCommentNotExist, nil
+		return resp, codes.CodeCommentNotExist, nil
 	}
 	if req.ReplyUserID != 0 {
-		user, err := model.FindUserById(c, req.ReplyUserID)
+		user, err := models.FindUserById(c, req.ReplyUserID)
 		if err != nil {
-			return &types.SubCommentCreateResp{}, codes.CodeAllIntervalError, err
+			return resp, codes.CodeAllIntervalError, err
 		}
 		if user == nil {
-			return &types.SubCommentCreateResp{}, codes.CodeUserNotExist, nil
+			return resp, codes.CodeUserNotExist, nil
 		}
 	}
-	subcomment := &model.SubComment{
+	subcomment := &models.SubComment{
 		PostID:          req.PostID,
 		UserID:          uid,
 		ParentCommentID: req.ParentCommentID,
 		ReplyUserID:     req.ReplyUserID,
 		Content:         req.Content,
 	}
-	cid, err := model.CreateSubComment(c, subcomment)
+	cid, err := models.CreateSubComment(c, subcomment)
 	if err != nil {
-		return &types.SubCommentCreateResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
-	return &types.SubCommentCreateResp{ID: cid}, codes.CodeAllSuccess, nil
+	resp.ID = cid
+	return resp, codes.CodeAllSuccess, nil
 }

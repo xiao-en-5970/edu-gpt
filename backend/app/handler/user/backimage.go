@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
@@ -25,7 +25,7 @@ func HandlerUserBackImage(c *gin.Context) {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
-	user, err := model.FindUserById(c, id)
+	user, err := models.FindUserById(c, id)
 	if user == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return

@@ -2,44 +2,43 @@ package logic
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/post"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
-func LogicPostEdit(c *gin.Context,req *types.EditPostReq)(resp * types.EditPostResp,code int,err error){
-	if req.ID==0{
-		return &types.EditPostResp{},codes.CodeAllRequestFormatError,nil
+func LogicPostEdit(c *gin.Context, req *types.EditPostReq) (resp types.EditPostResp, code int, err error) {
+	if req.ID == 0 {
+		return resp, codes.CodeAllRequestFormatError, nil
 	}
-	u,ex:=c.Get("id")
-	if !ex{
-		return &types.EditPostResp{},codes.CodeAuthUnvalidToken,nil
+	u, ex := c.Get("id")
+	if !ex {
+		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	user,err := model.FindUserById(c,uid)
-	if user == nil{
-		return &types.EditPostResp{},codes.CodeUserNotExist,nil
+	user, err := models.FindUserById(c, uid)
+	if user == nil {
+		return resp, codes.CodeUserNotExist, nil
 	}
-	post := &model.Post{
-		ID: req.ID,
-		Title: req.Title,
+	post := &models.Post{
+		ID:      req.ID,
+		Title:   req.Title,
 		Content: req.Content,
 	}
-	if err!=nil{
-		return &types.EditPostResp{},codes.CodeAllIntervalError,err
+	if err != nil {
+		return resp, codes.CodeAllIntervalError, err
 	}
-	err=model.UpdatePost(c,post,req.ID)
-	if err!=nil{
-		return &types.EditPostResp{},codes.CodeAllIntervalError,err
+	err = models.UpdatePost(c, post, req.ID)
+	if err != nil {
+		return resp, codes.CodeAllIntervalError, err
 	}
-	rsppost,err:=model.FindPostById(c,req.ID)
-	if rsppost==nil{
-		return &types.EditPostResp{},codes.CodePostNotExist,err
+	rsppost, err := models.FindPostById(c, req.ID)
+	if rsppost == nil {
+		return resp, codes.CodePostNotExist, err
 	}
-	if err !=nil{
-		return &types.EditPostResp{},codes.CodeAllIntervalError,err
+	if err != nil {
+		return resp, codes.CodeAllIntervalError, err
 	}
-	return &types.EditPostResp{
-		ID: req.ID,
-	},codes.CodeAllSuccess,nil
+	resp.ID = req.ID
+	return resp, codes.CodeAllSuccess, nil
 }

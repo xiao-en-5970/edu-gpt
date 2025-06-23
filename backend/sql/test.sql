@@ -1,4 +1,4 @@
-TRUNCATE TABLE `comment`;
+TRUNCATE TABLE `course`;
 
 ALTER TABLE user
 ADD COLUMN `follow` BIGINT NOT NULL COMMENT '用户关注数量',
@@ -8,3 +8,5 @@ ADD COLUMN `allpost_like` BIGINT NOT NULL COMMENT '用户点赞数量';
 
 ALTER TABLE `post` 
 ADD COLUMN `community_id` BIGINT NOT NULL DEFAULT 1 COMMENT '社区id';
+
+SELECT DISTINCT `course_type` from `course` ORDER BY  `course_type`

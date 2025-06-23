@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
@@ -29,12 +29,12 @@ func HandlerUser(c *gin.Context) {
 		return
 	}
 	myid, ex := c.Get("id")
-	if !ex{
+	if !ex {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return
 	}
 	myuid := myid.(uint)
-	user, err := model.FindUserById(c, id)
+	user, err := models.FindUserById(c, id)
 	if user == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return
@@ -49,8 +49,8 @@ func HandlerUser(c *gin.Context) {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}
-	fs,err:=model.FindFollowStatusById(c,myuid,id)
-	if err !=nil{
+	fs, err := models.FindFollowStatusById(c, myuid, id)
+	if err != nil {
 		responce.ErrorInternalServerError(c, err)
 		return
 	}

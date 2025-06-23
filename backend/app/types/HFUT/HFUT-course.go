@@ -5,7 +5,15 @@ type HFUTCoursesResp struct {
 	Msg  string      `json:"msg"`
 	Data HFUTCourses `json:"data"`
 }
-
+type CourseInfo struct{
+	CourseName string   `json:"courseName"`
+	CourseCode string   `json:"courseCode"`
+	CourseType string   `json:"courseType"`
+	Credits    float64  `json:"credits"`
+	OpenDepart string   `json:"openDepart"`
+	ExamMod    string   `json:"examMod"`
+	Campus     string   `json:"campus"`
+}
 type HFUTCourses struct {
 	List []Course `json:"list"`
 	Page Page     `json:"page"`

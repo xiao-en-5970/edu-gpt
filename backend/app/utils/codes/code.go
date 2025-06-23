@@ -43,6 +43,10 @@ const (
 	CodeCommentLDisabled    = 70004 // 评论已删除
 	CodeSubCommentLocked    = 70005 // 回复已锁定
 	CodeSubCommentLDisabled = 70006 // 回复已删除
+	//课程错误
+	CodeCourseNotExist     = 80001 //课程不存在
+	CodeCourseAlreadyExist = 80002 //课程已存在
+	CodeCourseNotFound     = 80003 //课程未找到
 
 )
 
@@ -86,5 +90,9 @@ var (
 		CodeCommentLDisabled:    "评论已删除",
 		CodeSubCommentLocked:    "回复已锁定",
 		CodeSubCommentLDisabled: "回复已删除",
+		//课程错误
+		CodeCourseNotExist:     "课程不存在",
+		CodeCourseAlreadyExist: "课程已存在",
+		CodeCourseNotFound:     "课程未找到",
 	}
 )

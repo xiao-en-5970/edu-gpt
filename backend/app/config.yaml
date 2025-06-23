@@ -29,6 +29,7 @@ static:
   avatars_path: /var/lib/static/avatars
   backimage_path: /var/lib/static/backimages
   post_path: /var/lib/static/posts
+  book_path: /var/lib/static/books
 auth:
   max_age: 240 #单位小时
   

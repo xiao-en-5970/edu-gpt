@@ -41,7 +41,7 @@ type RedisConfig struct {
 	DB           int    `mapstructure:"db"`
 	PoolSize     int    `mapstructure:"poolsize"`
 	CookieExpire int    `mapstructure:"cookie_expire"` //单位小时
-	LikeExpire int `mapstructure:"like_expire"` 
+	LikeExpire   int    `mapstructure:"like_expire"`
 }
 
 type HfutAPI struct {
@@ -54,6 +54,7 @@ type Static struct {
 	AvatarsPath   string `mapstructure:"avatars_path"`
 	BackImagePath string `mapstructure:"backimage_path"`
 	PostPath      string `mapstructure:"post_path"`
+	BookPath      string `mapstructure:"book_path"`
 }
 type LoggingConfig struct {
 	Level string `mapstructure:"level"`

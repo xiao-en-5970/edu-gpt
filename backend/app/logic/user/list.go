@@ -3,7 +3,7 @@ package logic
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
@@ -12,25 +12,25 @@ import (
 func LogicFollowList(c *gin.Context, req *types.FollowListReq) (resp types.FollowListResp, code int, err error) {
 	id, ex := c.Get("id")
 	if !ex {
-		return types.FollowListResp{}, codes.CodeAuthUnvalidToken, nil
+		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	if req.Order == "" {
-		return types.FollowListResp{}, codes.CodeAllRequestFormatError, nil
+		return resp, codes.CodeAllRequestFormatError, nil
 	}
 	uid := id.(uint)
-	users, err := model.FollowFansList(c, uid, req.Page, req.Size, req.Desc, req.Order, true)
+	users, err := models.FollowFansList(c, uid, req.Page, req.Size, req.Desc, req.Order, true)
 	if err != nil {
-		return types.FollowListResp{}, codes.CodeAllIntervalError, err
+		return resp, codes.CodeAllIntervalError, err
 	}
 
 	briefffs := make([]types.BriefFollow, 0, req.Size)
 	for _, u := range users {
-		userinfo, err := model.FindUserById(c, u.Follow)
+		userinfo, err := models.FindUserById(c, u.Follow)
 		if userinfo == nil {
-			return types.FollowListResp{}, codes.CodeUserNotExist, nil
+			return resp, codes.CodeUserNotExist, nil
 		}
 		if err != nil {
-			return types.FollowListResp{}, codes.CodeAllIntervalError, err
+			return resp, codes.CodeAllIntervalError, err
 		}
 		if userinfo.Active == global.Active.String() {
 			briefffs = append(briefffs, types.BriefFollow{
@@ -55,14 +55,14 @@ func LogicFansList(c *gin.Context, req *types.FansListReq) (resp types.FansListR
 		return types.FansListResp{}, codes.CodeAllRequestFormatError, nil
 	}
 	uid := id.(uint)
-	followfans, err := model.FollowFansList(c, uid, req.Page, req.Size, req.Desc, req.Order, false)
+	followfans, err := models.FollowFansList(c, uid, req.Page, req.Size, req.Desc, req.Order, false)
 	if err != nil {
 		return types.FansListResp{}, codes.CodeAllIntervalError, err
 	}
 
 	briefffs := make([]types.BriefFans, 0, req.Size)
 	for _, u := range followfans {
-		userinfo, err := model.FindUserById(c, u.UserID)
+		userinfo, err := models.FindUserById(c, u.UserID)
 		if userinfo == nil {
 			return types.FansListResp{}, codes.CodeUserNotExist, nil
 		}

@@ -5,11 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	logichfut "github.com/xiao-en-5970/edu-gpt/backend/app/logic/HFUT"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/HFUT"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
-	logichfut "github.com/xiao-en-5970/edu-gpt/backend/app/logic/HFUT"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/redisprefix"
 )
 
@@ -19,13 +19,13 @@ func LogicUserRefreshHFUTInfo(c *gin.Context, username string, password string, 
 		Password: password,
 	})
 	if code != codes.CodeAllSuccess {
-		return  code, err
+		return code, err
 	}
 	cookie := hfutloginresp.Data.Cookie
 	global.RedisClient.SetEx(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, username), cookie, time.Duration(global.Cfg.Redis.CookieExpire)*time.Hour)
 	hfutrsp, code, _ := logichfut.LogicHFUTStudentInfo(c, username)
 	if code == codes.CodeAllSuccess {
-		u := &model.User{
+		u := &models.User{
 			UsernameEn:     hfutrsp.Data.UsernameEn,
 			UsernameZh:     hfutrsp.Data.UsernameZh,
 			Sex:            hfutrsp.Data.Sex,
@@ -42,7 +42,7 @@ func LogicUserRefreshHFUTInfo(c *gin.Context, username string, password string, 
 			EnrollmentDate: hfutrsp.Data.EnrollmentDate,
 			GraduateDate:   hfutrsp.Data.GraduateDate,
 		}
-		err = model.UpdateUser(c, u, uid)
+		err = models.UpdateUser(c, u, uid)
 		if err != nil {
 			return codes.CodeAllIntervalError, err
 		}

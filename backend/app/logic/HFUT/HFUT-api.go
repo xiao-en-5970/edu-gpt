@@ -6,11 +6,13 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/services"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/HFUT"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/redisprefix"
@@ -18,10 +20,10 @@ import (
 
 func LogicUserHFUTLogin(req *types.HFUTLoginReq) (resp *types.HFUTLoginResp, code int, err error) {
 	c := &http.Client{}
-	params := url.Values{}
+	params := &url.Values{}
 	params.Add("username", req.Username)
 	params.Add("password", req.Password)
-	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s:%d/vpn/login?", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port)+params.Encode(), nil)
+	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s:%d/vpn/login?%s", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port, params.Encode()), nil)
 	rsp, err := c.Do(r)
 	if err != nil {
 		return &types.HFUTLoginResp{}, codes.CodeAllBadGateway, err
@@ -76,7 +78,7 @@ func LogicUserHFUTLogin(req *types.HFUTLoginReq) (resp *types.HFUTLoginResp, cod
 }
 
 func LogicHFUTStudentInfo(c *gin.Context, username string) (resp *types.HFUTStudentInfoResp, code int, err error) {
-	result := global.RedisClient.Get(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey,username))
+	result := global.RedisClient.Get(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, username))
 	if result.Err() != nil {
 		return &types.HFUTStudentInfoResp{}, codes.CodeHFUTIntervalError, nil
 	}
@@ -102,7 +104,7 @@ func LogicHFUTStudentInfo(c *gin.Context, username string) (resp *types.HFUTStud
 		return hfutrsp, codes.CodeAllSuccess, nil
 	} else if rsp.StatusCode == 401 || rsp.StatusCode == 400 {
 		// 删除 Redis 中的无效 cookie
-		global.RedisClient.Del(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey,username))
+		global.RedisClient.Del(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, username))
 		//未登录
 		return &types.HFUTStudentInfoResp{}, codes.CodeHFUTNotLogin, nil
 	} else if rsp.StatusCode == 500 {
@@ -125,53 +127,28 @@ func LogicHFUTStudentInfo(c *gin.Context, username string) (resp *types.HFUTStud
 	}
 }
 
-
-func LogicHFUTCourses(c *gin.Context,username string, courseName string,page int,size int,semesterCode int) (resp *types.HFUTCoursesResp, code int, err error) {
-	client := &http.Client{}
-	r, _ := http.NewRequest("GET", fmt.Sprintf("http://%s:%d/vpn/eam/course/search?", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port), nil)
-	result := global.RedisClient.Get(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey,username))
-	if result.Err() != nil {
-		return &types.HFUTCoursesResp{}, codes.CodeHFUTIntervalError, nil
+func LogicHFUTCourses(c *gin.Context, username string, courseName string, page int, size int, semesterCode int) (resp *types.HFUTCoursesResp, code int, err error) {
+	result:=services.NewHFUTApi().WithContext(c).
+	WithPrefix("vpn/eam/course/search").
+	WithParmas(
+		"username", username,
+		"courseName",courseName,
+		"page",strconv.Itoa(page),
+		"size",strconv.Itoa(size),
+		"semesterCode",strconv.Itoa(semesterCode),
+	).
+	Request().SetCookieByUsername(username).
+	Do().Result()
+	if result.Err()!=nil{
+		return &types.HFUTCoursesResp{},codes.CodeAllIntervalError,result.Err()
 	}
-	cookie := result.Val()
-	global.Logger.Infof("cookie:%s", cookie)
-	r.Header.Set("cookie", cookie)
-	rsp, err := client.Do(r)
-	if err != nil {
-		return &types.HFUTCoursesResp{}, codes.CodeAllBadGateway, err
+	if result.Val()==nil{
+		return &types.HFUTCoursesResp{},result.Code(),nil
 	}
-	defer rsp.Body.Close()
-
-	if rsp.StatusCode == 200 {
-		//获取信息成功
-		bytebody, _ := io.ReadAll(rsp.Body)
-		hfutrsp := &types.HFUTCoursesResp{}
-		err := json.Unmarshal(bytebody, hfutrsp)
-		if err != nil {
-			return &types.HFUTCoursesResp{}, codes.CodeHFUTIntervalError, nil
-		}
-		return hfutrsp, codes.CodeAllSuccess, nil
-	} else if rsp.StatusCode == 401 || rsp.StatusCode == 400 {
-		// 删除 Redis 中的无效 cookie
-		global.RedisClient.Del(c, middleware.GetPrefix(redisprefix.PrefixUserCookieKey,username))
-		//未登录
-		return &types.HFUTCoursesResp{}, codes.CodeHFUTNotLogin, nil
-	} else if rsp.StatusCode == 500 {
-		//信息门户限流
-		for i := 0; i < global.Cfg.HfutAPI.Retry; i++ {
-			time.Sleep(100 * time.Millisecond)
-			rsp, err := client.Do(r)
-			if err != nil {
-				return &types.HFUTCoursesResp{}, codes.CodeAllBadGateway, err
-			}
-			if rsp.StatusCode != 500 {
-				break
-			}
-		}
-		return &types.HFUTCoursesResp{}, codes.CodeHFUTIntervalError, nil
-	} else {
-		global.Logger.Infof("rsp.Body: %v\n", rsp.Body)
-		//登录信息门户未知问题
-		return &types.HFUTCoursesResp{}, codes.CodeHFUTUnkonwnError, nil
+	resp = &types.HFUTCoursesResp{}
+	err=json.Unmarshal(result.Val(),resp)
+	if err !=nil{
+		return &types.HFUTCoursesResp{},codes.CodeAllIntervalError,err
 	}
+	return resp,result.Code(),nil
 }

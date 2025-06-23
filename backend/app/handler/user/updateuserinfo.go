@@ -30,7 +30,7 @@ func HandlerUserUpdateUserInfo(c *gin.Context) {
 		return
 	}
 	if code == codes.CodeAllSuccess {
-		responce.SuccessWithData(c, *resp)
+		responce.SuccessWithData(c, resp)
 	} else {
 		responce.ErrorInternalServerErrorWithCode(c, code)
 	}

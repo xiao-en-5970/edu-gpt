@@ -38,3 +38,7 @@ func (s Status) String() string {
 func GetUrl(prefix string, id uint) string {
 	return fmt.Sprintf("https://%s/api/v1/%s/%d", Cfg.Server.Address, prefix, id)
 }
+
+func GetFileUrl(prefix string, path string) string {
+	return fmt.Sprintf("https://%s/api/v1/%s/%s", Cfg.Server.Address, prefix, path)
+}

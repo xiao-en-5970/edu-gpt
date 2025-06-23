@@ -5,16 +5,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
-	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
-	hfuttypes "github.com/xiao-en-5970/edu-gpt/backend/app/types/HFUT"
 	logichfut "github.com/xiao-en-5970/edu-gpt/backend/app/logic/HFUT"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
+	hfuttypes "github.com/xiao-en-5970/edu-gpt/backend/app/types/HFUT"
+	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/bcrypts"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
-func LogicUserCreate(c *gin.Context, req *types.LoginReq)(id uint,code int,err error){
+func LogicUserCreate(c *gin.Context, req *types.LoginReq) (id uint, code int, err error) {
 	hfutloginresp, code, err := logichfut.LogicUserHFUTLogin(&hfuttypes.HFUTLoginReq{
 		Username: req.Username,
 		Password: req.Password,
@@ -35,7 +35,7 @@ func LogicUserCreate(c *gin.Context, req *types.LoginReq)(id uint,code int,err e
 	if err != nil {
 		return 0, codes.CodeAllIntervalError, err
 	}
-	u := &model.User{
+	u := &models.User{
 		Username:            req.Username,
 		Nickname:            hfutinforesp.Data.UsernameZh,
 		Password:            hashpass,
@@ -59,9 +59,9 @@ func LogicUserCreate(c *gin.Context, req *types.LoginReq)(id uint,code int,err e
 		AvatarPath:          "./static/avatars/default-avatar.png",
 		BackgroundImagePath: "./static/backgrounds/default-image.png",
 	}
-	id, err = model.InsertUser(c, u)
+	id, err = models.InsertUser(c, u)
 	if err != nil {
 		return 0, codes.CodeAllIntervalError, err
 	}
-	return id,codes.CodeAllSuccess,nil
+	return id, codes.CodeAllSuccess, nil
 }

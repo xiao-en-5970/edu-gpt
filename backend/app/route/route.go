@@ -11,7 +11,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
-
+	"github.com/gin-contrib/pprof"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
@@ -26,6 +26,7 @@ func RouteInit(r *gin.Engine) {
 		responce.SuccessWithMsg(c, "测试成功!")
 	})
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	pprof.Register(r)
 	//监听文件变化（示例用 fsnotify）
 	watcher, _ := fsnotify.NewWatcher()
     watcher.Add("./docs")       // Swagger生成的文档目录
@@ -46,4 +47,5 @@ func RouteInit(r *gin.Engine) {
 	RouteUserInit(apiGroup)
 	RoutePostInit(apiGroup)
 	RouteCommentInit(apiGroup)
+	RouteCourseInit(apiGroup)
 }

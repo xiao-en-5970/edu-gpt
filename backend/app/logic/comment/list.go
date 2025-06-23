@@ -3,7 +3,7 @@ package logic
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/comment"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
@@ -13,14 +13,14 @@ func LogicCommentList(c *gin.Context, req *types.CommentListReq) (resp types.Com
 	if !ex {
 		return types.CommentListResp{}, codes.CodeAuthUnvalidToken, nil
 	}
-	comments, err := model.ListComment(c, req.PostID, req.Page, req.Size,req.Desc,req.Order)
+	comments, err := models.ListComment(c, req.PostID, req.Page, req.Size, req.Desc, req.Order)
 	if err != nil {
 		return types.CommentListResp{}, codes.CodeAllIntervalError, err
 	}
 	global.Logger.Info(comments)
 	briefcomments := make([]types.BriefComment, 0, 1)
 	for _, co := range comments {
-		poster, err := model.FindUserById(c, co.UserID)
+		poster, err := models.FindUserById(c, co.UserID)
 		if poster == nil {
 			return types.CommentListResp{}, codes.CodeUserNotExist, nil
 		}
@@ -47,13 +47,13 @@ func LogicSubCommentList(c *gin.Context, req *types.SubCommentListReq) (resp typ
 	if !ex {
 		return types.SubCommentListResp{}, codes.CodeAuthUnvalidToken, nil
 	}
-	comments, err := model.ListSubComment(c, req.ParentCommentID, req.Page, req.Size,req.Desc,req.Order)
+	comments, err := models.ListSubComment(c, req.ParentCommentID, req.Page, req.Size, req.Desc, req.Order)
 	if err != nil {
 		return types.SubCommentListResp{}, codes.CodeAllIntervalError, err
 	}
 	briefcomments := make([]types.BriefSubComment, 0, 1)
 	for _, co := range comments {
-		poster, err := model.FindUserById(c, co.UserID)
+		poster, err := models.FindUserById(c, co.UserID)
 		if poster == nil {
 			return types.SubCommentListResp{}, codes.CodeUserNotExist, nil
 		}

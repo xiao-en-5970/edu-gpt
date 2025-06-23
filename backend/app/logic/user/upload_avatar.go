@@ -7,18 +7,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/user"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
-func LogicUserUploadAvatar(c *gin.Context, req *types.UploadImageReq) (resp *types.UploadImageResp, code int, err error) {
+func LogicUserUploadAvatar(c *gin.Context, req *types.UploadImageReq) (resp types.UploadImageResp, code int, err error) {
 	u, ex := c.Get("id")
 	if !ex {
-		return &types.UploadImageResp{}, codes.CodeAuthUnvalidToken, nil
+		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	id := u.(uint)
-	user, _ := model.FindUserById(c,id)
+	user, _ := models.FindUserById(c, id)
 	if user != nil {
 		//用户存在
 		//生成存储路径
@@ -28,17 +28,18 @@ func LogicUserUploadAvatar(c *gin.Context, req *types.UploadImageReq) (resp *typ
 			os.RemoveAll(absPath)
 		} else {
 			user.AvatarPath = absPath
-			model.UpdateUser(c,user, user.ID)
+			models.UpdateUser(c, user, user.ID)
 		}
 		// 保存新文件
 		if err := c.SaveUploadedFile(req.File, absPath); err != nil {
-			return &types.UploadImageResp{}, codes.CodeAllIntervalError, err
+			return resp, codes.CodeAllIntervalError, err
 		}
 		url := global.GetUrl("user/auth/avatar", user.ID)
-		return &types.UploadImageResp{
+		resp = types.UploadImageResp{
 			Url: url,
-		}, codes.CodeAllSuccess, nil
+		}
+		return resp, codes.CodeAllSuccess, nil
 	} else {
-		return &types.UploadImageResp{}, codes.CodeUserNotExist, nil
+		return resp, codes.CodeUserNotExist, nil
 	}
 }

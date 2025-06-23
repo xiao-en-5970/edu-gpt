@@ -1,11 +1,11 @@
 package types
 
-import "github.com/xiao-en-5970/edu-gpt/backend/app/model"
+import "github.com/xiao-en-5970/edu-gpt/backend/app/models"
 
 // PostResp 帖子详情响应数据
 // @Description 帖子详情的响应数据
 type PostResp struct {
-	model.Post
+	models.Post
 	Nickname   string   `json:"poster_nickname" example:"张三" comment:"发帖人昵称"`
 	Grade      string   `json:"poster_grade" example:"2022" comment:"发帖人年级"`
 	Campus     string   `json:"poster_campus" example:"翡翠湖校区" comment:"发帖人校区"`

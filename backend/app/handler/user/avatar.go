@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/model"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
@@ -12,9 +12,9 @@ import (
 // @Summary      获取用户头像
 // @Description  根据用户ID返回头像数据
 // @Tags         User模块
-// @Security     BearerAuth 
+// @Security     BearerAuth
 // @Produce      octet-stream
-// @Param        id  path  string  true  "用户ID"  
+// @Param        id  path  string  true  "用户ID"
 // @Success      200  {file}  binary  "头像图片文件"
 // @Router       /user/auth/avatar/{id} [get]
 func HandlerUserAvatar(c *gin.Context) {
@@ -25,7 +25,7 @@ func HandlerUserAvatar(c *gin.Context) {
 		responce.ErrorBadRequest(c, err)
 		return
 	}
-	user, err := model.FindUserById(c, id)
+	user, err := models.FindUserById(c, id)
 	if user == nil {
 		responce.ErrorInternalServerErrorWithCode(c, codes.CodeUserNotExist)
 		return
