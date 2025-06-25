@@ -16,6 +16,7 @@ func RouteCourseInit(apiGroup *gin.RouterGroup) {
 		auth.POST("/list", handler.HandlerListCourses)
 		auth.POST("/list_files", handler.HandlerCourseFiles)
 		auth.POST("/get_info", handler.HandlerCourseGetInfo)
-		// auth.POST("/getfile", handler.HandlerCourseGetFile)
+		auth.GET("/get_file", handler.HandlerCourseGetFile)
+		auth.POST("/get_course_table", handler.HandlerCourseGetTable)
 	}
 }

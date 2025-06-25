@@ -17,7 +17,7 @@ func LogicCourseFiles(c *gin.Context, req *types.CourseFilesReq) (resp types.Cou
 	if course == nil {
 		return resp, codes.CodeCourseNotExist, nil
 	}
-	finfo, err := fileop.GetAllFilesInfo(global.Cfg.Static.BookPath + "/" + course.CourseName)
+	finfo, err := fileop.GetAllFilesInfo(global.Cfg.Static.BookPath + "/" + course.CourseType + "/" + course.CourseName)
 	if err != nil {
 		return resp, codes.CodeAllIntervalError, err
 	}
@@ -28,7 +28,7 @@ func LogicCourseFiles(c *gin.Context, req *types.CourseFilesReq) (resp types.Cou
 			FileSize: file.Size,
 			FileType: file.FileType,
 			ModTime:  file.ModTime,
-			FileURL:  global.GetFileUrl("course/auth/getfile", course.CourseName+"/"+file.Name),
+			FileURL:  global.GetFileUrl("course/auth/getfile", course.CourseType+"/"+course.CourseName+"/"+file.Name),
 		})
 	}
 	return resp, codes.CodeAllSuccess, nil

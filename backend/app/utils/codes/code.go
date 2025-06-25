@@ -47,7 +47,19 @@ const (
 	CodeCourseNotExist     = 80001 //课程不存在
 	CodeCourseAlreadyExist = 80002 //课程已存在
 	CodeCourseNotFound     = 80003 //课程未找到
-
+	//文件错误
+	CodeFileQueryFail          = 90001 //文件查询失败
+	CodeFileNotExist           = 90002 //文件不存在
+	CodeFileUploadFail         = 90003 //文件上传失败
+	CodeFileDownloadFail       = 90004 //文件下载失败
+	CodeFileDeleteFail         = 90005 //文件删除失败
+	CodeFileQueryFilePathEmpty = 90006 //文件查询路径不允许为空
+	//课程表错误
+	CodeCourseTableQueryFail   = 100001 //课程表查询失败
+	CodeCourseTableCampusFault = 100002 //课程表校区错误
+	CodeCourseTableYearFault   = 100003 //课程表学年错误
+	CodeCourseTableTermFault   = 100004 //课程表学期错误
+	CodeCourseTableEmpty       = 100005 //课程表为空
 )
 
 var (
@@ -94,5 +106,18 @@ var (
 		CodeCourseNotExist:     "课程不存在",
 		CodeCourseAlreadyExist: "课程已存在",
 		CodeCourseNotFound:     "课程未找到",
+		//文件错误
+		CodeFileQueryFail:          "文件查询失败",
+		CodeFileNotExist:           "文件不存在",
+		CodeFileUploadFail:         "文件上传失败",
+		CodeFileDownloadFail:       "文件下载失败",
+		CodeFileDeleteFail:         "文件删除失败",
+		CodeFileQueryFilePathEmpty: "文件查询路径不允许为空",
+		//课程表错误
+		CodeCourseTableQueryFail:   "课程表查询失败。原因：hfutapi问题或信息门户未登录",
+		CodeCourseTableCampusFault: "课程表校区错误。原因：校区2代表合肥校区，23代表宣城校区",
+		CodeCourseTableYearFault:   "课程表学年错误。原因：学年不能超过当前年份",
+		CodeCourseTableTermFault:   "课程表学期错误。原因：学期为1或2",
+		CodeCourseTableEmpty:       "课程表为空。原因：当前学期无课或者当前学期未开始",
 	}
 )

@@ -16,24 +16,24 @@ import (
 )
 
 type ServiceHFUTApi struct {
-	ctx      *gin.Context
-	err      error
-	req      *http.Request
-	client   http.Client
-	resp     *http.Response
-	retry    int
-	body     []byte
-	code     int
-	username string
-	params   url.Values
-	prefix   string
+	ctx       *gin.Context
+	err       error
+	req       *http.Request
+	client    http.Client
+	resp      *http.Response
+	retry     int
+	body      []byte
+	code      int
+	username  string
+	params    url.Values
+	prefix    string
 	hasCookie bool
 }
 
-type ServiceHFUTApiResult struct{
-	err      error
-	body     []byte
-	code     int
+type ServiceHFUTApiResult struct {
+	err  error
+	body []byte
+	code int
 }
 
 func NewHFUTApi() *ServiceHFUTApi {
@@ -44,7 +44,7 @@ func NewHFUTApi() *ServiceHFUTApi {
 	h.client = http.Client{}
 	h.retry = 0
 	h.code = codes.CodeAllSuccess
-	
+
 	h.params = url.Values{}
 	h.hasCookie = false
 	return h
@@ -64,21 +64,21 @@ func (h *ServiceHFUTApi) WithContext(c *gin.Context) *ServiceHFUTApi {
 	h.ctx = c
 	return h
 }
-func (h *ServiceHFUTApi) WithParmas(keyvalues ... string) *ServiceHFUTApi {
+func (h *ServiceHFUTApi) WithParmas(keyvalues ...string) *ServiceHFUTApi {
 	if h.err != nil {
 		return h
 	}
-	n := len(keyvalues) 
-	if n%2 != 0{
+	n := len(keyvalues)
+	if n%2 != 0 {
 		h.err = errors.New("key value数量不对等")
 	}
-	for i :=0;i<n-1;i+=2{
-		h.params.Add(keyvalues[i],keyvalues[i+1])
+	for i := 0; i < n-1; i += 2 {
+		h.params.Add(keyvalues[i], keyvalues[i+1])
 	}
 	return h
 }
 
-func (h *ServiceHFUTApi) Request() *ServiceHFUTApi {
+func (h *ServiceHFUTApi) GenNewRequest() *ServiceHFUTApi {
 	if h.err != nil {
 		return h
 	}
@@ -86,7 +86,7 @@ func (h *ServiceHFUTApi) Request() *ServiceHFUTApi {
 	return h
 }
 
-func (h *ServiceHFUTApi) SetCookieByUsername(username string) *ServiceHFUTApi {
+func (h *ServiceHFUTApi) RequestSetCookieByUsername(username string) *ServiceHFUTApi {
 	if h.err != nil {
 		return h
 	}
@@ -122,8 +122,8 @@ func (h *ServiceHFUTApi) Result() *ServiceHFUTApiResult {
 		h.body, _ = io.ReadAll(h.resp.Body)
 	} else if h.resp.StatusCode == 401 || h.resp.StatusCode == 400 {
 		// 删除 Redis 中的无效 cookie
-		if h.hasCookie{
-			result:=global.RedisClient.Del(h.ctx, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, h.username))
+		if h.hasCookie {
+			result := global.RedisClient.Del(h.ctx, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, h.username))
 			h.err = result.Err()
 		}
 		//未登录
