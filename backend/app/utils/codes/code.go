@@ -26,6 +26,7 @@ const (
 	CodeHFUTIntervalError = 40002 //信息门户内部问题，请重试
 	CodeHFUTUnkonwnError  = 40003 //信息门户未知错误
 	CodeHFUTNotLogin      = 40004 //信息门户未登录
+	CodeHFUTRetrySoMuch   = 40005 //信息门户重试次数过多，请稍后再试
 
 	//图片错误
 	CodeImageFormatError = 50001 //图片格式错误
@@ -86,6 +87,7 @@ var (
 		CodeHFUTIntervalError: "信息门户内部问题，请重试",
 		CodeHFUTUnkonwnError:  "信息门户未知错误",
 		CodeHFUTNotLogin:      "信息门户未登录",
+		CodeHFUTRetrySoMuch:   "信息门户重试次数过多，请稍后再试",
 		//图片错误
 		CodeImageFormatError: "图片格式错误",
 		CodeImageNotExist:    "图片不存在",

@@ -1,6 +1,8 @@
 package services
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
@@ -13,7 +15,13 @@ type Service interface {
 
 func ServiceHandlerWithJson(c *gin.Context, service Service) {
 	req := service.NewReq()
-	err := c.ShouldBindJSON(req)
+	raw, ex := c.Get("raw_req")
+	var err error
+	if ex {
+		err = json.Unmarshal(raw.([]byte), req)
+	} else {
+		err = c.ShouldBindJSON(req)
+	}
 	if err != nil {
 		responce.ErrorBadRequest(c, err)
 		return
@@ -29,5 +37,3 @@ func ServiceHandlerWithJson(c *gin.Context, service Service) {
 		responce.ErrorInternalServerErrorWithCode(c, code)
 	}
 }
-
-

@@ -16,6 +16,7 @@ type Config struct {
 	Logging LoggingConfig `mapstructure:"logging"`
 	Auth    Auth          `mapstructure:"auth"`
 	Static  Static        `mapstructure:"static"`
+	Cache   Cache         `mapstructure:"cache"` // 缓存配置
 }
 type Auth struct {
 	MaxAge time.Duration `mapstructure:"max_age"`
@@ -57,12 +58,23 @@ type Static struct {
 	BookPath      string `mapstructure:"book_path"`
 }
 type LoggingConfig struct {
-	Level string `mapstructure:"level"`
+	StdOutLevel string `mapstructure:"stdout_level"` // 控制台日志级别
+	FilePath    string `mapstructure:"file_path"`    // 日志文件路径
+	FileLevel   string `mapstructure:"file_level"`   // 文件日志级别
+	MaxSize     int    `mapstructure:"max_size"`     // 每个日志文件的大小，单位MB
+	MaxBackups  int    `mapstructure:"max_backups"` // 保留的旧日志文件个数
+	MaxAge      int    `mapstructure:"max_age"`    // 日志文件的最大保存天数
+	Compress    bool   `mapstructure:"compress"`    // 是否压缩日志文件
 }
 
 type Credentials struct {
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
+}
+
+type Cache struct {
+	ReadExpiration  int `mapstructure:"read_expiration"`  // 读取缓存过期时间，单位秒
+	WriteExpiration int `mapstructure:"write_expiration"` // 写入缓存过期时间，单位秒
 }
 
 func ConfInit(path string) (cfg *Config, err error) {

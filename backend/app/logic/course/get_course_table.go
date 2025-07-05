@@ -33,11 +33,15 @@ func LogicCourseGetTable(c *gin.Context, req *types.GetCourseTableReq) (resp typ
 		return resp,codes.CodeUserNotExist, nil
 	}
 	courselistresp, code, err := logic.LogicHFUTCoursesList(c, user.Username, req.CampusId, semesterId)
+	// global.Logger.Infof("LogicHFUTCoursesList: %v", resp)
 	if err != nil {
 		return resp, codes.CodeAllIntervalError, err
 	}
-	if code!=codes.CodeAllSuccess {
+	if code != codes.CodeAllSuccess {
 		return resp, code, nil
+	}
+	if (courselistresp.Data == nil){
+		return resp, codes.CodeCourseTableEmpty, nil
 	}
 	resp = types.GetCourseTableResp(courselistresp.Data)
 	return resp, codes.CodeAllSuccess, nil

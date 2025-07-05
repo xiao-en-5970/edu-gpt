@@ -9,19 +9,20 @@ import (
 	"os/exec"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
-	"github.com/gin-contrib/pprof"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
-	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/zaplog"
 )
 
 func RouteInit(r *gin.Engine) {
 	
 	apiGroup := r.Group("api/v1")
-	apiGroup.Use(zaplog.ZapLogger(global.Logger))
+	apiGroup.Use(middleware.ZapLogger(global.Logger))
+	apiGroup.Use(middleware.ErrorMiddleware(global.Logger))
 	apiGroup.GET("/", func(c *gin.Context) {
 		responce.SuccessWithMsg(c, "测试成功!")
 	})
@@ -36,14 +37,13 @@ func RouteInit(r *gin.Engine) {
 	go func() {
 		for event := range watcher.Events {
 			if event.Op&fsnotify.Write == fsnotify.Write {
-				global.Logger.Infof("重新生成接口文档")
+				global.Logger.Debug("重新生成接口文档")
 				cmd := exec.Command("swag", "init") // 重新生成文档
 				cmd.Stdout = os.Stdout
 				cmd.Run()
 			}
 		}
 	}()
-
 	RouteUserInit(apiGroup)
 	RoutePostInit(apiGroup)
 	RouteCommentInit(apiGroup)

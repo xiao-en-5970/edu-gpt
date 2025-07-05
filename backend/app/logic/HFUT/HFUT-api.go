@@ -154,7 +154,7 @@ func LogicHFUTCoursesList(c *gin.Context, username string, bizTypeId int, semest
 		return resp, codes.CodeCourseTableCampusFault, nil
 	}
 	result := services.NewHFUTApi().WithContext(c).
-		WithPrefix("vpn/eam/courseList").
+		WithPrefix("vpn/eam/coursesList").
 		WithParmas(
 			"bizTypeId", strconv.Itoa(bizTypeId),
 			"semesterId", strconv.Itoa(semesterId),
@@ -167,9 +167,11 @@ func LogicHFUTCoursesList(c *gin.Context, username string, bizTypeId int, semest
 	if result.Val() == nil {
 		return resp, result.Code(), nil
 	}
+	// global.Logger.Infof("LogicHFUTCoursesList result: %s", result.Val())
 	err = json.Unmarshal(result.Val(), &resp)
 	if err != nil {
-		return resp, codes.CodeAllIntervalError, err
+		return resp, codes.CodeCourseTableEmpty, nil
 	}
+	
 	return resp, result.Code(), nil
 }

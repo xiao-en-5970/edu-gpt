@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/redisprefix"
 	"gorm.io/gorm"
 )
@@ -41,10 +42,9 @@ func GetLikeStatus(c *gin.Context, postid uint, userid uint) (likeStatus int, er
 	return likeStatus, nil
 }
 
-func AddLikeCount(c *gin.Context, postid uint, userid uint, expectlikestatus int) (err error) {
+func UpdateUserLikePost(c *gin.Context, postid uint, userid uint, expectlikestatus int) (err error) {
 	err = global.Db.Transaction(func(tx *gorm.DB) (err error) {
 		oldlike := &PostLike{}
-		post := &Post{}
 		oldlike.PostID = postid
 		oldlike.UserID = userid
 		err = tx.WithContext(c).Model(oldlike).Where("post_id=? and user_id=?", postid, userid).First(oldlike).Error
@@ -56,8 +56,8 @@ func AddLikeCount(c *gin.Context, postid uint, userid uint, expectlikestatus int
 					if err != nil {
 						return err
 					}
-					err = tx.WithContext(c).Model(post).Where("id=?", postid).Update("like_count", gorm.Expr("like_count + 1")).Error
-					if err != nil {
+					err = middleware.UpdateCacheCount(c,postid,middleware.GetPrefix(redisprefix.PrefixPostLikeCountKey,strconv.Itoa(int(postid))), 1)
+					if err !=nil{
 						return err
 					}
 				}
@@ -71,7 +71,7 @@ func AddLikeCount(c *gin.Context, postid uint, userid uint, expectlikestatus int
 				if err != nil {
 					return err
 				}
-				err = tx.WithContext(c).Model(post).Where("id=?", postid).Update("like_count", gorm.Expr("like_count + ?", expectlikestatus-oldstatus)).Error
+				err := middleware.UpdateCacheCount(c,postid,middleware.GetPrefix(redisprefix.PrefixPostLikeCountKey,strconv.Itoa(int(postid))), expectlikestatus-oldstatus)
 				if err != nil {
 					return err
 				}
@@ -88,6 +88,25 @@ func AddLikeCount(c *gin.Context, postid uint, userid uint, expectlikestatus int
 		time.Duration(global.Cfg.Redis.LikeExpire)*time.Hour)
 	if result.Err() != nil {
 		return result.Err()
+	}
+	return nil
+}
+
+
+func GetPostLikeCountFromMysql(c *gin.Context, id uint) (count int, err error) {
+	post := &Post{}
+	err = global.Db.WithContext(c).Model(post).Where("id=?", id).First(post).Error
+	if err != nil {
+		return -1, err
+	}
+	return int(post.LikeCount), nil
+}
+// type FuncMysqlUpdateCount func(c *gin.Context, id uint, newcount int) (err error)
+func UpdatePostLikeCountFromMysql(c *gin.Context ,id uint,newcount int)(err error){
+	post := &Post{}
+	err = global.Db.WithContext(c).Model(post).Where("id=?", id).Update("like_count",  newcount).Error
+	if err != nil {
+		return  err
 	}
 	return nil
 }

@@ -48,7 +48,7 @@ func CreatePost(c *gin.Context, post *Post) (id uint, err error) {
 		global.Logger.Warnf("创建记录失败: %v", result.Error)
 		return 0, result.Error
 	}
-	global.Logger.Infof("插入成功，ID: %d\n", post.ID)
+	global.Logger.Debugf("插入成功，ID: %d\n", post.ID)
 	return post.ID, nil
 }
 

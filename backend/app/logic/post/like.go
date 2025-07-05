@@ -18,7 +18,7 @@ func LogicPostLike(c *gin.Context, req *types.PostLikeReq) (resp types.PostLikeR
 	if post == nil || post.Active != global.Active.String() {
 		return resp, codes.CodePostNotExist, nil
 	}
-	go models.AddLikeCount(c, req.PostID, uid, req.LikeStatus)
+	go models.UpdateUserLikePost(c, req.PostID, uid, req.LikeStatus)
 	resp.OK = 1
 	return resp, codes.CodeAllSuccess, nil
 }

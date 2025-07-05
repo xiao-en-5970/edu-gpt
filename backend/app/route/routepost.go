@@ -10,10 +10,11 @@ func RoutePostInit(apiGroup *gin.RouterGroup) {
 	r := apiGroup.Group("/post")
 
 	auth := r.Group("/auth")
+	
 	auth.Use(middleware.AuthMiddleware())
 	{
-		auth.GET("/:id", handler.HandlerPost)
-		auth.POST("/:id", handler.HandlerPost)
+		auth.GET("/:id",middleware.AddReadCacheMiddleware(), handler.HandlerPost)
+		auth.POST("/:id",middleware.AddReadCacheMiddleware(), handler.HandlerPost)
 		auth.POST("/create", handler.HandlerPostCreate)
 		auth.POST("/edit", handler.HandlerPostEdit)
 		auth.GET("/postimage/:id", handler.HandlerPostPostImage)

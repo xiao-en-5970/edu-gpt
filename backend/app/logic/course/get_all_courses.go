@@ -14,8 +14,8 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
 )
 
-func LogicGetAllCourses(c *gin.Context) (code int, err error) {
-	sem, err := models.CheckSemester(c, 294)
+func LogicGetAllCourses(c *gin.Context,semester int) (code int, err error) {
+	sem, err := models.CheckSemester(c, semester)
 	if err != nil {
 		return codes.CodeAllIntervalError, err
 	}
@@ -42,7 +42,7 @@ func LogicGetAllCourses(c *gin.Context) (code int, err error) {
 		wg_recv.Add(1)
 		go func(i int) {
 			defer wg_recv.Done()
-			hfutresp, code, err := logic.LogicHFUTCourses(c, user.Username, "", i, 10, 294)
+			hfutresp, code, err := logic.LogicHFUTCourses(c, user.Username, "", i, 10, semester)
 			if err != nil {
 				return
 			}
@@ -77,7 +77,7 @@ func LogicGetAllCourses(c *gin.Context) (code int, err error) {
 		defer wg_chan.Done()
 		for ci := range CourseInfos {
 			
-			id, err := models.InsertCourse(c, 294, &models.Course{
+			id, err := models.InsertCourse(c, semester, &models.Course{
 				CourseName: ci.CourseName,
 				CourseCode: ci.CourseCode,
 				CourseType: ci.CourseType,

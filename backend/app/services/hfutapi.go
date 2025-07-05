@@ -41,7 +41,10 @@ func NewHFUTApi() *ServiceHFUTApi {
 	if h.err != nil {
 		return h
 	}
-	h.client = http.Client{}
+	h.client = http.Client{
+		Timeout: time.Second * time.Duration(10), // 设置超时时间为10秒
+
+	}
 	h.retry = 0
 	h.code = codes.CodeAllSuccess
 
@@ -82,7 +85,13 @@ func (h *ServiceHFUTApi) GenNewRequest() *ServiceHFUTApi {
 	if h.err != nil {
 		return h
 	}
-	h.req, h.err = http.NewRequest("GET", fmt.Sprintf("http://%s:%d/%s?%s", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port, h.prefix, h.params.Encode()), nil)
+	if err := h.ctx.Err(); err != nil {
+		h.err = err
+		return h // 直接返回取消或超时错误
+	}
+	address := fmt.Sprintf("http://%s:%d/%s?%s", global.Cfg.HfutAPI.Host, global.Cfg.HfutAPI.Port, h.prefix, h.params.Encode())
+	global.Logger.Debugf("hfut api address: %s", address)
+	h.req, h.err = http.NewRequestWithContext(h.ctx, "GET", address, nil)
 	return h
 }
 
@@ -90,11 +99,15 @@ func (h *ServiceHFUTApi) RequestSetCookieByUsername(username string) *ServiceHFU
 	if h.err != nil {
 		return h
 	}
+	if err := h.ctx.Err(); err != nil {
+		h.err = err
+		return h // 直接返回取消或超时错误
+	}
 	h.username = username
 	result := global.RedisClient.Get(h.ctx, middleware.GetPrefix(redisprefix.PrefixUserCookieKey, h.username))
 	h.err = result.Err()
 	cookie := result.Val()
-	global.Logger.Infof("username:%s cookie:%s", h.username, cookie)
+	global.Logger.Debugf("username:%s cookie:%s", h.username, cookie)
 	h.req.Header.Set("cookie", cookie)
 	h.hasCookie = true
 	return h
@@ -104,22 +117,33 @@ func (h *ServiceHFUTApi) Do() *ServiceHFUTApi {
 		return h
 	}
 	if h.retry > global.Cfg.HfutAPI.Retry {
-		h.code = codes.CodeAllBadGateway
+		h.code = codes.CodeHFUTRetrySoMuch
 		return h
+	}
+	if err := h.ctx.Err(); err != nil {
+		h.err = err
+		return h // 直接返回取消或超时错误
 	}
 	h.resp, h.err = h.client.Do(h.req)
 	return h
 }
 
-func (h *ServiceHFUTApi) Result() *ServiceHFUTApiResult {
-	res := &ServiceHFUTApiResult{}
+func (h *ServiceHFUTApi) Result() (res ServiceHFUTApiResult) {
 	if h.err != nil {
 		res.err = h.err
 		return res
 	}
+	if err := h.ctx.Err(); err != nil {
+		res.err = err
+		return res // 直接返回取消或超时错误
+	}
 	if h.resp.StatusCode == 200 {
 		//获取信息成功
-		h.body, _ = io.ReadAll(h.resp.Body)
+		h.body, h.err = io.ReadAll(h.resp.Body) // 不再忽略错误
+		if h.err != nil {
+			res.err = h.err
+			return res
+		}
 	} else if h.resp.StatusCode == 401 || h.resp.StatusCode == 400 {
 		// 删除 Redis 中的无效 cookie
 		if h.hasCookie {

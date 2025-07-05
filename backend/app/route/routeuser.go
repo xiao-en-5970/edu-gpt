@@ -12,7 +12,7 @@ func RouteUserInit(apiGroup *gin.RouterGroup) {
 	auth := r.Group("/auth")
 	auth.Use(middleware.AuthMiddleware())
 	{
-		auth.GET("/:id", handler.HandlerUser)
+		auth.GET("/:id", middleware.AddReadCacheMiddleware(), handler.HandlerUser)
 		auth.POST("/:id", handler.HandlerUser)
 		auth.POST("/avatar/:id", handler.HandlerUserAvatar)
 		auth.POST("/backimage/:id", handler.HandlerUserBackImage)
@@ -22,8 +22,8 @@ func RouteUserInit(apiGroup *gin.RouterGroup) {
 		auth.POST("/update_userinfo", handler.HandlerUserUpdateUserInfo)
 		auth.POST("/upload_avatar", handler.HandlerUserUploadAvatar)
 		auth.POST("/upload_backimage", handler.HandlerUserUploadBackImage)
-		auth.POST("/follow",handler.HandlerFollow)
-		auth.POST("/list_follow",handler.HandlerListFollow)
-		auth.POST("/list_fans",handler.HandlerListFans)
+		auth.POST("/follow", handler.HandlerFollow)
+		auth.POST("/list_follow", handler.HandlerListFollow)
+		auth.POST("/list_fans", handler.HandlerListFans)
 	}
 }

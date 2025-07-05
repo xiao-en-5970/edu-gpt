@@ -8,7 +8,7 @@ import (
 )
 
 func HandlerCourseGetAllCourses(c *gin.Context) {
-	code,err:=logic.LogicGetAllCourses(c)
+	code,err:=logic.LogicGetAllCourses(c,274)
 	if err !=nil{
 		responce.ErrorInternalServerError(c,err)
 		return

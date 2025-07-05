@@ -21,9 +21,15 @@ redis:
 hfut-api:
   host: "hfut-api"
   port: 8082
-  retry: 10
+  retry: 20 #重试次数
 logging:
-  level: "info"
+  stdout_level: "debug"
+  file_path: "/var/lib/static/log"
+  file_level: "debug"
+  max_size: 100 #单位MB
+  max_backups: 10
+  max_age: 30 #单位天
+  compress: true
 static:
   root_path: /var/lib/static
   avatars_path: /var/lib/static/avatars
@@ -32,4 +38,6 @@ static:
   book_path: /var/lib/static/books
 auth:
   max_age: 240 #单位小时
-  
+cache:
+  read_expiration: 30 #单位秒
+  write_expiration: 30 #单位秒
