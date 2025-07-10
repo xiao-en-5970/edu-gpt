@@ -5,9 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/global"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/middleware"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/models"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/post"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/codes"
+	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/redisprefix"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/utils/responce"
 )
 
@@ -36,6 +38,17 @@ func HandlerPost(c *gin.Context) {
 	if err != nil {
 		responce.ErrorInternalServerError(c, err)
 		return
+	}
+	post.LikeCount,err = middleware.GetCacheCountMiddleware(
+		c,
+		pid,
+		redisprefix.PrefixPostLikeCountKey,
+		models.GetPostLikeCountFromMysql,
+		models.UpdatePostLikeCountFromMysql,
+	)
+	if err !=nil{
+		responce.ErrorInternalServerError(c,err)
+		return 
 	}
 	switch post.Active {
 	case global.Disabled.String():

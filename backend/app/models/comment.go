@@ -10,33 +10,17 @@ import (
 )
 
 type Comment struct {
-	ID         uint      `gorm:"column:id;primaryKey;autoIncrement;column:id" json:"id"`
-	PostID     uint      `gorm:"column:post_id;not null;index:idx_post" json:"post_id"`
-	UserID     uint      `gorm:"column:user_id;not null" json:"user_id"`
-	Content    string    `gorm:"column:content;type:text" json:"content"`
-	LikeCount  int       `gorm:"column:like_count;default:0" json:"like_count"`
-	ChildCount int       `gorm:"column:child_count;default:0" json:"child_count"`
-	Active     string    `gorm:"column:active;type:ENUM('active','locked','disabled');not null;default:'active'" json:"active"`
-	CreateAt   time.Time `gorm:"column:create_at;not null;default:CURRENT_TIMESTAMP" json:"create_at"`
-	UpdateAt   time.Time `gorm:"column:update_at;not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" json:"update_at"`
-}
-
-type SubComment struct {
-	ID              uint      `gorm:"column:id;primaryKey;autoIncrement;column:id" json:"id"`
-	PostID          uint      `gorm:"column:post_id;not null;index:idx_post" json:"post_id"`
-	UserID          uint      `gorm:"column:user_id;not null" json:"user_id"`
-	ParentCommentID uint      `gorm:"column:parent_comment_id;not null;default:0;index:idx_parent" json:"parent_comment_id"`
-	ReplyUserID     uint      `gorm:"column:reply_user_id;not null;default:0" json:"reply_user_id"`
-	Content         string    `gorm:"column:content;type:text" json:"content"`
-	LikeCount       int       `gorm:"column:like_count;default:0" json:"like_count"`
-	Active          string    `gorm:"column:active;type:ENUM('active','locked','disabled');not null;default:'active'" json:"active"`
-	CreateAt        time.Time `gorm:"column:create_at;not null;default:CURRENT_TIMESTAMP" json:"create_at"`
-	UpdateAt        time.Time `gorm:"column:update_at;not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" json:"update_at"`
-}
-
-// TableName 设置表名
-func (SubComment) TableName() string {
-	return "sub_comment"
+	ID              uint     `gorm:"primaryKey;autoIncrement" json:"id"`
+	CommentTableID  uint     `gorm:"not null" json:"comment_table_id"`                                       // 评论的评论区ID
+	UserID          uint     `gorm:"not null" json:"user_id"`                                                // 发评论的用户ID
+	ParentCommentID uint     `gorm:"not null;default:0" json:"parent_comment_id"`                            // 上层评论id，为0表示评论区顶层
+	ReplyCommentID  uint     `gorm:"not null;default:0" json:"reply_comment_id"`                             // 回复的评论id，为0表示评论区顶层
+	Content         string    `gorm:"type:text;not null" json:"content"`                                      // 内容
+	LikeCount       int       `gorm:"not null;default:0" json:"like_count"`                                   // 点赞数
+	ChildCount      int       `gorm:"not null;default:0" json:"child_count"`                                  // 子评论数量
+	Active          string    `gorm:"type:enum('active','locked','disabled');default:'active'" json:"active"` // 状态
+	CreateAt        time.Time `gorm:"autoCreateTime" json:"create_at"`                                        // 创建时间
+	UpdateAt        time.Time `gorm:"autoUpdateTime" json:"update_at"`                                        // 更新时间
 }
 
 // TableName 设置表名
@@ -56,18 +40,6 @@ func FindCommentById(c *gin.Context, id uint) (comment *Comment, err error) {
 	return comment, nil // 用户存在
 }
 
-func FindSubCommentById(c *gin.Context, id uint) (subcomment *SubComment, err error) {
-	subcomment = &SubComment{}
-	err = global.Db.WithContext(c).Model(subcomment).Where("id=?", id).First(subcomment).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil // 用户不存在
-		}
-		return nil, err // 其他数据库错误
-	}
-	return subcomment, nil // 用户存在
-}
-
 func CreateComment(c *gin.Context, comment *Comment) (id uint, err error) {
 	err = global.Db.Transaction(func(tx *gorm.DB) (err error) {
 		err = tx.WithContext(c).Model(comment).Create(comment).Error
@@ -75,11 +47,17 @@ func CreateComment(c *gin.Context, comment *Comment) (id uint, err error) {
 			global.Logger.Warnf("创建记录失败: %v", err)
 			return err
 		}
-		err = tx.WithContext(c).Model(&Post{}).Where("id=?", comment.PostID).Update("comment_count", gorm.Expr("comment_count + 1")).Error
+		err = tx.WithContext(c).Model(&Post{}).Where("id=?", comment.CommentTableID).Update("comment_count", gorm.Expr("comment_count + 1")).Error
 		if err != nil {
 			global.Logger.Warnf("评论数增加失败: %v", err)
 			return err
 		}
+		err = tx.WithContext(c).Model(&Comment{}).Where("id=?", comment.ParentCommentID).Update("child_count", gorm.Expr("child_count + 1")).Error
+		if err != nil {
+			global.Logger.Warnf("回复数增加失败: %v", err)
+			return err
+		}
+		
 		return nil
 	})
 	if err != nil {
@@ -89,33 +67,7 @@ func CreateComment(c *gin.Context, comment *Comment) (id uint, err error) {
 	return comment.ID, nil
 }
 
-func CreateSubComment(c *gin.Context, subcomment *SubComment) (id uint, err error) {
-	err = global.Db.Transaction(func(tx *gorm.DB) (err error) {
-		err = tx.WithContext(c).Model(subcomment).Create(subcomment).Error
-		if err != nil {
-			global.Logger.Warnf("创建记录失败: %v", err)
-			return err
-		}
-		err = tx.WithContext(c).Model(&Post{}).Where("id=?", subcomment.PostID).Update("comment_count", gorm.Expr("comment_count + 1")).Error
-		if err != nil {
-			global.Logger.Warnf("评论数增加失败: %v", err)
-			return err
-		}
-		err = tx.WithContext(c).Model(&Comment{}).Where("id=?", subcomment.ParentCommentID).Update("child_count", gorm.Expr("child_count + 1")).Error
-		if err != nil {
-			global.Logger.Warnf("回复数增加失败: %v", err)
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		global.Logger.Warnf("创建失败: %v", err)
-		return 0, err
-	}
-	return subcomment.ID, nil
-}
-
-func ListComment(c *gin.Context, pcid uint, page int, size int, desc int, order string) (comments []Comment, err error) {
+func ListComment(c *gin.Context, ctid uint, page int, size int, desc int, order string) (comments []Comment, err error) {
 	comments = make([]Comment, 0, size)
 	orderdesc := ""
 	if order == "time" {
@@ -128,23 +80,6 @@ func ListComment(c *gin.Context, pcid uint, page int, size int, desc int, order 
 	} else {
 		orderdesc += "DESC"
 	}
-	err = global.Db.WithContext(c).Model(&Comment{}).Where("active=? and post_id=?", "active",pcid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&comments).Error
-	return comments, err
-}
-
-func ListSubComment(c *gin.Context, pcid uint, page int, size int, desc int, order string) (comments []SubComment, err error){
-	comments = make([]SubComment, 0, size)
-	orderdesc := ""
-	if order == "time" {
-		orderdesc += "id "
-	} else if order == "like" {
-		orderdesc += "like_count "
-	}
-	if desc == 0 {
-		orderdesc += "ASC"
-	} else {
-		orderdesc += "DESC"
-	}
-	err = global.Db.WithContext(c).Model(&SubComment{}).Where("active=? and parent_comment_id=?", "active",pcid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&comments).Error
+	err = global.Db.WithContext(c).Model(&Comment{}).Where("active=? and comment_table_id=?", "active", ctid).Order(orderdesc).Offset((page - 1) * size).Limit(size).Find(&comments).Error
 	return comments, err
 }

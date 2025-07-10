@@ -12,15 +12,24 @@ func LogicPostCreate(c *gin.Context, req *types.CreatePostReq) (resp types.Creat
 	if !ex {
 		return resp, codes.CodeAuthUnvalidToken, nil
 	}
+	if req.CommunityID == 0 {
+		req.CommunityID = 1
+	}
 	uid := u.(uint)
+	ctid, err := models.CommentTableCreate(c)
+	if err != nil {
+		return resp, codes.CodeAllIntervalError, err
+	}
 	post := &models.Post{
-		PosterID:     uid,
-		Title:        req.Title,
-		Content:      req.Content,
-		ViewCount:    0,
-		LikeCount:    0,
-		CollectCount: 0,
-		CommentCount: 0,
+		PosterID:       uid,
+		Title:          req.Title,
+		Content:        req.Content,
+		CommentTableID: ctid,
+		ViewCount:      0,
+		LikeCount:      0,
+		CollectCount:   0,
+		CommentCount:   0,
+		CommunityID:    req.CommunityID,
 	}
 	pid, err := models.CreatePost(c, post)
 	if err != nil {

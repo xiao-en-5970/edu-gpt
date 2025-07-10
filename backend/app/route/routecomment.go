@@ -16,11 +16,11 @@ func RouteCommentInit(apiGroup *gin.RouterGroup) {
 		// TODO
 		auth.POST("/list", handler.HandlerCommentList)
 		// TODO
-		auth.POST("/listreply", handler.HandlerSubCommentList)
+		auth.POST("/listreply", handler.HandlerCommentList)
 		// TODO
 		auth.POST("/like", handler.HandlerCommentLike)
 		// TODO
-		auth.POST("/likereply", handler.HandlerSubCommentLike)
+		auth.POST("/likereply", handler.HandlerCommentLike)
 		
 	}
 }

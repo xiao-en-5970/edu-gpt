@@ -9,19 +9,21 @@ import (
 	"gorm.io/gorm"
 )
 
-// Post 对应数据库中的 post 表
+// Post 帖子表
 type Post struct {
-	ID           uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id" comment:"帖子ID"`
-	PosterID     uint      `gorm:"column:poster_id" json:"poster_id" comment:"发帖人id"`
-	Title        string    `gorm:"column:title;type:varchar(200);index:idx_title_prefix(10)" json:"title" comment:"标题"`
-	Content      string    `gorm:"column:content;type:text" json:"content" comment:"内容（除标题）"`
-	ViewCount    int       `gorm:"column:view_count;default:0" json:"view_count" comment:"浏览数"`
-	Active       string    `gorm:"column:active;type:ENUM('active', 'locked', 'disabled');not null;default:'active';comment:状态" json:"active" validate:"required,oneof=active locked disabled"`
-	LikeCount    int       `gorm:"column:like_count;default:0" json:"like_count" comment:"点赞数"`
-	CollectCount int       `gorm:"column:collect_count;default:0" json:"collect_count" comment:"收藏数"`
-	CommentCount int       `gorm:"column:comment_count;default:0" json:"comment_count" comment:"(被）评论数"`
-	CreateAt     time.Time `gorm:"column:create_at;autoCreateTime;not null" json:"create_at" comment:"创建时间"`
-	UpdateAt     time.Time `gorm:"column:update_at;autoUpdateTime;not null" json:"update_at" comment:"更新时间"`
+	ID             uint      `gorm:"primaryKey;autoIncrement" json:"id"`                                     // 帖子ID
+	PosterID       uint      `gorm:"column:poster_id" json:"poster_id"`                                      // 发帖人id
+	Title          string    `gorm:"type:varchar(200);not null" json:"title"`                                // 标题
+	Content        string    `gorm:"type:text;not null" json:"content"`                                      // 内容
+	CommunityID    uint      `gorm:"not null;default:1" json:"community_id"`                                 // 所属社区id
+	CommentTableID uint      `gorm:"not null" json:"comment_table_id"`                                       // 评论区ID
+	ViewCount      int       `gorm:"not null;default:0" json:"view_count"`                                   // 浏览数
+	LikeCount      int       `gorm:"not null;default:0" json:"like_count"`                                   // 点赞数
+	CollectCount   int       `gorm:"default:0" json:"collect_count"`                                         // 收藏数
+	CommentCount   int       `gorm:"default:0" json:"comment_count"`                                         // (被）评论数
+	Active         string    `gorm:"type:enum('active','locked','disabled');default:'active'" json:"active"` // 状态
+	CreateAt       time.Time `gorm:"autoCreateTime" json:"create_at"`                                        // 创建时间
+	UpdateAt       time.Time `gorm:"autoUpdateTime" json:"update_at"`                                        // 更新时间
 }
 
 // TableName 指定表名

@@ -5,9 +5,10 @@ import "mime/multipart"
 // CreatePostReq 创建帖子请求参数
 // @Description 创建帖子的请求参数
 type CreatePostReq struct {
-	ImageCount int    `json:"image_count" validate:"required,min=0,max=9" example:"3" comment:"图片数量"`
-	Title      string `json:"title" validate:"required,min=1,max=100" example:"这是一个帖子标题" comment:"帖子标题"`
-	Content    string `json:"content" validate:"required,min=1,max=5000" example:"这是帖子的详细内容..." comment:"帖子内容"`
+	ImageCount  int    `json:"image_count" validate:"required,min=0,max=9" example:"3" comment:"图片数量"`
+	Title       string `json:"title" validate:"required,min=1,max=100" example:"这是一个帖子标题" comment:"帖子标题"`
+	Content     string `json:"content" validate:"required,min=1,max=5000" example:"这是帖子的详细内容..." comment:"帖子内容"`
+	CommunityID uint `json:"community_id" example:"社区id" comment:"社区ID"`
 }
 
 // CreatePostResp 创建帖子响应数据

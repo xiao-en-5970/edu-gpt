@@ -107,7 +107,7 @@ func LogicHFUTStudentInfo(c *gin.Context, username string) (resp types.HFUTStude
 	} else if rsp.StatusCode == 500 {
 		//信息门户限流
 		for i := 0; i < global.Cfg.HfutAPI.Retry; i++ {
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(1000 * time.Millisecond)
 			rsp, err := client.Do(r)
 			if err != nil {
 				return resp, codes.CodeAllBadGateway, err

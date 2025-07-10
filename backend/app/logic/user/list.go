@@ -22,7 +22,6 @@ func LogicFollowList(c *gin.Context, req *types.FollowListReq) (resp types.Follo
 	if err != nil {
 		return resp, codes.CodeAllIntervalError, err
 	}
-
 	briefffs := make([]types.BriefFollow, 0, req.Size)
 	for _, u := range users {
 		userinfo, err := models.FindUserById(c, u.Follow)

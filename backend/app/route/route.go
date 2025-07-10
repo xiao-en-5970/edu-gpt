@@ -48,4 +48,5 @@ func RouteInit(r *gin.Engine) {
 	RoutePostInit(apiGroup)
 	RouteCommentInit(apiGroup)
 	RouteCourseInit(apiGroup)
+	RouteCommunityinit(apiGroup)
 }

@@ -19,18 +19,6 @@ func HandlerCommentCreate(c *gin.Context) {
 	services.ServiceHandlerWithJson(c,CommentCreate{})
 }
 
-// @Summary 创建回复
-// @Description 输入正文和父评论id和回复用户id创建一条回复并返回这个回复的id
-// @Tags Comment模块
-// @Security     BearerAuth 
-// @Accept json
-// @Produce json
-// @Param edit body types.SubCommentCreateReq true "请求体"
-// @Success 200 {object} types.SubCommentCreateResp "成功响应"
-// @Router /comment/auth/createreply [post]
-func HandlerSubCommentCreate(c *gin.Context) {
-	services.ServiceHandlerWithJson(c,SubCommentCreate{})
-}
 
 type CommentCreate struct{}
 
@@ -42,6 +30,9 @@ func (CommentCreate) Logic(c *gin.Context, req any) (resp any, code int, err err
 	return logic.LogicCommentCreate(c, req.(*types.CommentCreateReq))
 }
 
+func HandlerSubCommentCreate(c *gin.Context) {
+	services.ServiceHandlerWithJson(c,SubCommentCreate{})
+}
 
 type SubCommentCreate struct{}
 

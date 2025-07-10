@@ -38,12 +38,15 @@ const (
 	CodePostLocked         = 60004 // 帖子已锁定
 	CodePostLDisabled      = 60005 // 帖子已删除
 	//评论错误
-	CodeCommentNotExist     = 70001 //评论不存在
-	CodeSubCommentNotExist  = 70002 //子评论不存在
-	CodeCommentLocked       = 70003 // 评论已锁定
-	CodeCommentLDisabled    = 70004 // 评论已删除
-	CodeSubCommentLocked    = 70005 // 回复已锁定
-	CodeSubCommentLDisabled = 70006 // 回复已删除
+	CodeCommentNotExist                = 70001 //评论不存在
+	CodeSubCommentNotExist             = 70002 //子评论不存在
+	CodeCommentLocked                  = 70003 // 评论已锁定
+	CodeCommentLDisabled               = 70004 // 评论已删除
+	CodeSubCommentLocked               = 70005 // 回复已锁定
+	CodeSubCommentLDisabled            = 70006 // 回复已删除
+	CodeCommentParentCantBeReply       = 70007 //回复不可作为上层评论
+	CodeCommentParentNotExist          = 70008 //回复的上层评论不存在
+	CodeCommentParentNotExistThisTable = 70009 //回复的上层评论不在当前评论区
 	//课程错误
 	CodeCourseNotExist     = 80001 //课程不存在
 	CodeCourseAlreadyExist = 80002 //课程已存在
@@ -61,6 +64,8 @@ const (
 	CodeCourseTableYearFault   = 100003 //课程表学年错误
 	CodeCourseTableTermFault   = 100004 //课程表学期错误
 	CodeCourseTableEmpty       = 100005 //课程表为空
+	//评论区错误
+	CodeCommentTableNotFound = 110001 //评论区不存在
 )
 
 var (
@@ -98,12 +103,15 @@ var (
 		CodePostLocked:         "帖子已锁定",
 		CodePostLDisabled:      "帖子已删除",
 		//评论错误
-		CodeCommentNotExist:     "评论不存在",
-		CodeSubCommentNotExist:  "子评论不存在",
-		CodeCommentLocked:       "评论已锁定",
-		CodeCommentLDisabled:    "评论已删除",
-		CodeSubCommentLocked:    "回复已锁定",
-		CodeSubCommentLDisabled: "回复已删除",
+		CodeCommentNotExist:          "评论不存在",
+		CodeSubCommentNotExist:       "子评论不存在",
+		CodeCommentLocked:            "评论已锁定",
+		CodeCommentLDisabled:         "评论已删除",
+		CodeSubCommentLocked:         "回复已锁定",
+		CodeSubCommentLDisabled:      "回复已删除",
+		CodeCommentParentCantBeReply: "回复不可作为上层评论",
+		CodeCommentParentNotExist:    "回复的上层评论不存在",
+		CodeCommentParentNotExistThisTable:"回复的上层评论不在当前评论区",
 		//课程错误
 		CodeCourseNotExist:     "课程不存在",
 		CodeCourseAlreadyExist: "课程已存在",
@@ -121,5 +129,7 @@ var (
 		CodeCourseTableYearFault:   "课程表学年错误。原因：学年不能超过当前年份",
 		CodeCourseTableTermFault:   "课程表学期错误。原因：学期为1或2",
 		CodeCourseTableEmpty:       "课程表为空。原因：当前学期无课或者当前学期未开始",
+		//评论区错误
+		CodeCommentTableNotFound: "评论区不存在",
 	}
 )

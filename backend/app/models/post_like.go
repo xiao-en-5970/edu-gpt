@@ -28,7 +28,10 @@ func (PostLike) TableName() string {
 }
 
 func GetLikeStatus(c *gin.Context, postid uint, userid uint) (likeStatus int, err error) {
-	result := global.RedisClient.Get(c, redisprefix.PrefixPostLikeKey1+strconv.Itoa(int(postid))+redisprefix.PrefixPostLikeKey2+strconv.Itoa(int(userid)))
+	pre1 := middleware.GetPrefix(redisprefix.PrefixPostLikeKey1,strconv.Itoa(int(postid)))
+	pre2 := middleware.GetPrefix(redisprefix.PrefixPostLikeKey2,strconv.Itoa(int(userid)))
+	pre:=middleware.GetPrefix(pre1,pre2)
+	result := global.RedisClient.Get(c,pre)
 	if result.Err() != nil {
 		if result.Err() == redis.Nil {
 			return 0, nil
@@ -56,8 +59,14 @@ func UpdateUserLikePost(c *gin.Context, postid uint, userid uint, expectlikestat
 					if err != nil {
 						return err
 					}
-					err = middleware.UpdateCacheCount(c,postid,middleware.GetPrefix(redisprefix.PrefixPostLikeCountKey,strconv.Itoa(int(postid))), 1)
-					if err !=nil{
+					err = middleware.UpdateCacheCount(c,
+						postid,
+						redisprefix.PrefixPostLikeCountKey,
+						1,
+						GetPostLikeCountFromMysql,
+						UpdatePostLikeCountFromMysql,
+					)
+					if err != nil {
 						return err
 					}
 				}
@@ -71,10 +80,17 @@ func UpdateUserLikePost(c *gin.Context, postid uint, userid uint, expectlikestat
 				if err != nil {
 					return err
 				}
-				err := middleware.UpdateCacheCount(c,postid,middleware.GetPrefix(redisprefix.PrefixPostLikeCountKey,strconv.Itoa(int(postid))), expectlikestatus-oldstatus)
+				err := middleware.UpdateCacheCount(c,
+					postid, 
+					redisprefix.PrefixPostLikeCountKey,
+					expectlikestatus-oldstatus,
+					GetPostLikeCountFromMysql,
+					UpdatePostLikeCountFromMysql)
 				if err != nil {
 					return err
 				}
+			}else{
+				global.Logger.Debugf("点赞状态不变 %d",expectlikestatus)
 			}
 		}
 		return nil
@@ -82,9 +98,12 @@ func UpdateUserLikePost(c *gin.Context, postid uint, userid uint, expectlikestat
 	if err != nil {
 		return err
 	}
+	pre1 := middleware.GetPrefix(redisprefix.PrefixPostLikeKey1,strconv.Itoa(int(postid)))
+	pre2 := middleware.GetPrefix(redisprefix.PrefixPostLikeKey2,strconv.Itoa(int(userid)))
+	pre := middleware.GetPrefix(pre1,pre2)
 	result := global.RedisClient.SetEx(c,
-		redisprefix.PrefixPostLikeKey1+strconv.Itoa(int(postid))+redisprefix.PrefixPostLikeKey2+strconv.Itoa(int(userid)),
-		strconv.Itoa(int(expectlikestatus)),
+		pre,
+		expectlikestatus,
 		time.Duration(global.Cfg.Redis.LikeExpire)*time.Hour)
 	if result.Err() != nil {
 		return result.Err()
@@ -92,21 +111,20 @@ func UpdateUserLikePost(c *gin.Context, postid uint, userid uint, expectlikestat
 	return nil
 }
 
-
 func GetPostLikeCountFromMysql(c *gin.Context, id uint) (count int, err error) {
 	post := &Post{}
 	err = global.Db.WithContext(c).Model(post).Where("id=?", id).First(post).Error
 	if err != nil {
 		return -1, err
 	}
-	return int(post.LikeCount), nil
+	return post.LikeCount, nil
 }
-// type FuncMysqlUpdateCount func(c *gin.Context, id uint, newcount int) (err error)
-func UpdatePostLikeCountFromMysql(c *gin.Context ,id uint,newcount int)(err error){
+
+func UpdatePostLikeCountFromMysql(c *gin.Context, id uint, newcount int) (err error) {
 	post := &Post{}
-	err = global.Db.WithContext(c).Model(post).Where("id=?", id).Update("like_count",  newcount).Error
+	err = global.Db.WithContext(c).Model(post).Where("id=?", id).Update("like_count", newcount).Error
 	if err != nil {
-		return  err
+		return err
 	}
 	return nil
 }

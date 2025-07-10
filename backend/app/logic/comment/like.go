@@ -23,17 +23,5 @@ func LogicCommentLike(c *gin.Context, req *types.CommentLikeReq) (resp types.Com
 	return resp, codes.CodeAllSuccess, nil
 }
 
-func LogicSubCommentLike(c *gin.Context, req *types.SubCommentLikeReq) (resp types.SubCommentLikeResp, code int, err error) {
-	u, ex := c.Get("id")
-	if !ex {
-		return resp, codes.CodeAuthUnvalidToken, nil
-	}
-	uid := u.(uint)
-	subcomment, _ := models.FindSubCommentById(c, req.SubCommentID)
-	if subcomment == nil || subcomment.Active != global.Active.String() {
-		return resp, codes.CodeSubCommentNotExist, nil
-	}
-	go models.AddSubCommentLikeCount(c, req.SubCommentID, uid, req.LikeStatus)
-	resp.OK = 1
-	return resp, codes.CodeAllSuccess, nil
-}
+
+

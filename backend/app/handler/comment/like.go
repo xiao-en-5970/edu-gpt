@@ -20,19 +20,6 @@ func HandlerCommentLike(c * gin.Context){
 	services.ServiceHandlerWithJson(c,CommentLike{})
 }
 
-// @Summary 回复点赞
-// @Description 给回复点赞
-// @Tags Comment模块
-// @Security     BearerAuth 
-// @Accept json
-// @Produce json
-// @Param edit body types.SubCommentLikeReq true "请求体"
-// @Success 200 {object} types.SubCommentLikeResp "成功响应"
-// @Router /comment/auth/likereply [post]
-func HandlerSubCommentLike(c * gin.Context){
-	services.ServiceHandlerWithJson(c,SubCommentLike{})
-}
-
 type CommentLike struct{}
 
 func (CommentLike) NewReq() any {
@@ -43,13 +30,3 @@ func (CommentLike) Logic(c *gin.Context, req any) (resp any, code int, err error
 	return logic.LogicCommentLike(c, req.(*types.CommentLikeReq))
 }
 
-
-type SubCommentLike struct{}
-
-func (SubCommentLike) NewReq() any {
-	return &types.SubCommentLikeReq{}
-}
-
-func (SubCommentLike) Logic(c *gin.Context, req any) (resp any, code int, err error) {
-	return logic.LogicSubCommentLike(c, req.(*types.SubCommentLikeReq))
-}

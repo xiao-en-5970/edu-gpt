@@ -36,13 +36,14 @@ CREATE TABLE `user` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_username` (`username`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表';
-
+-- 帖子表
 CREATE TABLE `post` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '帖子ID',
     `poster_id` BIGINT COMMENT '发帖人id',
     `title` VARCHAR(200) NOT NULL COMMENT '标题',
     `content` TEXT NOT NULL COMMENT '内容',
-    `community_id` BIGINT NOT NULL DEFAULT 1 COMMENT '社区id',
+    `community_id` BIGINT NOT NULL DEFAULT 1 COMMENT '所属社区id',
+    `comment_table_id` BIGINT NOT NULL COMMENT '评论区ID',
     `view_count` INT NOT NULL DEFAULT 0 COMMENT '浏览数',
     `like_count` INT NOT NULL DEFAULT 0 COMMENT '点赞数',
     `collect_count` INT DEFAULT 0 COMMENT '收藏数',
@@ -57,7 +58,7 @@ CREATE TABLE `post` (
     PRIMARY KEY (`id`),
     INDEX `idx_title_prefix` (`title` (10))
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '帖子表';
-
+-- //帖子-图片表
 CREATE TABLE `post_image` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '帖子图片ID',
     `post_id` BIGINT NOT NULL COMMENT '发帖人id',
@@ -68,7 +69,7 @@ CREATE TABLE `post_image` (
     PRIMARY KEY (`id`),
     KEY `idx_post` (`post_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '帖子图片表';
-
+-- 帖子-点赞表
 CREATE TABLE `post_likes` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `post_id` BIGINT NOT NULL COMMENT '帖子ID',
@@ -80,11 +81,13 @@ CREATE TABLE `post_likes` (
     UNIQUE KEY `uk_post_user` (`post_id`, `user_id`),
     KEY `idx_user` (`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户点赞记录表';
-
+-- 评论表
 CREATE TABLE `comment` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `post_id` BIGINT NOT NULL COMMENT '评论的帖子ID',
+    `comment_table_id` BIGINT NOT NULL COMMENT '评论的评论区ID',
     `user_id` BIGINT NOT NULL COMMENT '发评论的用户ID',
+    `parent_comment_id` BIGINT NOT NULL DEFAULT 0 COMMENT '上层评论id，为0表示评论区顶层',
+    `reply_comment_id` BIGINT NOT NULL DEFAULT 0 COMMENT '回复的评论id，为0表示评论区顶层',
     `content` TEXT NOT NULL COMMENT '内容',
     `like_count` INT NOT NULL DEFAULT 0 COMMENT '点赞数',
     `child_count` INT NOT NULL DEFAULT 0 COMMENT '子评论数量',
@@ -96,17 +99,14 @@ CREATE TABLE `comment` (
     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    KEY `idx_post` (`post_id`)
+    KEY `idx_comment_table` (`comment_table_id`) ,
+    KEY `idx_parent` (`parent_comment_id`) ,
+    KEY `idx_reply` (`reply_comment_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论表';
 
-CREATE TABLE `sub_comment` (
+-- 评论区表
+CREATE TABLE `comment_table` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `post_id` BIGINT NOT NULL COMMENT '评论的帖子ID',
-    `user_id` BIGINT NOT NULL COMMENT '发评论的用户ID',
-    `parent_comment_id` BIGINT NOT NULL DEFAULT 0 COMMENT '上层评论id',
-    `reply_user_id` BIGINT NOT NULL DEFAULT 0 COMMENT '回复的子评论用户id,默认为0表示回复顶层评论',
-    `content` TEXT COMMENT '内容',
-    `like_count` INT DEFAULT 0 COMMENT '子评论点赞数',
     `active` ENUM(
         'active',
         'locked',
@@ -114,9 +114,41 @@ CREATE TABLE `sub_comment` (
     ) NOT NULL DEFAULT 'active' COMMENT '状态',
     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_parent` (`parent_comment_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论表';
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论区表';
+-- 社区表
+CREATE TABLE `community` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(200) NOT NULL COMMENT '名字',
+    `description` TEXT NOT NULL COMMENT '介绍',
+    `active` ENUM(
+        'active',
+        'locked',
+        'disabled'
+    ) NOT NULL DEFAULT 'active' COMMENT '状态',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社区表';
+
+-- CREATE TABLE `sub_comment` (
+--     `id` BIGINT NOT NULL AUTO_INCREMENT,
+--     `post_id` BIGINT NOT NULL COMMENT '评论的帖子ID',
+--     `user_id` BIGINT NOT NULL COMMENT '发评论的用户ID',
+--     `parent_comment_id` BIGINT NOT NULL DEFAULT 0 COMMENT '上层评论id',
+
+--     `content` TEXT COMMENT '内容',
+--     `like_count` INT DEFAULT 0 COMMENT '子评论点赞数',
+--     `active` ENUM(
+--         'active',
+--         'locked',
+--         'disabled'
+--     ) NOT NULL DEFAULT 'active' COMMENT '状态',
+--     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--     PRIMARY KEY (`id`),
+--     KEY `idx_parent` (`parent_comment_id`)
+-- ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论表';
 
 CREATE TABLE `comment_likes` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
@@ -130,17 +162,17 @@ CREATE TABLE `comment_likes` (
     KEY `idx_user` (`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论点赞记录表';
 
-CREATE TABLE `subcomment_likes` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `subcomment_id` BIGINT NOT NULL COMMENT '子评论ID',
-    `user_id` BIGINT NOT NULL COMMENT '用户ID',
-    `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-点赞 0-取消',
-    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_subcomment_user` (`subcomment_id`, `user_id`),
-    KEY `idx_user` (`user_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论点赞记录表';
+-- CREATE TABLE `subcomment_likes` (
+--     `id` BIGINT NOT NULL AUTO_INCREMENT,
+--     `subcomment_id` BIGINT NOT NULL COMMENT '子评论ID',
+--     `user_id` BIGINT NOT NULL COMMENT '用户ID',
+--     `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-点赞 0-取消',
+--     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--     PRIMARY KEY (`id`),
+--     UNIQUE KEY `uk_subcomment_user` (`subcomment_id`, `user_id`),
+--     KEY `idx_user` (`user_id`)
+-- ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '子评论点赞记录表';
 
 CREATE TABLE `user_follow` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,

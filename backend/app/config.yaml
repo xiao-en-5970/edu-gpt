@@ -40,4 +40,4 @@ auth:
   max_age: 240 #单位小时
 cache:
   read_expiration: 30 #单位秒
-  write_expiration: 30 #单位秒
+  write_expiration: 60 #单位秒

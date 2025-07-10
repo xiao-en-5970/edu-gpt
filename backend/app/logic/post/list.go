@@ -13,6 +13,7 @@ func LogicPostList(c *gin.Context, req *types.PostListReq) (resp types.PostListR
 	if !ex {
 		return resp, codes.CodeAuthUnvalidToken, nil
 	}
+	
 	if req.Order == "" {
 		return resp, codes.CodeAllRequestFormatError, nil
 	}

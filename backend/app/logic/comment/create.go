@@ -13,17 +13,28 @@ func LogicCommentCreate(c *gin.Context, req *types.CommentCreateReq) (resp types
 		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	post, err := models.FindPostById(c, req.PostID)
+	if req.PostID != 0 {
+		post, err := models.FindPostById(c, req.PostID)
+		if err != nil {
+			return resp, codes.CodeAllIntervalError, err
+		}
+		if post == nil {
+			return resp, codes.CodePostNotExist, err
+		}
+		req.CommentTableID = post.CommentTableID
+	}
+	ct, err := models.FindCommentTableById(c, req.CommentTableID)
 	if err != nil {
 		return resp, codes.CodeAllIntervalError, err
 	}
-	if post == nil {
-		return resp, codes.CodePostNotExist, err
+	if ct == nil {
+		return resp, codes.CodeCommentTableNotFound, nil
 	}
+
 	comment := &models.Comment{
-		PostID:  req.PostID,
-		UserID:  uid,
-		Content: req.Content,
+		CommentTableID: req.CommentTableID,
+		UserID:         uid,
+		Content:        req.Content,
 	}
 	cid, err := models.CreateComment(c, comment)
 	if err != nil {
@@ -33,43 +44,54 @@ func LogicCommentCreate(c *gin.Context, req *types.CommentCreateReq) (resp types
 	return resp, codes.CodeAllSuccess, nil
 }
 
-func LogicSubCommentCreate(c *gin.Context, req *types.SubCommentCreateReq) (resp types.SubCommentCreateResp, code int, err error) {
+func LogicSubCommentCreate(c *gin.Context, req *types.SubCommentCreateReq) (resp types.CommentCreateResp, code int, err error) {
 	u, ex := c.Get("id")
 	if !ex {
 		return resp, codes.CodeAuthUnvalidToken, nil
 	}
 	uid := u.(uint)
-	post, err := models.FindCommentById(c, req.PostID)
-	if err != nil {
-		return resp, codes.CodeAllIntervalError, err
-	}
-	if post == nil {
-		return resp, codes.CodePostNotExist, nil
-	}
-	comment, err := models.FindCommentById(c, req.ParentCommentID)
-	if err != nil {
-		return resp, codes.CodeAllIntervalError, err
-	}
-	if comment == nil {
-		return resp, codes.CodeCommentNotExist, nil
-	}
-	if req.ReplyUserID != 0 {
-		user, err := models.FindUserById(c, req.ReplyUserID)
+	if req.PostID != 0 {
+		post, err := models.FindPostById(c, req.PostID)
 		if err != nil {
 			return resp, codes.CodeAllIntervalError, err
 		}
-		if user == nil {
-			return resp, codes.CodeUserNotExist, nil
+		if post == nil {
+			return resp, codes.CodePostNotExist, err
 		}
+		req.CommentTableID = post.CommentTableID
 	}
-	subcomment := &models.SubComment{
-		PostID:          req.PostID,
-		UserID:          uid,
+	ct, err := models.FindCommentTableById(c, req.CommentTableID)
+	if err != nil {
+		return resp, codes.CodeAllIntervalError, err
+	}
+	if ct == nil {
+		return resp, codes.CodeCommentTableNotFound, nil
+	}
+	cmt, err := models.FindCommentById(c, req.ParentCommentID)
+	if err != nil {
+		return resp, codes.CodeAllIntervalError, err
+	}
+	if cmt == nil {
+		return resp, codes.CodeCommentParentNotExist, nil
+	}
+	if cmt.CommentTableID != req.CommentTableID {
+		return resp, codes.CodeCommentParentNotExistThisTable, nil
+	}
+	if cmt.ParentCommentID != 0 {
+		return resp, codes.CodeCommentParentCantBeReply, nil
+	}
+	if req.ReplyID == 0 {
+		req.ReplyID = req.ParentCommentID
+	}
+
+	comment := &models.Comment{
+		CommentTableID:  ct.ID,
 		ParentCommentID: req.ParentCommentID,
-		ReplyUserID:     req.ReplyUserID,
+		ReplyCommentID:  req.ReplyID,
+		UserID:          uid,
 		Content:         req.Content,
 	}
-	cid, err := models.CreateSubComment(c, subcomment)
+	cid, err := models.CreateComment(c, comment)
 	if err != nil {
 		return resp, codes.CodeAllIntervalError, err
 	}

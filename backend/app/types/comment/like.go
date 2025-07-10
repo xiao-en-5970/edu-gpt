@@ -12,16 +12,3 @@ type CommentLikeReq struct {
 type CommentLikeResp struct {
 	OK  int `json:"ok" example:"1" comment:"是否成功"`
 }
-
-// SubCommentLikeReq 子评论点赞请求参数
-// @Description 子评论点赞/取消点赞的请求参数
-type SubCommentLikeReq struct {
-	SubCommentID uint `json:"subcomment_id" validate:"required" example:"789" comment:"子评论ID"`
-	LikeStatus   int  `json:"like_status" validate:"required,oneof=0 1" example:"1" comment:"点赞状态(0:取消点赞,1:点赞)"`
-}
-
-// SubCommentLikeResp 子评论点赞响应数据
-// @Description 子评论点赞操作后返回的响应数据
-type SubCommentLikeResp struct {
-	OK  int `json:"ok" example:"1" comment:"是否成功"`
-}

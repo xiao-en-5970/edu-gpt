@@ -3,8 +3,9 @@ package types
 // CommentCreateReq 创建评论请求参数
 // @Description 创建评论的请求参数
 type CommentCreateReq struct {
-	PostID  uint   `json:"post_id" validate:"required" example:"123" comment:"帖子ID"`
-	Content string `json:"content" validate:"required,min=1,max=500" example:"这是一条评论内容" comment:"评论内容"`
+	PostID         uint   `json:"post_id" example:"123" comment:"帖子ID"`
+	CommentTableID uint   `json:"comment_table_id" example:"123" comment:"帖子ID"`
+	Content        string `json:"content" validate:"required,min=1,max=500" example:"这是一条评论内容" comment:"评论内容"`
 }
 
 // CommentCreateResp 创建评论响应数据
@@ -16,9 +17,10 @@ type CommentCreateResp struct {
 // SubCommentCreateReq 创建子评论请求参数
 // @Description 创建子评论(回复评论)的请求参数
 type SubCommentCreateReq struct {
-	PostID          uint   `json:"post_id" validate:"required" example:"123" comment:"帖子ID"`
+	PostID          uint   `json:"post_id" example:"123" comment:"帖子ID"`
+	CommentTableID  uint   `json:"comment_table_id" example:"123" comment:"帖子ID"`
 	ParentCommentID uint   `json:"parent" validate:"required" example:"456" comment:"父评论ID"`
-	ReplyUserID     uint   `json:"reply" example:"789" comment:"回复的用户ID"`
+	ReplyID         uint   `json:"reply" example:"789" comment:"回复的帖子ID"`
 	Content         string `json:"content" validate:"required,min=1,max=500" example:"这是一条回复评论" comment:"评论内容"`
 }
 
