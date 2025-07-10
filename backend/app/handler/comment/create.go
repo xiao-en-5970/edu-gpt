@@ -6,19 +6,10 @@ import (
 	"github.com/xiao-en-5970/edu-gpt/backend/app/services"
 	types "github.com/xiao-en-5970/edu-gpt/backend/app/types/comment"
 )
-// @Summary 创建评论
-// @Description 输入正文和帖子id创建评论并返回评论id
-// @Tags Comment模块
-// @Security     BearerAuth 
-// @Accept json
-// @Produce json
-// @Param edit body types.CommentCreateReq true "请求体"
-// @Success 200 {object} types.CommentCreateResp "成功响应"
-// @Router /commmnt/auth/create [post]
-func HandlerCommentCreate(c *gin.Context) {
-	services.ServiceHandlerWithJson(c,CommentCreate{})
-}
 
+func HandlerCommentCreate(c *gin.Context) {
+	services.ServiceHandlerWithJson(c, CommentCreate{})
+}
 
 type CommentCreate struct{}
 
@@ -31,7 +22,7 @@ func (CommentCreate) Logic(c *gin.Context, req any) (resp any, code int, err err
 }
 
 func HandlerSubCommentCreate(c *gin.Context) {
-	services.ServiceHandlerWithJson(c,SubCommentCreate{})
+	services.ServiceHandlerWithJson(c, SubCommentCreate{})
 }
 
 type SubCommentCreate struct{}
