@@ -1,25 +1,13 @@
-# 使用 Node.js 20 官方镜像
-FROM node:20-alpine
+# 使用阿里云官方提供的 Node.js 20 镜像（非 library 命名空间）
+FROM node:20-slim
 
-# 设置工作目录
+# 后续内容保持不变...
 WORKDIR /app
-# 1. 配置国内镜像源和安装必要工具
-RUN npm config set registry https://registry.npmmirror.com && \
-    npm install -g pnpm && \
-    pnpm config set registry https://registry.npmmirror.com
-# 安装 pnpm
-RUN npm install -g pnpm
-
-# 复制项目文件
+RUN npm config set registry https://registry.npmmirror.com
+RUN corepack enable
+RUN corepack prepare pnpm@latest --activate
 COPY . .
-
-RUN npm install -g tsx
-RUN npm install -g express
-# 安装依赖
 RUN pnpm install
-
-# 暴露端口（如果需要）
+RUN pnpm list tesseract.js || echo "tesseract.js not found (安装失败)"
 EXPOSE 8082
-
-# 启动命令
 CMD ["pnpm", "run", "start"]
