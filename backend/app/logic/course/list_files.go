@@ -28,7 +28,7 @@ func LogicCourseFiles(c *gin.Context, req *types.CourseFilesReq) (resp types.Cou
 			FileSize: file.Size,
 			FileType: file.FileType,
 			ModTime:  file.ModTime,
-			FileURL:  global.GetFileUrl("course/auth/getfile", course.CourseType+"/"+course.CourseName+"/"+file.Name),
+			FileURL:  global.GetFileUrl("course/auth/get_file", course.CourseType+"/"+course.CourseName+"/"+file.Name),
 		})
 	}
 	return resp, codes.CodeAllSuccess, nil

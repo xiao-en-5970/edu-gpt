@@ -74,12 +74,45 @@ services:
       - /app/node_modules
     ports:
       - "8082:8082" # 如果需要暴露端口
+  napcat:
+    container_name: napcat
+    image: mlikiowa/napcat-docker:latest
+    restart: always
+    environment:
+      - NAPCAT_UID=${NAPCAT_UID:-1000}
+      - NAPCAT_GID=${NAPCAT_GID:-1000}
+      - MODE=koishi
+    ports:
+      - 4000:3000
+      - 7099:6099
+    volumes:
+      - /var/lib/container/napcat/config:/app/napcat/config
+      - /var/lib/container/ntqq:/app/.config/QQ
+      - /var/lib/container/koishi:/koishi
+    networks:
+      - app_net
+    mac_address: "02:42:ac:11:00:02"
+
+  koishi:
+    container_name: koishi
+    image: koishijs/koishi:latest
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 5140:5140
+    volumes:
+      - /var/lib/container/ntqq:/app/.config/QQ
+      - /var/lib/container/koishi:/koishi
+    networks:
+      - app_net
+
 
 volumes:
   mysql_data:
   redis_data:
-
-
+  esdata:
+    driver: local
 networks:
   app_net:
     driver: bridge

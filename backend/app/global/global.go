@@ -39,11 +39,11 @@ func (s Status) String() string {
 }
 
 func GetUrl(prefix string, id uint) string {
-	return fmt.Sprintf("https://%s/api/v1/%s/%d", Cfg.Server.Address, prefix, id)
+	return fmt.Sprintf("%s/api/v1/%s/%d", Cfg.Server.Address, prefix, id)
 }
 
 func GetFileUrl(prefix string, path string) string {
-	return fmt.Sprintf("https://%s/api/v1/%s?filepath=%s", Cfg.Server.Address, prefix, path)
+	return fmt.Sprintf("%s/api/v1/%s?filepath=%s", Cfg.Server.Address, prefix, path)
 }
 
 // 2022 学年第一学期【2022 9-12月】作为基准，学期代码为194

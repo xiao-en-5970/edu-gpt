@@ -1,5 +1,5 @@
 server:
-  address: "localhost:8080"
+  address: "http://localhost"
   port: 8080
   timeout: 30s
 mysql:

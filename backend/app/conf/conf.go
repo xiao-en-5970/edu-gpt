@@ -3,6 +3,7 @@ package conf
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/spf13/viper"
@@ -88,6 +89,7 @@ func ConfInit(path string) (cfg *Config, err error) {
 	if err := viper.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("解析配置失败: %w", err)
 	}
+	cfg.Server.Address =cfg.Server.Address + ":" + strconv.Itoa(cfg.Server.Port)
 	os.MkdirAll(cfg.Static.RootPath, 0755)
 	os.MkdirAll(cfg.Static.AvatarsPath, 0755)
 	os.MkdirAll(cfg.Static.BackImagePath, 0755)
