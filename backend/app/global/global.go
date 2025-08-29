@@ -2,8 +2,6 @@ package global
 
 import (
 	"fmt"
-	"sync"
-
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"github.com/xiao-en-5970/edu-gpt/backend/app/conf"
@@ -67,8 +65,3 @@ func GetIDByContext(c *gin.Context) (uint) {
 	uid := u.(uint)
 	return uid
 }
-
-
-//锁
-
- var LockPostLikeCount sync.Mutex 
